@@ -1,13 +1,13 @@
-// components/FullPage/interactiveMenu.tsx
+// components/FullPage/Menu.tsx
 
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import SpaceshipNav from '@/components/Ui/navbar';
-import MenuButton from './menuButton';
+import SpaceshipNav from '@/components/Ui/NavBar';
+import MenuButton from './MenuButton';
 
-export default function InteractiveMenu() {
+export default function Menu() {
     const [showNav, setShowNav] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
 

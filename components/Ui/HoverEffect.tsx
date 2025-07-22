@@ -26,28 +26,28 @@ const TrailSimShader = {
         uDiss:      { value: 0.98 },
     },
     vertexShader: `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = vec4(position, 1.0);
-        }
-    `,
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = vec4(position, 1.0);
+    }
+  `,
     fragmentShader: `
-        precision highp float;
-        varying vec2 vUv;
-        uniform sampler2D uPrev;
-        uniform vec2 uMouse;
-        uniform float uIntensity;
-        uniform float uRadius;
-        uniform float uDiss;
+    precision highp float;
+    varying vec2 vUv;
+    uniform sampler2D uPrev;
+    uniform vec2 uMouse;
+    uniform float uIntensity;
+    uniform float uRadius;
+    uniform float uDiss;
 
-        void main() {
-          vec4 prev = texture2D(uPrev, vUv);
-          float d = distance(vUv, uMouse);
-          float add = uIntensity * exp(- (d * d) / (uRadius * uRadius));
-          gl_FragColor = vec4(prev.rgb * uDiss, prev.a * uDiss + add);
-        }
-    `
+    void main() {
+      vec4 prev = texture2D(uPrev, vUv);
+      float d = distance(vUv, uMouse);
+      float add = uIntensity * exp(- (d * d) / (uRadius * uRadius));
+      gl_FragColor = vec4(prev.rgb * uDiss, prev.a * uDiss + add);
+    }
+  `
 };
 
 // --- Display Shader ---
@@ -66,86 +66,85 @@ const TrailDisplayShader = {
         uMouseVelocity:  { value: new THREE.Vector2() },
     },
     vertexShader: `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = vec4(position, 1.0);
-        }
-    `,
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = vec4(position, 1.0);
+    }
+  `,
     fragmentShader: `
-        precision highp float;
-        varying vec2 vUv;
-        uniform sampler2D uTexture;
-        uniform sampler2D uBackground;
-        uniform vec2 uMouse;
-        uniform float uAlpha;
-        uniform float uBlur;
-        uniform float uDisplacementScale;
-        
-        uniform float uTime;
-        uniform float uShatterScale;
-        uniform float uShatterStrength;
+    precision highp float;
+    varying vec2 vUv;
+    uniform sampler2D uTexture;
+    uniform sampler2D uBackground;
+    uniform vec2 uMouse;
+    uniform float uAlpha;
+    uniform float uBlur;
+    uniform float uDisplacementScale;
+    
+    uniform float uTime;
+    uniform float uShatterScale;
+    uniform float uShatterStrength;
 
-        uniform float uDragStrength;
-        uniform vec2 uMouseVelocity;
+    uniform float uDragStrength;
+    uniform vec2 uMouseVelocity;
 
-        vec2 random2(vec2 p) {
-            return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453);
-        }
+    vec2 random2(vec2 p) {
+        return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453);
+    }
 
-        vec2 shatter(vec2 uv) {
-            vec2 p = floor(uv);
-            vec2 f = fract(uv);
-            float min_dist = 1.0;
-            vec2 final_offset = vec2(0.0);
+    vec2 shatter(vec2 uv) {
+        vec2 p = floor(uv);
+        vec2 f = fract(uv);
+        float min_dist = 1.0;
+        vec2 final_offset = vec2(0.0);
 
-            for (int j = -1; j <= 1; j++) {
-                for (int i = -1; i <= 1; i++) {
-                    vec2 neighbor = vec2(float(i), float(j));
-                    vec2 point_pos = random2(p + neighbor);
-                    point_pos = 0.5 + 0.5 * sin(uTime * 0.5 + 6.2831 * point_pos);
-                    vec2 diff = neighbor + point_pos - f;
-                    float dist = length(diff);
-                    if (dist < min_dist) {
-                        min_dist = dist;
-                        final_offset = (point_pos - 0.5) * 0.3;
-                    }
+        for (int j = -1; j <= 1; j++) {
+            for (int i = -1; i <= 1; i++) {
+                vec2 neighbor = vec2(float(i), float(j));
+                vec2 point_pos = random2(p + neighbor);
+                point_pos = 0.5 + 0.5 * sin(uTime * 0.5 + 6.2831 * point_pos);
+                vec2 diff = neighbor + point_pos - f;
+                float dist = length(diff);
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    final_offset = (point_pos - 0.5) * 0.3;
                 }
             }
-            return final_offset;
         }
+        return final_offset;
+    }
 
-        void main() {
-          vec4 sum = vec4(0.0);
-          float count = 0.0;
-          for (float x = -1.0; x <= 1.0; x++) {
-            for (float y = -1.0; y <= 1.0; y++) {
-              sum += texture2D(uTexture, vUv + vec2(x, y) * uBlur);
-              count += 1.0;
-            }
-          }
-
-          vec4 trailData = sum / count;
-          if (trailData.a < 0.01) discard;
-
-          float intensity = trailData.a;
-          vec2 dirToMouse = vUv - uMouse;
-
-          vec2 shatterOffset = shatter(vUv * uShatterScale) * uShatterStrength;
-          vec2 geometricDisplacement = ((dirToMouse * uDisplacementScale) + shatterOffset) * intensity;
-          
-          vec2 dragDisplacement = uMouseVelocity * uDragStrength * intensity;
-
-          vec2 finalUv = vUv + geometricDisplacement - dragDisplacement;
-          vec4 finalBgColor = texture2D(uBackground, finalUv);
-
-          gl_FragColor = vec4(finalBgColor.rgb, finalBgColor.a * (1.0 - intensity * uAlpha));
+    void main() {
+      vec4 sum = vec4(0.0);
+      float count = 0.0;
+      for (float x = -1.0; x <= 1.0; x++) {
+        for (float y = -1.0; y <= 1.0; y++) {
+          sum += texture2D(uTexture, vUv + vec2(x, y) * uBlur);
+          count += 1.0;
         }
-    `
+      }
+
+      vec4 trailData = sum / count;
+      if (trailData.a < 0.01) discard;
+
+      float intensity = trailData.a;
+      vec2 dirToMouse = vUv - uMouse;
+
+      vec2 shatterOffset = shatter(vUv * uShatterScale) * uShatterStrength;
+      vec2 geometricDisplacement = ((dirToMouse * uDisplacementScale) + shatterOffset) * intensity;
+      
+      vec2 dragDisplacement = uMouseVelocity * uDragStrength * intensity;
+
+      vec2 finalUv = vUv + geometricDisplacement - dragDisplacement;
+      vec4 finalBgColor = texture2D(uBackground, finalUv);
+
+      gl_FragColor = vec4(finalBgColor.rgb, finalBgColor.a * (1.0 - intensity * uAlpha));
+    }
+  `
 };
 
 function GPUTrail({ backgroundTexture }: { backgroundTexture: THREE.Texture }) {
-    // ✨ Hardcoded configuration object
     const config = useMemo(() => ({
         resolution: 512,
         radius: 0.02,
@@ -167,6 +166,7 @@ function GPUTrail({ backgroundTexture }: { backgroundTexture: THREE.Texture }) {
     const simScene  = useMemo(() => new THREE.Scene(), []);
     const simCam    = useMemo(() => new THREE.OrthographicCamera(-1,1,1,-1,0,1), []);
 
+    // Track mouse globally
     const realMouse          = useRef(new THREE.Vector2());
     const simulatedMouse     = useRef(new THREE.Vector2());
     const prevSimulatedMouse = useRef(new THREE.Vector2());
@@ -177,10 +177,8 @@ function GPUTrail({ backgroundTexture }: { backgroundTexture: THREE.Texture }) {
             realMouse.current.x = e.clientX / window.innerWidth;
             realMouse.current.y = 1 - e.clientY / window.innerHeight;
         };
-        simulatedMouse.current.copy(realMouse.current);
-        prevSimulatedMouse.current.copy(realMouse.current);
-        window.addEventListener('pointermove', onMove);
-        return () => window.removeEventListener('pointermove', onMove);
+        document.addEventListener('pointermove', onMove, { capture: true, passive: true });
+        return () => document.removeEventListener('pointermove', onMove, { capture: true });
     }, []);
 
     const simMat = useMemo(() => {
@@ -233,18 +231,14 @@ function GPUTrail({ backgroundTexture }: { backgroundTexture: THREE.Texture }) {
 }
 
 function GPUTrailEffectWithBackground() {
-    const textureLoader = useMemo(() => new THREE.TextureLoader(), []);
+    const loader = useMemo(() => new THREE.TextureLoader(), []);
     const backgroundTexture = useMemo(() => {
-        const tex = textureLoader.load('/background.jpg');
+        const tex = loader.load('/background.jpg');
         tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
-        tex.minFilter = THREE.LinearFilter;
-        tex.magFilter = THREE.LinearFilter;
         return tex;
-    }, [textureLoader]);
+    }, [loader]);
 
-    if (!backgroundTexture) return null;
-
-    return <GPUTrail backgroundTexture={backgroundTexture} />;
+    return backgroundTexture ? <GPUTrail backgroundTexture={backgroundTexture} /> : null;
 }
 
 export default function GPUTrailCanvas() {
@@ -253,7 +247,15 @@ export default function GPUTrailCanvas() {
             orthographic
             camera={{ zoom: 1, position: [0,0,1] }}
             gl={{ antialias: true, alpha: true }}
-            style={{ position: 'absolute', top:0, left:0, width:'100vw', height:'100vh', pointerEvents:'none', zIndex:9999 }}
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                pointerEvents: 'none',
+                zIndex: 9997  // send canvas behind page
+            }}
         >
             <Suspense fallback={null}>
                 <GPUTrailEffectWithBackground />

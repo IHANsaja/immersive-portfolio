@@ -158,7 +158,7 @@ export default function AnimatedHoverButton({
                 />
                 <span
                     ref={textRef}
-                    className="hover-text w-full h-full flex justify-center items-center font-inconsolata-sans tracking-widest"
+                    className="hover-text w-full h-full flex justify-center items-center font-inconsolata-sans text-[var(--foreground)] tracking-widest"
                 >
                     {label}
                 </span>

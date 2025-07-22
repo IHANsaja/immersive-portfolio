@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import AnimatedHoverButton from '@/components/Ui/button';
+import AnimatedHoverButton from '@/components/Ui/Button';
 import gsap from '../../app/utils/gsapClient';
 import {useGSAP} from "@gsap/react";
 

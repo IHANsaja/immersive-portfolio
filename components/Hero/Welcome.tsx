@@ -62,7 +62,7 @@ const Welcome = () => {
           md:text-6xl        /* medium ≥768px */
           lg:text-8xl        /* large ≥1024px */
           xl:text-[100px]    /* xl ≥1280px */
-          text-gray-200
+          text-[var(--foreground)]
           text-shadow-lg
           text-center
           whitespace-nowrap

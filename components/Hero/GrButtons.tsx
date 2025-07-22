@@ -1,10 +1,10 @@
 "use client";
 import React from 'react'
-import AnimatedHoverButton from "@/components/Ui/button";
+import AnimatedHoverButton from "@/components/Ui/Button";
 import {useGSAP} from "@gsap/react";
 import gsap from "@/app/utils/gsapClient";
 
-const GRbuttons = () => {
+const GrButtons = () => {
     const githubClick = () => {
         window.open('https://github.com/IHANsaja', '_blank');
     }
@@ -34,4 +34,4 @@ const GRbuttons = () => {
         </div>
     )
 }
-export default GRbuttons
+export default GrButtons
