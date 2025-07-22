@@ -17,14 +17,13 @@ function describeArc(x: number, y: number, radius: number, startAngle: number, e
     const start = polarToCartesian(x, y, radius, startAngle);
     const end = polarToCartesian(x, y, radius, endAngle);
     const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
-    const d = ['M', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 1, end.x, end.y, 'L', x, y, 'Z'].join(' ');
-    return d;
+    return ['M', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 1, end.x, end.y, 'L', x, y, 'Z'].join(' ');
 }
 
 interface NavItem {
     id: string;
     label: string;
-    icon: React.ElementType;
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     angle: number;
 }
 
@@ -117,15 +116,17 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
     const getClosestItem = useCallback((angle: number): NavItem | null => {
         const normalizedAngle = (angle + 360) % 360;
         let closestItem: NavItem | null = null;
-        let minDiff = 360;
+        let minDiff = Infinity;
+
         navItems.forEach(item => {
             let diff = Math.abs(normalizedAngle - item.angle);
             if (diff > 180) diff = 360 - diff;
-            if (diff < SLICE_DEGREE / 2) {
+            if (diff < minDiff && diff < SLICE_DEGREE / 2) {
                 minDiff = diff;
                 closestItem = item;
             }
         });
+
         return closestItem;
     }, []);
 
@@ -135,7 +136,7 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
     };
 
     const handleDragEnd = useCallback(() => {
-        if(isDragging) {
+        if (isDragging) {
             const closestItem = getClosestItem(joystickAngle);
             if (closestItem) {
                 setActiveItem(closestItem.id);
@@ -151,7 +152,7 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
         const angle = getJoystickAngle(e);
         setJoystickAngle(angle);
         const DRAG_DISTANCE = containerSize > 400 ? 12 : 8;
-        const angleRad = (angle - 90) * Math.PI/180;
+        const angleRad = (angle - 90) * Math.PI / 180;
         setJoystickOffset({
             x: DRAG_DISTANCE * Math.cos(angleRad),
             y: DRAG_DISTANCE * Math.sin(angleRad)
@@ -179,10 +180,10 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
     }, [showPopup, handleDragMove, handleDragEnd]);
 
     const handleClose = () => {
-        playSound(clickAudioRef); // just trigger sound
+        playSound(clickAudioRef);
         setTimeout(() => {
-            onClose(); // wait before unmounting
-        }, 200); // 100–200ms works well for short click sounds
+            onClose();
+        }, 200);
     };
 
     return (
@@ -223,38 +224,47 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
                             >
                                 <X size={28} />
                             </motion.button>
-                            <div className="absolute inset-0 w-full h-full bg-black rounded-full bg-[radial-gradient(#222_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                            <div className="absolute inset-0 w-full h-full bg-black rounded-full bg-[radial-gradient(#222_1px,transparent_1px)] [background-size:16px_16px]" />
                             <motion.div className="relative w-full h-full rounded-full bg-[#191919] backdrop-blur-sm border border-gray-700/50 shadow-[0_0_80px_rgba(0,180,255,0.2)]">
-                                {containerSize > 0 && <svg className="absolute inset-0 w-full h-full">
-                                    <g transform={`translate(${containerSize / 2}, ${containerSize / 2})`}>
-                                        {navItems.map(item => {
-                                            const isActive = activeItem === item.id;
-                                            return (
-                                                <motion.path
-                                                    key={item.id}
-                                                    d={describeArc(0, 0, containerSize / 2, item.angle - SLICE_DEGREE / 2, item.angle + SLICE_DEGREE / 2)}
-                                                    onMouseEnter={() => handleMouseEnter(item.id)}
-                                                    onMouseLeave={() => setActiveItem(null)}
-                                                    onClick={() => handleClick(item.id)}
-                                                    className="cursor-pointer"
-                                                    initial={{ fill: 'rgba(255, 255, 255, 0)' }}
-                                                    animate={{ fill: isActive ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0)' }}
-                                                    transition={{ duration: 0.3 }}
-                                                />
-                                            );
-                                        })}
-                                    </g>
-                                </svg>}
+                                {containerSize > 0 && (
+                                    <svg className="absolute inset-0 w-full h-full">
+                                        <g transform={`translate(${containerSize / 2}, ${containerSize / 2})`}>
+                                            {navItems.map(item => {
+                                                const isActive = activeItem === item.id;
+                                                return (
+                                                    <motion.path
+                                                        key={item.id}
+                                                        d={describeArc(0, 0, containerSize / 2, item.angle - SLICE_DEGREE / 2, item.angle + SLICE_DEGREE / 2)}
+                                                        onMouseEnter={() => handleMouseEnter(item.id)}
+                                                        onMouseLeave={() => setActiveItem(null)}
+                                                        onClick={() => handleClick(item.id)}
+                                                        className="cursor-pointer"
+                                                        initial={{ fill: 'rgba(255, 255, 255, 0)' }}
+                                                        animate={{ fill: isActive ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0)' }}
+                                                        transition={{ duration: 0.3 }}
+                                                    />
+                                                );
+                                            })}
+                                        </g>
+                                    </svg>
+                                )}
                                 {[...Array(navItems.length)].map((_, i) => (
-                                    <div key={i} className="absolute top-1/2 left-1/2 w-1/2 h-px bg-gray-700/50 origin-left" style={{ transform: `rotate(${i * SLICE_DEGREE - 90}deg)` }} />
+                                    <div
+                                        key={i}
+                                        className="absolute top-1/2 left-1/2 w-1/2 h-px bg-gray-700/50 origin-left"
+                                        style={{ transform: `rotate(${i * SLICE_DEGREE - 90}deg)` }}
+                                    />
                                 ))}
-                                {navItems.map((item) => {
+                                {navItems.map(item => {
                                     const radius = containerSize * 0.35;
                                     const itemSize = containerSize * 0.2;
                                     const angleRad = (item.angle - 90) * (Math.PI / 180);
                                     const x = (containerSize / 2) + (radius * Math.cos(angleRad)) - (itemSize / 2);
                                     const y = (containerSize / 2) + (radius * Math.sin(angleRad)) - (itemSize / 2);
                                     const isActive = activeItem === item.id;
+
+                                    const Icon = item.icon;
+
                                     return (
                                         <motion.div
                                             key={item.id}
@@ -263,7 +273,7 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
                                             animate={{ scale: isActive ? 1.1 : 1, color: isActive ? '#fff' : '#9ca3af' }}
                                             transition={{ duration: 0.3 }}
                                         >
-                                            <item.icon className="w-[30%] h-[30%] mb-1" />
+                                            <Icon className="w-[30%] h-[30%] mb-1" />
                                             <span className="text-[10px] sm:text-xs md:text-sm tracking-wider">{item.label}</span>
                                         </motion.div>
                                     );
@@ -276,13 +286,13 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
                                 onTouchStart={handleDragStart}
                             >
                                 <motion.div className="relative w-full h-full rounded-full bg-[#202020] border-2 border-gray-600 flex items-center justify-center cursor-grab" whileTap={{ scale: 0.95, cursor: 'grabbing' }}>
-                                    <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.1)_0%,_transparent_60%)]"></div>
+                                    <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.1)_0%,_transparent_60%)]" />
                                     <motion.div
                                         className="w-[62.5%] h-[62.5%] rounded-full bg-[#121212] shadow-inner flex items-center justify-center"
                                         animate={{ rotate: isDragging ? joystickAngle : 0, x: joystickOffset.x, y: joystickOffset.y }}
                                         transition={{ ease: "easeOut", duration: isDragging ? 0.1 : 0.4 }}
                                     >
-                                        <Image  src="/logo.png" alt="Ihan logo" width={50} height={50} />
+                                        <Image src="/logo.png" alt="Ihan logo" width={50} height={50} />
                                     </motion.div>
                                 </motion.div>
                             </div>
