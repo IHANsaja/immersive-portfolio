@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 
 const Welcome = () => {
 
-    let tl = gsap.timeline();
+    const tl = gsap.timeline();
 
     useGSAP(() => {
         const timeout = setTimeout(() => {
