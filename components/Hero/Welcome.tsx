@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import gsap from "../../app/utils/gsapClient";
+import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 

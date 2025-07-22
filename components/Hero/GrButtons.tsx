@@ -2,7 +2,7 @@
 import React from 'react'
 import AnimatedHoverButton from "@/components/Ui/Button";
 import {useGSAP} from "@gsap/react";
-import gsap from "@/app/utils/gsapClient";
+import gsap from "gsap";
 
 const GrButtons = () => {
     const githubClick = () => {

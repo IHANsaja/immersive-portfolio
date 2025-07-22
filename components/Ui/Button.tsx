@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useRef, useLayoutEffect, MouseEventHandler, useEffect } from 'react';
-import gsap from '../../app/utils/gsapClient'; // Make sure this path is correct
+import gsap from 'gsap'; // Make sure this path is correct
 
 interface AnimatedHoverButtonProps {
     text?: string;

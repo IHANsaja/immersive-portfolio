@@ -2,7 +2,7 @@
 
 import React from 'react';
 import AnimatedHoverButton from '@/components/Ui/Button';
-import gsap from '../../app/utils/gsapClient';
+import gsap from 'gsap';
 import {useGSAP} from "@gsap/react";
 
 interface MenuButtonProps {
