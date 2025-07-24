@@ -12,6 +12,7 @@
   --color-foreground: var(--foreground);
   --font-inconsolata-sans: var(--font-inconsolata-sans), sans-serif;
   --font-neotriad-sans: var(--font-neotriad-sans), sans-serif;
+  --font-andvari-sans: var(--font-andvari-sans), sans-serif;
 }
 
 body {

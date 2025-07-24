@@ -14,6 +14,12 @@ const NeotriadSans = localFont({
     display: 'swap', // Recommended for better performance/user experience
 });
 
+const AndvariSans = localFont({
+    variable: '--font-andvari-sans',
+    src: '../public/fonts/andvari.ttf', // ✅ Correct path relative to the file in `app` or `pages`
+    display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: "Ihan Hansaja",
   description: "Portfolio of Ihan Hansaja",
@@ -27,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${InconsolataSans.variable} ${NeotriadSans.variable} antialiased`}
+        className={`${InconsolataSans.variable} ${NeotriadSans.variable} ${AndvariSans.variable} antialiased`}
       >
         {children}
       </body>
