@@ -41,7 +41,7 @@ const AnimatedSvg = () => {
 
         const emptyBoxDuration = 4000;
         const filledBoxDuration = 4000;
-        const secondEmptyBoxDuration = 3980;
+        const secondEmptyBoxDuration = 4000;
 
         let startTime: number | undefined;
         let loopCount = 0;
@@ -68,7 +68,7 @@ const AnimatedSvg = () => {
             const { x: x1, y: y1 } = path.getPointAtLength(emptyProgress * pathLength);
             const emptyW = parseFloat(emptyBox.getAttribute('width') || '0');
             const emptyH = parseFloat(emptyBox.getAttribute('height') || '0');
-            const emptyScale = 0.42813;
+            const emptyScale = 0.5;
             emptyBox.setAttribute('transform', `translate(${x1 - (emptyW * emptyScale) / 2} ${y1 - (emptyH * emptyScale) / 2}) scale(${emptyScale})`);
 
             // Animate filledBox
@@ -76,16 +76,16 @@ const AnimatedSvg = () => {
             const { x: x2, y: y2 } = path.getPointAtLength(filledProgress * pathLength);
             const filledW = parseFloat(filledBox.getAttribute('width') || '0');
             const filledH = parseFloat(filledBox.getAttribute('height') || '0');
-            const filledScale = 1 + filledProgress * (2.5 - 1);
+            const filledScale = 0.5 + filledProgress * (1.5 - 1);
             filledBox.setAttribute('transform', `translate(${x2 - (filledW * filledScale) / 2} ${y2 - (filledH * filledScale) / 2}) scale(${filledScale})`);
 
             // Animate secondEmptyBox
             if (secondEmptyBox) {
-                const secondProgress = calculatePingPongProgress(elapsedTime, secondEmptyBoxDuration);
+                const secondProgress = calculatePingPongProgress(elapsedTime + 100, secondEmptyBoxDuration);
                 const { x: x3, y: y3 } = path.getPointAtLength(secondProgress * pathLength);
                 const secondW = parseFloat(secondEmptyBox.getAttribute('width') || '0');
                 const secondH = parseFloat(secondEmptyBox.getAttribute('height') || '0');
-                const secondScale = 0.42813;
+                const secondScale = 0.2 + secondProgress * (0.5);
                 secondEmptyBox.setAttribute('transform', `translate(${x3 - (secondW * secondScale) / 2} ${y3 - (secondH * secondScale) / 2}) scale(${secondScale})`);
             }
 

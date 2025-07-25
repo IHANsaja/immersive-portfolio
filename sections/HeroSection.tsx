@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import GPUFluidCanvas from "@/components/Ui/HoverEffect";
 import Image from "next/image";
 import Spline from "@splinetool/react-spline";
@@ -7,24 +6,6 @@ import Menu from "@/components/Hero/Menu";
 import Welcome from "@/components/Hero/Welcome";
 
 const HeroSection = () => {
-    useEffect(() => {
-        const handleWheel = (e: WheelEvent) => {
-            if (e.deltaY > 0) {
-                // Scroll to next section smoothly
-                const nextSection = document.querySelector("#next-section");
-                if (nextSection) {
-                    nextSection.scrollIntoView({ behavior: "smooth" });
-                }
-            }
-        };
-
-        const scene = document.getElementById("scene");
-        scene?.addEventListener("wheel", handleWheel, { passive: true });
-
-        return () => {
-            scene?.removeEventListener("wheel", handleWheel);
-        };
-    }, []);
 
     return (
         <section id="hero-section" className="relative w-screen h-screen">
@@ -57,10 +38,6 @@ const HeroSection = () => {
 
             <div className="absolute top-0 left-0 w-screen flex justify-end gap-8 items-center z-[10000]">
                 <GrButtons />
-            </div>
-
-            <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-[10000]">
-                <Menu />
             </div>
 
             <Welcome />

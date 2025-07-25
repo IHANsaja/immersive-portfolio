@@ -7,6 +7,8 @@ import { ScrollTrigger, ScrollSmoother, ScrambleTextPlugin } from "gsap/all";
 
 import HeroSection from "@/sections/HeroSection";
 import AboutSection from "@/sections/AboutSection";
+import Menu from "@/components/Hero/Menu";
+import ProjectsSection from "@/sections/ProjectsSection";
 
 // Register plugins
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrambleTextPlugin);
@@ -28,7 +30,11 @@ const Home = () => {
                 <div id="smooth-content">
                     <HeroSection />
                     <AboutSection />
+                    <ProjectsSection />
                 </div>
+            </div>
+            <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-[10000]">
+                <Menu />
             </div>
         </main>
     );

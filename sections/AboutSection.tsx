@@ -4,9 +4,11 @@ import React, { useRef } from "react";
 import ModelViewerPage from "@/components/About/ModelView";
 import AnimatedHoverButton from "@/components/Ui/Button";
 import AnimatedSvg from "@/components/Ui/AnimatedSvg";
+import PoliceLights from "@/components/Ui/PoliceLights";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
+import Menu from "@/components/Hero/Menu";
 
 gsap.registerPlugin(SplitText);
 
@@ -91,7 +93,7 @@ const AboutSection = () => {
     return (
         <section
             id="about-section"
-            className="w-screen h-screen flex flex-row gap-40 bg-[var(--background)] text-white relative"
+            className="w-screen h-screen flex flex-row gap-40 bg-[var(--background)] text-[#f0dbee] relative"
         >
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
@@ -117,59 +119,79 @@ const AboutSection = () => {
                 <div className="h-1/2 mt-20 ml-10 px-12 pt-40 flex flex-row justify-start items-start gap-10 w-full">
                     {/* Basic Info */}
                     <div>
+                        <PoliceLights rectHeight={30} rectWidth={70} />
+                        <br />
+                        {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
                         <p className="scramble font-andvari-sans uppercase text-[11px] mb-2">// basic info</p>
                         <p className="scramble font-andvari-sans text-[11px]">
-                            name → "Ihan Hansaja"
+                            name → &quot;Ihan Hansaja&quot;
                         </p>
                         <p className="scramble font-andvari-sans text-[11px]">
-                            location → "Kotikawatta"
+                            location → &quot;Kotikawatta&quot;
                         </p>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <p className="font-andvari-sans text-[11px]">
+                            &lt;meta charset=&quot;UTF-8&quot;&gt;
+                        </p>
+                        <br />
+                        <br />
+                        <p className="font-inconsolata-sans-sans w-full text-2xl">+ + + +</p>
                     </div>
 
                     {/* Skills */}
                     <div>
+                        {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
                         <p className="scramble font-andvari-sans uppercase text-[11px] mb-2">// areas of expertise</p>
                         <p className="scramble font-andvari-sans uppercase text-[11px]">
-                            [" Full‑Stack Development ",
+                            [&quot; Full‑Stack Development &quot;,
                         </p>
                         <p className="scramble font-andvari-sans uppercase text-[11px]">
-                            " Front‑End Development ",
+                            &quot; Front‑End Development &quot;,
                         </p>
                         <p className="scramble font-andvari-sans uppercase text-[11px]">
-                            " Back‑End Development ",
+                            &quot; Back‑End Development &quot;,
                         </p>
                         <p className="scramble font-andvari-sans uppercase text-[11px]">
-                            " UI/UX Design ",
+                            &quot; UI/UX Design &quot;,
                         </p>
                         <p className="scramble font-andvari-sans uppercase text-[11px]">
-                            " AI Engineering ",
+                            &quot; AI Engineering &quot;,
                         </p>
                         <p className="scramble font-andvari-sans uppercase text-[11px]">
-                            " Machine Learning Engineering "]
+                            &quot; Machine Learning Engineering &quot;]
                         </p>
                         <br />
                         <br />
-                        <p className="scramble font-andvari-sans uppercase text-[11px] mb-2">// what i'm building</p>
+                        {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
+                        <p className="scramble font-andvari-sans uppercase text-[11px] mb-2">// what i&apos;m building</p>
                         <p className="scramble font-andvari-sans uppercase text-[11px]">
-                            [" AI‑driven Web Apps ",
+                            [&quot; AI‑driven Web Apps &quot;,
                         </p>
                         <p className="scramble font-andvari-sans uppercase text-[11px]">
-                            " Immersive Websites ",
+                            &quot; Immersive Websites &quot;,
                         </p>
                         <p className="scramble font-andvari-sans uppercase text-[11px]">
-                            " AI SaaS Platforms ",
+                            &quot; AI SaaS Platforms &quot;,
                         </p>
                         <p className="scramble font-andvari-sans uppercase text-[11px]">
-                            " Machine Learning Models "]
+                            &quot; Machine Learning Models &quot;]
                         </p>
                         <br />
                         <br />
                     </div>
                 </div>
 
-                {/* LEFT SVG */}
-                <div className="svgGsap h-1/2 w-full ml-30 hidden md:flex justify-start items-center">
-                    <AnimatedSvg />
+                    {/* LEFT SVG */}
+                <div className="h-1/2 w-full ml-30 hidden md:flex flex-col justify-center items-start">
+                    <div className="svgGsap">
+                        <AnimatedSvg />
+                    </div>
+                    <div className="font-inconsalata-sans w-full text-2xl flex justify-center items-center">
+                        + + + +
+                    </div>
                 </div>
             </div>
 
@@ -179,23 +201,28 @@ const AboutSection = () => {
             </div>
 
             {/* RIGHT SIDE: INTRO & PARAGRAPH */}
-            <div className="w-1/2 flex flex-col justify-center items-end gap-10 px-8 mr-20 text-right text-[var(--foreground)] leading-5 tracking-wider">
-                <h1 className="scramble font-neotriad-sans text-4xl">Hey I am IHAN HANSAJA</h1>
+            <div className="w-1/2 flex flex-col px-8 mr-20  text-[var(--foreground)] leading-5 tracking-wider">
+                <div className="w-full h-1/3 ml-20 flex justify-start items-center text-2xl font-inconsolata-sans">
+                    + + + +
+                </div>
+                <div className="w-full h-2/3 text-right flex flex-col justify-start items-end gap-10">
+                    <h1 className="scramble font-neotriad-sans text-4xl">Hey I am IHAN HANSAJA</h1>
 
-                <p
-                    ref={paragraphRef}
-                    className="font-andvari-sans max-w-xl text-[11px] leading-relaxed"
-                >
-                    I am a Software Engineering undergraduate with a strong passion for
-                    building efficient, user-centric applications.
-                    I enjoy solving real-world problems through clean code, intuitive
-                    design, and continuous learning. Whether it's creating
-                    scalable systems or crafting interactive frontends, I thrive in
-                    collaborative environments that push my technical and creative
-                    boundaries.
-                </p>
-                <div className="buttonGsap">
-                    <AnimatedHoverButton bgColor={"#3F51B5"} text="PROJECTS" />
+                    <p
+                        ref={paragraphRef}
+                        className="font-andvari-sans max-w-xl text-[11px] leading-relaxed"
+                    >
+                        I am a Software Engineering undergraduate with a strong passion for
+                        building efficient, user-centric applications.
+                        I enjoy solving real-world problems through clean code, intuitive
+                        design, and continuous learning. Whether it&apos;s creating
+                        scalable systems or crafting interactive frontends, I thrive in
+                        collaborative environments that push my technical and creative
+                        boundaries.
+                    </p>
+                    <div className="buttonGsap">
+                        <AnimatedHoverButton bgColor={"#3F51B5"} text="PROJECTS" />
+                    </div>
                 </div>
 
             </div>
