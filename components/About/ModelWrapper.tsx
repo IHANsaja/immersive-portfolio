@@ -202,7 +202,7 @@ export default function ModelWrapper({
             className="fixed top-0 left-0 z-10 w-screen h-screen pointer-events-none"
             style={{ opacity: 0 }}
         >
-            <Canvas camera={{ fov: 35 }}>
+            <Canvas camera={{ fov: 35 }} style={{ pointerEvents: 'none' }}>
                 <SceneContent
                     initialCameraPos={cameraPosition}
                     initialModelPos={modelPosition}
