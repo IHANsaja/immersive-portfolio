@@ -48,6 +48,8 @@ export function Model(props: JSX.IntrinsicElements['group']) {
     // The 'nodes' object will be populated once the GLTF is loaded.
     const { nodes, materials } = useGLTF('/models/ihan.glb') as unknown as GLTFResult;
 
+    console.log(nodes);
+
     // We use useGSAP for proper animation setup and cleanup in React.
     useGSAP(() => {
         // 1. Create a GSAP context. This allows us to properly manage and
@@ -65,52 +67,189 @@ export function Model(props: JSX.IntrinsicElements['group']) {
             if (neck) {
                 // 3. Set the initial state: head looking down.
                 // A positive rotation on the X-axis tilts the head forward.
-                gsap.set(neck.rotation, { x: 1.5 });
+                gsap.set(neck.rotation, { x: 0.6, y: 0, z: 0 });
 
-                // 4. Create the scroll-based animation.
-                gsap.to(neck.rotation, {
-                    x: 0.6, // Animate to the neutral rotation.
-                    ease: 'power1.inOut',
-                    scrollTrigger: {
-                        // ⚠️ IMPORTANT: This selector MUST match an element in your HTML/JSX.
-                        trigger: '#about-section',
-                        start: 'top bottom', // When the trigger's top hits the viewport's bottom
-                        end: 'top top',   // When the trigger's top hits the viewport's top
-                        scrub: true,      // Smoothly link animation to scroll progress
-                    },
-                });
+                // 4. Create a timeline for neck animations for better coordination
+                const neckTimeline = gsap.timeline();
+
+                // About section - head looking down
+                neckTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#about-section',
+                            start: 'top bottom',
+                            end: 'top top',
+                            scrub: 0.8, // Add higher smoothing factor for neck rotation
+                        }
+                    }).to(neck.rotation, { x: 0.6, y: 0, z: 0, duration: 1, ease: 'power2.inOut' })
+                );
+
+                // Projects section - head turning right
+                neckTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#projects-section',
+                            start: 'top center',
+                            end: 'top top',
+                            scrub: 0.8, // Add higher smoothing factor for neck rotation
+                        }
+                    }).to(neck.rotation, { x: 0.6, y: 0.5, z: 0, duration: 1, ease: 'power2.inOut' })
+                );
+
+                // Skills section - head turning left
+                neckTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#skill-section',
+                            start: 'top center',
+                            end: 'top top',
+                            scrub: 0.8, // Add higher smoothing factor for neck rotation
+                        }
+                    }).to(neck.rotation, { x: 0.6, y: -0.5, z: 0, duration: 1, ease: 'power2.inOut' })
+                );
+
+                // Contact section - head looking forward
+                neckTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#contact-section',
+                            start: 'top center',
+                            end: 'top top',
+                            scrub: 0.8, // Add higher smoothing factor for neck rotation
+                        }
+                    }).to(neck.rotation, { x: 0, y: 0, z: 0, duration: 1, ease: 'power2.inOut' })
+                );
             } else {
                 // Helpful for debugging if the bone name is wrong
                 console.warn("GSAP animation failed: 'Neck' bone not found in the model.");
             }
 
-            // --- NEW: HAND/ARM ANIMATION ---
-            // 1. Find the arm bones by name. Check your console log for exact names.
-            // Common names are 'LeftArm', 'RightArm', 'LeftHand', etc.
+            // --- HAND/ARM ANIMATION ---
+            // 1. Find the arm bones by name
             const leftArm = groupRef.current.getObjectByName('LeftArm');
             const rightArm = groupRef.current.getObjectByName('RightArm');
 
             // 2. Animate the arms if they are found.
             if (leftArm && rightArm) {
-                // Set the initial rotation for the arms (e.g., slightly down and back).
-                gsap.set([leftArm.rotation, rightArm.rotation], {
-                    x: 1.8, // Rotated forward/down
-                });
+                // Set the initial rotation for the arms
+                gsap.set([leftArm.rotation, rightArm.rotation], { x: 1.3, y: 0, z: 0 });
 
-                // Create a scroll-based animation to raise the arms.
-                gsap.to([leftArm.rotation, rightArm.rotation], {
-                    x: 1.3, // Raise arms up
-                    ease: 'power1.inOut',
-                    scrollTrigger: {
-                        trigger: '#about-section',
-                        start: 'top bottom',
-                        end: 'top top',
-                        scrub: true,
-                    },
-                });
+                // Create a timeline for both arms
+                const armsTimeline = gsap.timeline();
+
+                armsTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#about-section',
+                            start: 'top bottom',
+                            end: 'top top',
+                            scrub: 0.7, // Add smoothing factor for arm rotation
+                        }
+                    }).to([leftArm.rotation, rightArm.rotation], { x: 1.3, y: 0, z: 0, duration: 1.2, ease: 'power2.inOut' })
+                );
             } else {
                 console.warn("GSAP animation failed: 'LeftArm' or 'RightArm' bones not found.");
             }
+
+            if (leftArm) {
+                // Create a timeline for left arm animations
+                const leftArmTimeline = gsap.timeline();
+
+                // About section
+                leftArmTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#about-section',
+                            start: 'top bottom',
+                            end: 'top top',
+                            scrub: 0.7, // Add smoothing factor for arm rotation
+                        }
+                    }).to(leftArm.rotation, { x: 1.3, y: 0, z: 0, duration: 1.2, ease: 'power2.inOut' })
+                );
+
+                // Skill section
+                leftArmTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#skill-section',
+                            start: 'top bottom',
+                            end: 'top top',
+                            scrub: 0.7, // Add smoothing factor for arm rotation
+                        }
+                    }).to(leftArm.rotation, { x: 1.3, y: 0, z: 0, duration: 1.2, ease: 'power2.inOut' })
+                );
+
+                // Contact section
+                leftArmTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#contact-section',
+                            start: 'top bottom',
+                            end: 'top top',
+                            scrub: 0.7, // Add smoothing factor for arm rotation
+                        }
+                    }).to(leftArm.rotation, { x: 0.7, y: -0.2, z: 0.7, duration: 1.2, ease: 'power2.inOut' })
+                );
+            }
+
+            const leftForeArm = groupRef.current.getObjectByName('LeftForeArm');
+
+            if (leftForeArm) {
+                // Set initial state
+                gsap.set(leftForeArm.rotation, { x: 0, y: 0, z: 0 });
+
+                // Create a timeline for left forearm animations
+                const leftForeArmTimeline = gsap.timeline();
+
+                // About section
+                leftForeArmTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#about-section',
+                            start: 'top center',
+                            end: 'bottom bottom',
+                            scrub: 0.7, // Add smoothing factor for forearm rotation
+                        }
+                    }).to(leftForeArm.rotation, { x: -0.1, y: 0, z: 0.4, duration: 1.2, ease: 'power2.inOut' })
+                );
+
+                // Projects section
+                leftForeArmTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#projects-section',
+                            start: 'top center',
+                            end: 'bottom bottom',
+                            scrub: 0.7, // Add smoothing factor for forearm rotation
+                        }
+                    }).to(leftForeArm.rotation, { x: 1, y: -1, z: 2, duration: 1.2, ease: 'power2.inOut' })
+                );
+
+                // Skill section
+                leftForeArmTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#skill-section',
+                            start: 'top center',
+                            end: 'bottom bottom',
+                            scrub: 0.7, // Add smoothing factor for forearm rotation
+                        }
+                    }).to(leftForeArm.rotation, { x: 0, y: 0, z: 0, duration: 1.2, ease: 'power2.inOut' })
+                );
+
+                // Contact section
+                leftForeArmTimeline.add(
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: '#contact-section',
+                            start: 'top center',
+                            end: 'bottom bottom',
+                            scrub: 0.7, // Add smoothing factor for forearm rotation
+                        }
+                    }).to(leftForeArm.rotation, { x: -0.8, y: -0.6, z: 1.3, duration: 1.2, ease: 'power2.inOut' })
+                );
+            }
+
         });
 
         // 5. Cleanup function. This will be called when the component unmounts,

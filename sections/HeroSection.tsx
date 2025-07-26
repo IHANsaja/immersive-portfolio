@@ -2,7 +2,6 @@ import GPUFluidCanvas from "@/components/Ui/HoverEffect";
 import Image from "next/image";
 import Spline from "@splinetool/react-spline";
 import GrButtons from "@/components/Hero/GrButtons";
-import Menu from "@/components/Hero/Menu";
 import Welcome from "@/components/Hero/Welcome";
 
 const HeroSection = () => {
@@ -42,7 +41,7 @@ const HeroSection = () => {
 
             <Welcome />
 
-            <div className="absolute bottom-0 left-0 w-full flex justify-center z-[9999] pointer-events-none mix-blend-plus-darker">
+            <div className="absolute bottom-0 left-0 w-full flex justify-center z-[9990] pointer-events-none mix-blend-plus-darker">
                 <img
                     src="/PlanetRocks.png"
                     alt="planet rocks"
