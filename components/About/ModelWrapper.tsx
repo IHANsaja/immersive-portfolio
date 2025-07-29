@@ -180,7 +180,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
         <>
             <ambientLight intensity={0.5} />
             <directionalLight position={[5, 5, 5]} intensity={0.5} />
-            <Environment files="/hdr/venice_sunset.hdr" />
+            <Environment files="/hdr/sunset.hdr" />
 
             {/* <-- Wrap in a group so we can animate it */}
             <group ref={modelRef}>
