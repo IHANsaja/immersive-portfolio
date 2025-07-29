@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #1c2542;
+  --background: #11172d;
   --foreground: #f0dbee;
   --clip-cut-size: 10px;
   --clip-border-color: #121212;
@@ -164,5 +164,11 @@ html, body {
   /* opacity: 0.3; */
   pointer-events: none;
   transition: border-color 0.3s ease-in-out;
+}
+
+@layer utilities {
+  .card {
+    @apply relative h-[110px] w-[110px] rounded-sm p-2 flex items-center justify-center bg-foreground;
+  }
 }
 

@@ -7,6 +7,7 @@ import PoliceLights from "@/components/Ui/PoliceLights";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
+import Image from "next/image";
 
 gsap.registerPlugin(SplitText);
 
@@ -71,16 +72,29 @@ const AboutSection = () => {
         });
 
         gsap.from('.buttonGsap', {
-            duration: 4,
-            opacity: 0,
-            x: 300,
-            delay: 2,
+            delay: 4,
+            duration: 1,
+            scaleX: 0,
+            ease: "power2.in",
             scrollTrigger: {
                 trigger: "#about-section",
                 start: "top 60%",
                 toggleActions: "restart none none none",
             }
         });
+
+        gsap.from('.card', {
+            delay: 4,
+            duration: 1,
+            scaleY: 0,
+            ease: "power2.in",
+            stagger: 0.3,
+            scrollTrigger: {
+                trigger: "#about-section",
+                start: "top 60%",
+                toggleActions: "restart none none none",
+            }
+        })
 
         return () => {
             split.revert();
@@ -197,10 +211,10 @@ const AboutSection = () => {
 
             {/* RIGHT SIDE: INTRO & PARAGRAPH */}
             <div className="w-1/2 flex flex-col px-8 mr-20  text-[var(--foreground)] leading-5 tracking-wider">
-                <div className="w-full h-1/3 ml-20 flex justify-start items-center text-2xl font-inconsolata-sans">
+                <div className="w-full h-1/5 ml-20 mt-20 flex justify-start items-center text-2xl font-inconsolata-sans">
                     + + + +
                 </div>
-                <div className="w-full h-2/3 text-right flex flex-col justify-start items-end gap-10">
+                <div className="w-full h-2/5 text-right flex flex-col justify-start items-end gap-10">
                     <h1 className="scramble font-neotriad-sans text-4xl">Hey I am IHAN HANSAJA</h1>
 
                     <p
@@ -219,7 +233,60 @@ const AboutSection = () => {
                         <AnimatedHoverButton bgColor={"#3F51B5"} text="PROJECTS" />
                     </div>
                 </div>
+                <div className="w-full h-2/5 flex flex-col justify-ceneter items-end gap-25 text-2xl font-inconsolata-sans z-10">
+                    <h1 className="scramble font-neotriad-sans text-4xl">Education</h1>
+                    <div className="flex flex-row justify-start items-center gap-10">
+                        <div className="h-full hidden md:flex justify-center items-end mr-10">
+                            <PoliceLights rectHeight={30} rectWidth={70} />
+                        </div>
+                        <div className="card">
+                            <svg
+                                width="100"
+                                height="200"
+                                viewBox="0 0 100 200"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                            >
+                                <path
+                                    d="M62 0C64.2091 6.44256e-08 66 1.79086 66 4V13H96C98.2091 13 100 14.7909 100 17V209C100 211.209 98.2091 213 96 213H4C1.79086 213 0 211.209 0 209V4C0 1.79086 1.79086 6.44256e-08 4 0H62Z"
+                                    fill="#3F51B5"
+                                />
+                            </svg>
+                            <Image
+                                src="/DSlogo.png"
+                                alt="DS senanayake college school logo"
+                                height={70}
+                                width={70}
+                                className="relative z-10"
+                            />
+                        </div>
+                        <div className="card">
+                            <svg
+                                width="100"
+                                height="200"
+                                viewBox="0 0 100 200"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                            >
+                                <path
+                                    d="M62 0C64.2091 6.44256e-08 66 1.79086 66 4V13H96C98.2091 13 100 14.7909 100 17V209C100 211.209 98.2091 213 96 213H4C1.79086 213 0 211.209 0 209V4C0 1.79086 1.79086 6.44256e-08 4 0H62Z"
+                                    fill="#3F51B5"
+                                />
+                            </svg>
+                            <Image
+                                src="/cinecLogo.png"
+                                alt="cinec campus logo"
+                                height={80}
+                                width={80}
+                                className="relative z-10"
+                            />
+                        </div>
+                    </div>
 
+
+                </div>
             </div>
         </section>
     );

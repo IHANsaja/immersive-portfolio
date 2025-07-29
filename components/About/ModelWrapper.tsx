@@ -18,7 +18,7 @@ interface ModelWrapperProps {
 interface SceneContentProps {
     initialCameraPos: [number, number, number];
     initialModelPos: [number, number, number];
-    sceneRef: React.RefObject<HTMLDivElement>;
+    sceneRef: React.RefObject<HTMLDivElement | null>;
 }
 
 function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneContentProps) {
@@ -43,11 +43,11 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
                 gsap.timeline({
                     scrollTrigger: {
                         trigger: "#about-section",
-                        start: "20% top",
+                        start: "19% top",
                         end: "40% bottom",
                         scrub: 0.5,
                     }
-                }).to(sceneRef.current, { opacity: 1, duration: 1, ease: "power2.inOut" })
+                }).to(sceneRef.current, { opacity: 1, duration: 1, ease: "circ.inOut" })
             );
 
             masterTimeline.add(
@@ -58,7 +58,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
                         end: "60% bottom",
                         scrub: 0.5,
                     }
-                }).to(sceneRef.current, { x: -1000, duration: 1.2, ease: "power3.inOut" })
+                }).to(sceneRef.current, { x: -1000, duration: 1.2, ease: "circ.inOut" })
             );
 
             masterTimeline.add(
@@ -69,7 +69,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
                         end: "80% bottom",
                         scrub: 0.5,
                     }
-                }).to(sceneRef.current, { x: 500, duration: 1.2, ease: "power3.inOut" })
+                }).to(sceneRef.current, { x: 500, duration: 1.2, ease: "circ.inOut" })
             );
 
             masterTimeline.add(
@@ -80,7 +80,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
                         end: "100% bottom",
                         scrub: 0.5,
                     }
-                }).to(sceneRef.current, { x: 0, duration: 1.2, ease: "power3.inOut" })
+                }).to(sceneRef.current, { x: 0, duration: 1.2, ease: "circ.inOut" })
             );
 
             // Camera animations
@@ -94,7 +94,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
                         end: "60% bottom",
                         scrub: 0.7,
                     }
-                }).to(camera.position, { z: 4, duration: 1.5, ease: "power2.inOut" })
+                }).to(camera.position, { z: 4, duration: 1.5, ease: "circ.inOut" })
             );
 
             cameraTimeline.add(
@@ -105,7 +105,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
                         end: "80% bottom",
                         scrub: 0.7,
                     }
-                }).to(camera.position, { z: 2, duration: 1.5, ease: "power2.inOut" })
+                }).to(camera.position, { z: 2, duration: 1.5, ease: "circ.inOut" })
             );
 
             cameraTimeline.add(
@@ -116,7 +116,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
                         end: "100% bottom",
                         scrub: 0.7,
                     }
-                }).to(camera.position, { z: 1.5, duration: 1.5, ease: "power2.inOut" })
+                }).to(camera.position, { z: 1.5, duration: 1.5, ease: "circ.inOut" })
             );
 
             // Model position animations
@@ -130,7 +130,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
                         end: "60% bottom",
                         scrub: 0.6,
                     }
-                }).to(modelRef.current.position, { x: 1, z: -1.5, y: -1, duration: 1.3, ease: "power3.inOut" })
+                }).to(modelRef.current.position, { x: 1, z: -1.5, y: -1, duration: 1.3, ease: "circ.inOut" })
             );
 
             modelTimeline.add(
@@ -141,7 +141,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
                         end: "80% bottom",
                         scrub: 0.6,
                     }
-                }).to(modelRef.current.position, { x: 0, y: -1.5, z: 0, duration: 1.3, ease: "power3.inOut" })
+                }).to(modelRef.current.position, { x: 0, y: -1.5, z: 0, duration: 1.3, ease: "circ.inOut" })
             );
 
             modelTimeline.add(
