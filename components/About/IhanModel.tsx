@@ -48,8 +48,6 @@ export function Model(props: JSX.IntrinsicElements['group']) {
     // The 'nodes' object will be populated once the GLTF is loaded.
     const { nodes, materials } = useGLTF('/models/ihan.glb') as unknown as GLTFResult;
 
-    console.log(nodes);
-
     // We use useGSAP for proper animation setup and cleanup in React.
     useGSAP(() => {
         // 1. Create a GSAP context. This allows us to properly manage and

@@ -170,5 +170,51 @@ html, body {
   .card {
     @apply relative h-[110px] w-[110px] rounded-sm p-2 flex items-center justify-center bg-foreground;
   }
+  .project-card {
+    @apply bg-background border border-gray-500 rounded-sm w-full max-w-xl;
+  }
+
+  .square {
+    @apply h-10 w-10 rounded-sm bg-foreground;
+  }
+
+  .dot {
+    --uib-size: 20px;
+    --uib-speed: 2s;
+    --uib-color: #3F51B5;
+    position: relative;
+    height: var(--uib-size);
+    width: var(--uib-size);
+  }
+
+  .dot::before,
+  .dot::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 100%; /* rounded-full */
+    background-color: var(--uib-color);
+    animation: pulse7132 var(--uib-speed) linear infinite;
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  .dot::after {
+    animation-delay: calc(var(--uib-speed) / -2);
+  }
+
+  @keyframes pulse7132 {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
 }
 
