@@ -1,7 +1,6 @@
 import React, { FC, useState, useRef, useEffect } from 'react';
 import { FaCode } from 'react-icons/fa';
 import { animate, stagger, utils } from 'animejs';
-import anime from 'animejs';
 
 interface ProjectCardProps {
     title: string;
@@ -23,7 +22,8 @@ const ProjectCard: FC<ProjectCardProps> = ({
     const [initiated, setInitiated] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const animationRef = useRef<ReturnType<typeof anime> | null>(null);
+    const animationRef = useRef<ReturnType<typeof animate> | null>(null);
+    const videoRef = useRef<HTMLVideoElement | null>(null);
 
     const animateGrid = () => {
         const $sqs = containerRef.current?.querySelectorAll('.square');
@@ -119,11 +119,20 @@ const ProjectCard: FC<ProjectCardProps> = ({
                 ) : (
                     <>
                         {/* Video */}
-                        <div className="w-full aspect-video overflow-hidden">
+                        <div
+                            className="w-full aspect-video overflow-hidden"
+                            onMouseEnter={() => videoRef.current?.play()}
+                            onMouseLeave={() => {
+                                if (videoRef.current) {
+                                    videoRef.current.pause();
+                                    videoRef.current.currentTime = 0; // reset if needed
+                                }
+                            }}
+                        >
                             <video
+                                ref={videoRef}
                                 src={videoSrc}
                                 className="w-full h-full object-cover"
-                                autoPlay
                                 loop
                                 muted
                                 playsInline
