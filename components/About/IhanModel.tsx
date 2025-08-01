@@ -115,7 +115,7 @@ export function Model(props: JSX.IntrinsicElements['group']) {
                             end: 'top top',
                             scrub: 0.8, // Add higher smoothing factor for neck rotation
                         }
-                    }).to(neck.rotation, { x: 0, y: 0, z: 0, duration: 1, ease: 'power2.inOut' })
+                    }).to(neck.rotation, { x: 0, y: 0.5, z: 0, duration: 1, ease: 'power2.inOut' })
                 );
             } else {
                 // Helpful for debugging if the bone name is wrong
@@ -244,7 +244,7 @@ export function Model(props: JSX.IntrinsicElements['group']) {
                             end: 'bottom bottom',
                             scrub: 0.7, // Add smoothing factor for forearm rotation
                         }
-                    }).to(leftForeArm.rotation, { x: -0.8, y: -0.6, z: 1.3, duration: 1.2, ease: 'power2.inOut' })
+                    }).to(leftForeArm.rotation, { x: -1, y: -0.4, z: 1, duration: 1.2, ease: 'power2.inOut' })
                 );
             }
 

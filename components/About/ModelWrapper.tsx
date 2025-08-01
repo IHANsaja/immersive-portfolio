@@ -80,7 +80,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
                         end: "100% bottom",
                         scrub: 0.5,
                     }
-                }).to(sceneRef.current, { x: 0, duration: 1.2, ease: "circ.inOut" })
+                }).to(sceneRef.current, { x: -700, duration: 1.2, ease: "circ.inOut" })
             );
 
             // Camera animations
@@ -116,7 +116,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
                         end: "100% bottom",
                         scrub: 0.7,
                     }
-                }).to(camera.position, { z: 1.5, duration: 1.5, ease: "circ.inOut" })
+                }).to(camera.position, { z: 4, duration: 1.5, ease: "circ.inOut" })
             );
 
             // Model position animations
@@ -199,7 +199,7 @@ export default function ModelWrapper({
     return (
         <div
             ref={sceneRef}
-            className="fixed top-0 left-0 z-10 w-screen h-screen pointer-events-none"
+            className="fixed top-0 left-0 z-0 w-screen h-screen pointer-events-none"
             style={{ opacity: 0 }}
         >
             <Canvas camera={{ fov: 35 }} style={{ pointerEvents: 'none' }}>

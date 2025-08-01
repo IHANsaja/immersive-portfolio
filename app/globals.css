@@ -3,8 +3,11 @@
 :root {
   --background: #11172d;
   --foreground: #f0dbee;
+  --background-two: #11172d;
+  --background-three: #170815;
   --clip-cut-size: 10px;
   --clip-border-color: #121212;
+  --ex: #c1afbf;
 }
 
 @theme inline {
@@ -218,3 +221,35 @@ html, body {
   }
 }
 
+.futuristic-input {
+  background-color: transparent;
+  border: 1px solid #A43424;
+  color: #F9CF46;
+  font-family: 'Inconsolata', monospace;
+  padding: 0.5rem 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(249, 207, 70, 0.3);
+}
+
+.futuristic-input:focus {
+  border-color: #F9CF46;
+  box-shadow: 0 0 20px #F9CF46;
+}
+
+.futuristic-button {
+  background-color: #0a0a0a;
+  border: 2px solid #F9CF46;
+  color: #F9CF46;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: 'Inconsolata', monospace;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(249, 207, 70, 0.3);
+}
+
+.futuristic-button:hover {
+  background-color: #F9CF46;
+  color: #0a0a0a;
+  box-shadow: 0 0 20px #F9CF46, 0 0 40px #F9CF46;
+}

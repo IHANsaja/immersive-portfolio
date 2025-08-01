@@ -8,11 +8,35 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 import Image from "next/image";
+import ScrambledTextBlock from "@/components/About/EducationCard";
 
 gsap.registerPlugin(SplitText);
 
 const AboutSection = () => {
     const paragraphRef = useRef<HTMLParagraphElement>(null);
+    const line1 = useRef<HTMLSpanElement>(null);
+    const line2 = useRef<HTMLSpanElement>(null);
+    const line3 = useRef<HTMLSpanElement>(null);
+    const line4 = useRef<HTMLSpanElement>(null);
+
+        const hoverEnter = () => {
+            const lines = [line1, line2, line3, line4];
+
+            lines.forEach((ref, i) => {
+                if (ref.current) {
+                    gsap.to(ref.current, {
+                        duration: 1.2,
+                        delay: i * 0.1, // stagger effect
+                        scrambleText: {
+                            text: ref.current.innerText,
+                            chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()",
+                            speed: 1,
+                            revealDelay: 0.2,
+                        },
+                    });
+                }
+            });
+        };
 
     useGSAP(() => {
         if (!paragraphRef.current) return;
@@ -94,7 +118,7 @@ const AboutSection = () => {
                 start: "top 60%",
                 toggleActions: "restart none none none",
             }
-        })
+        });
 
         return () => {
             split.revert();
@@ -109,7 +133,7 @@ const AboutSection = () => {
         >
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.5%22%20cy=%220.5%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
+                <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
 
              {/*MIRRORED PLANETS*/}
@@ -233,26 +257,15 @@ const AboutSection = () => {
                         <AnimatedHoverButton bgColor={"#3F51B5"} text="PROJECTS" />
                     </div>
                 </div>
-                <div className="w-full h-2/5 flex flex-col justify-ceneter items-end gap-25 text-2xl font-inconsolata-sans z-10">
+                <div className="w-full h-2/5 flex flex-col justify-ceneter items-end gap-10 text-2xl font-inconsolata-sans z-10">
                     <h1 className="scramble font-neotriad-sans text-4xl">Education</h1>
                     <div className="flex flex-row justify-start items-center gap-10">
-                        <div className="h-full hidden md:flex justify-center items-end mr-10">
+                        <div className="h-full hidden md:flex justify-center items-start mr-10">
                             <PoliceLights rectHeight={30} rectWidth={70} />
                         </div>
-                        <div className="card">
-                            <svg
-                                width="100"
-                                height="200"
-                                viewBox="0 0 100 200"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                            >
-                                <path
-                                    d="M62 0C64.2091 6.44256e-08 66 1.79086 66 4V13H96C98.2091 13 100 14.7909 100 17V209C100 211.209 98.2091 213 96 213H4C1.79086 213 0 211.209 0 209V4C0 1.79086 1.79086 6.44256e-08 4 0H62Z"
-                                    fill="#3F51B5"
-                                />
-                            </svg>
+                        <div
+                            onMouseEnter={hoverEnter}
+                            className="h-75 w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-6 bg-background">
                             <Image
                                 src="/DSlogo.png"
                                 alt="DS senanayake college school logo"
@@ -260,28 +273,35 @@ const AboutSection = () => {
                                 width={70}
                                 className="relative z-10"
                             />
+                            <ScrambledTextBlock
+                                lines={[
+                                    "2012 - 2021",
+                                    "D S Senanayake",
+                                    "Ordinary Level",
+                                    "Advanced Level",
+                                ]}
+                            />
+                            <span className="text-center font-inconsolata-sans text-sm">RES: 9A / 1C 2S</span>
                         </div>
-                        <div className="card">
-                            <svg
-                                width="100"
-                                height="200"
-                                viewBox="0 0 100 200"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                            >
-                                <path
-                                    d="M62 0C64.2091 6.44256e-08 66 1.79086 66 4V13H96C98.2091 13 100 14.7909 100 17V209C100 211.209 98.2091 213 96 213H4C1.79086 213 0 211.209 0 209V4C0 1.79086 1.79086 6.44256e-08 4 0H62Z"
-                                    fill="#3F51B5"
-                                />
-                            </svg>
+                        <div
+                            onMouseEnter={hoverEnter}
+                            className="h-75 w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-6 bg-background">
                             <Image
                                 src="/cinecLogo.png"
-                                alt="cinec campus logo"
-                                height={80}
-                                width={80}
+                                alt="DS senanayake college school logo"
+                                height={70}
+                                width={70}
                                 className="relative z-10"
                             />
+                            <ScrambledTextBlock
+                                lines={[
+                                    "2021 - Present",
+                                    "CINEC Campus",
+                                    "Software",
+                                    "Engineering",
+                                ]}
+                            />
+                            <span className="text-center font-inconsolata-sans text-sm">GPA: above 3.80</span>
                         </div>
                     </div>
 
