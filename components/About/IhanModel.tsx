@@ -1,6 +1,6 @@
 "use client";
 
-import React, { JSX, useRef } from 'react';
+import React, { JSX, useRef, useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import {
     SkinnedMesh,
@@ -15,6 +15,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Custom event for section pinning
+const SECTION_PINNED_EVENT = 'sectionPinned';
 
 type GLTFResult = {
     nodes: {
@@ -48,6 +51,114 @@ export function Model(props: JSX.IntrinsicElements['group']) {
     // The 'nodes' object will be populated once the GLTF is loaded.
     const { nodes, materials } = useGLTF('/models/ihan.glb') as unknown as GLTFResult;
 
+    // Create refs for the model gestures to be accessible in the event listener
+    const gesturesRef = useRef<{
+        neck: Record<string, { x: number, y: number, z: number }>;
+        leftArm: Record<string, { x: number, y: number, z: number }>;
+        rightArm: Record<string, { x: number, y: number, z: number }>;
+        leftForeArm: Record<string, { x: number, y: number, z: number }>;
+    }>({
+        neck: {
+            'hero-section': { x: 0.6, y: 0, z: 0 },
+            'about-section': { x: 0.6, y: 0, z: 0 },
+            'projects-section': { x: 0.6, y: 0.5, z: 0 },
+            'skill-section': { x: 0.6, y: -0.5, z: 0 },
+            'contact-section': { x: 0, y: 0.5, z: 0 }
+        },
+        leftArm: {
+            'hero-section': { x: 1.3, y: 0, z: 0 },
+            'about-section': { x: 1.3, y: 0, z: 0 },
+            'projects-section': { x: 1.3, y: 0, z: 0 },
+            'skill-section': { x: 1.3, y: 0, z: 0 },
+            'contact-section': { x: 0.7, y: -0.2, z: 0.7 }
+        },
+        rightArm: {
+            'hero-section': { x: 1.3, y: 0, z: 0 },
+            'about-section': { x: 1.3, y: 0, z: 0 },
+            'projects-section': { x: 1.3, y: 0, z: 0 },
+            'skill-section': { x: 1.3, y: 0, z: 0 },
+            'contact-section': { x: 1.3, y: 0, z: 0 }
+        },
+        leftForeArm: {
+            'hero-section': { x: 0, y: 0, z: 0 },
+            'about-section': { x: -0.1, y: 0, z: 0.4 },
+            'projects-section': { x: 1, y: -1, z: 2 },
+            'skill-section': { x: 0, y: 0, z: 0 },
+            'contact-section': { x: -1, y: -0.4, z: 1 }
+        }
+    });
+
+    // Set up event listener for section pinning
+    useEffect(() => {
+        if (!groupRef.current) return;
+
+        const handleSectionPinned = (event: Event) => {
+            const customEvent = event as CustomEvent;
+            const { sectionId, action } = customEvent.detail;
+
+            // Find the bones
+            const neck = groupRef.current.getObjectByName('Neck');
+            const leftArm = groupRef.current.getObjectByName('LeftArm');
+            const rightArm = groupRef.current.getObjectByName('RightArm');
+            const leftForeArm = groupRef.current.getObjectByName('LeftForeArm');
+
+            // Get the gesture values for this section
+            const neckGesture = gesturesRef.current.neck[sectionId];
+            const leftArmGesture = gesturesRef.current.leftArm[sectionId];
+            const rightArmGesture = gesturesRef.current.rightArm[sectionId];
+            const leftForeArmGesture = gesturesRef.current.leftForeArm[sectionId];
+
+            // Apply the gestures
+            if (neck && neckGesture) {
+                gsap.to(neck.rotation, { 
+                    x: neckGesture.x, 
+                    y: neckGesture.y, 
+                    z: neckGesture.z, 
+                    duration: 1, 
+                    ease: 'power2.inOut' 
+                });
+            }
+
+            if (leftArm && leftArmGesture) {
+                gsap.to(leftArm.rotation, { 
+                    x: leftArmGesture.x, 
+                    y: leftArmGesture.y, 
+                    z: leftArmGesture.z, 
+                    duration: 1.2, 
+                    ease: 'power2.inOut' 
+                });
+            }
+
+            if (rightArm && rightArmGesture) {
+                gsap.to(rightArm.rotation, { 
+                    x: rightArmGesture.x, 
+                    y: rightArmGesture.y, 
+                    z: rightArmGesture.z, 
+                    duration: 1.2, 
+                    ease: 'power2.inOut' 
+                });
+            }
+
+            if (leftForeArm && leftForeArmGesture) {
+                gsap.to(leftForeArm.rotation, { 
+                    x: leftForeArmGesture.x, 
+                    y: leftForeArmGesture.y, 
+                    z: leftForeArmGesture.z, 
+                    duration: 1.2, 
+                    ease: 'power2.inOut' 
+                });
+            }
+        };
+
+        // Add event listener
+        window.addEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
+
+        // Clean up
+        return () => {
+            window.removeEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
+        };
+    }, []);
+
     // We use useGSAP for proper animation setup and cleanup in React.
     useGSAP(() => {
         // 1. Create a GSAP context. This allows us to properly manage and
@@ -61,192 +172,30 @@ export function Model(props: JSX.IntrinsicElements['group']) {
             // 2. Find the neck bone. It's crucial to find it by name.
             // Skeletons are nested inside the primitive object.
             const neck = groupRef.current.getObjectByName('Neck');
-
-            if (neck) {
-                // 3. Set the initial state: head looking down.
-                // A positive rotation on the X-axis tilts the head forward.
-                gsap.set(neck.rotation, { x: 0.6, y: 0, z: 0 });
-
-                // 4. Create a timeline for neck animations for better coordination
-                const neckTimeline = gsap.timeline();
-
-                // About section - head looking down
-                neckTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#about-section',
-                            start: 'top bottom',
-                            end: 'top top',
-                            scrub: 0.8, // Add higher smoothing factor for neck rotation
-                        }
-                    }).to(neck.rotation, { x: 0.6, y: 0, z: 0, duration: 1, ease: 'power2.inOut' })
-                );
-
-                // Projects section - head turning right
-                neckTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#projects-section',
-                            start: 'top center',
-                            end: 'top top',
-                            scrub: 0.8, // Add higher smoothing factor for neck rotation
-                        }
-                    }).to(neck.rotation, { x: 0.6, y: 0.5, z: 0, duration: 1, ease: 'power2.inOut' })
-                );
-
-                // Skills section - head turning left
-                neckTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#skill-section',
-                            start: 'top center',
-                            end: 'top top',
-                            scrub: 0.8, // Add higher smoothing factor for neck rotation
-                        }
-                    }).to(neck.rotation, { x: 0.6, y: -0.5, z: 0, duration: 1, ease: 'power2.inOut' })
-                );
-
-                // Contact section - head looking forward
-                neckTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#contact-section',
-                            start: 'top center',
-                            end: 'top top',
-                            scrub: 0.8, // Add higher smoothing factor for neck rotation
-                        }
-                    }).to(neck.rotation, { x: 0, y: 0.5, z: 0, duration: 1, ease: 'power2.inOut' })
-                );
-            } else {
-                // Helpful for debugging if the bone name is wrong
-                console.warn("GSAP animation failed: 'Neck' bone not found in the model.");
-            }
-
-            // --- HAND/ARM ANIMATION ---
-            // 1. Find the arm bones by name
             const leftArm = groupRef.current.getObjectByName('LeftArm');
             const rightArm = groupRef.current.getObjectByName('RightArm');
+            const leftForeArm = groupRef.current.getObjectByName('LeftForeArm');
 
-            // 2. Animate the arms if they are found.
+            // Set initial states for all bones
+            if (neck) {
+                // Set the initial state: head looking down.
+                // A positive rotation on the X-axis tilts the head forward.
+                gsap.set(neck.rotation, { x: 0.6, y: 0, z: 0 });
+            }
+
             if (leftArm && rightArm) {
                 // Set the initial rotation for the arms
                 gsap.set([leftArm.rotation, rightArm.rotation], { x: 1.3, y: 0, z: 0 });
-
-                // Create a timeline for both arms
-                const armsTimeline = gsap.timeline();
-
-                armsTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#about-section',
-                            start: 'top bottom',
-                            end: 'top top',
-                            scrub: 0.7, // Add smoothing factor for arm rotation
-                        }
-                    }).to([leftArm.rotation, rightArm.rotation], { x: 1.3, y: 0, z: 0, duration: 1.2, ease: 'power2.inOut' })
-                );
-            } else {
-                console.warn("GSAP animation failed: 'LeftArm' or 'RightArm' bones not found.");
             }
-
-            if (leftArm) {
-                // Create a timeline for left arm animations
-                const leftArmTimeline = gsap.timeline();
-
-                // About section
-                leftArmTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#about-section',
-                            start: 'top bottom',
-                            end: 'top top',
-                            scrub: 0.7, // Add smoothing factor for arm rotation
-                        }
-                    }).to(leftArm.rotation, { x: 1.3, y: 0, z: 0, duration: 1.2, ease: 'power2.inOut' })
-                );
-
-                // Skill section
-                leftArmTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#skill-section',
-                            start: 'top bottom',
-                            end: 'top top',
-                            scrub: 0.7, // Add smoothing factor for arm rotation
-                        }
-                    }).to(leftArm.rotation, { x: 1.3, y: 0, z: 0, duration: 1.2, ease: 'power2.inOut' })
-                );
-
-                // Contact section
-                leftArmTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#contact-section',
-                            start: 'top bottom',
-                            end: 'top top',
-                            scrub: 0.7, // Add smoothing factor for arm rotation
-                        }
-                    }).to(leftArm.rotation, { x: 0.7, y: -0.2, z: 0.7, duration: 1.2, ease: 'power2.inOut' })
-                );
-            }
-
-            const leftForeArm = groupRef.current.getObjectByName('LeftForeArm');
 
             if (leftForeArm) {
-                // Set initial state
+                // Set initial state for forearm
                 gsap.set(leftForeArm.rotation, { x: 0, y: 0, z: 0 });
-
-                // Create a timeline for left forearm animations
-                const leftForeArmTimeline = gsap.timeline();
-
-                // About section
-                leftForeArmTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#about-section',
-                            start: 'top center',
-                            end: 'bottom bottom',
-                            scrub: 0.7, // Add smoothing factor for forearm rotation
-                        }
-                    }).to(leftForeArm.rotation, { x: -0.1, y: 0, z: 0.4, duration: 1.2, ease: 'power2.inOut' })
-                );
-
-                // Projects section
-                leftForeArmTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#projects-section',
-                            start: 'top center',
-                            end: 'bottom bottom',
-                            scrub: 0.7, // Add smoothing factor for forearm rotation
-                        }
-                    }).to(leftForeArm.rotation, { x: 1, y: -1, z: 2, duration: 1.2, ease: 'power2.inOut' })
-                );
-
-                // Skill section
-                leftForeArmTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#skill-section',
-                            start: 'top center',
-                            end: 'bottom bottom',
-                            scrub: 0.7, // Add smoothing factor for forearm rotation
-                        }
-                    }).to(leftForeArm.rotation, { x: 0, y: 0, z: 0, duration: 1.2, ease: 'power2.inOut' })
-                );
-
-                // Contact section
-                leftForeArmTimeline.add(
-                    gsap.timeline({
-                        scrollTrigger: {
-                            trigger: '#contact-section',
-                            start: 'top center',
-                            end: 'bottom bottom',
-                            scrub: 0.7, // Add smoothing factor for forearm rotation
-                        }
-                    }).to(leftForeArm.rotation, { x: -1, y: -0.4, z: 1, duration: 1.2, ease: 'power2.inOut' })
-                );
             }
+
+            // Model gestures are now handled by the section pinning event listener
+            // We're removing the scroll-based animations for model gestures to prevent
+            // the model from changing gestures when scrolling slightly after a section is pinned
 
         });
 

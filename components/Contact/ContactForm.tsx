@@ -184,7 +184,7 @@ const ContactForm: React.FC = () => {
                     src="/svg/border.svg"
                     alt="scifi contact form border"
                     fill
-                    className="contact-border"
+                    className="contact-border z-0"
                 />
 
                 {/* Appear-lines clip-path animation */}
@@ -266,18 +266,18 @@ const ContactForm: React.FC = () => {
                     <input
                         type="text"
                         placeholder="Name"
-                        className="absolute top-[10%] left-[42%] w-[160px] h-[36px] futuristic-input pointer-events-auto"
+                        className="absolute top-[10%] left-[42%] w-[160px] h-[36px] futuristic-input pointer-events-auto z-10"
                     />
                     {/* Email Field */}
                     <input
                         type="email"
                         placeholder="Email"
-                        className="absolute top-[47%] left-[6%] w-[250px] h-[36px] futuristic-input pointer-events-auto"
+                        className="absolute top-[47%] left-[6%] w-[250px] h-[36px] futuristic-input pointer-events-auto z-10"
                     />
                     {/* Message Field */}
                     <textarea
                         placeholder="Message"
-                        className="absolute top-[42%] right-[6%] w-[250px] h-[80px] resize-none futuristic-input pointer-events-auto"
+                        className="absolute top-[42%] right-[6%] w-[250px] h-[80px] resize-none futuristic-input pointer-events-auto z-10"
                     />
                     {/* Send Button */}
                     <button

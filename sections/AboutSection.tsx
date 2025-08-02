@@ -136,20 +136,6 @@ const AboutSection = () => {
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
 
-             {/*MIRRORED PLANETS*/}
-            <div className="absolute top-0 flex justify-center z-0 pointer-events-none mix-blend-plus-darker scale-y-[-1]">
-                <img
-                    src="/PlanetRocks.png"
-                    alt="planet rocks"
-                    className="max-w-[50%] h-auto"
-                />
-                <img
-                    src="/PlanetRocks.png"
-                    alt="planet rocks"
-                    className="max-w-[50%] h-auto scale-x-[-1]"
-                />
-            </div>
-
             {/* LEFT SIDE: BASIC INFO & SKILLS */}
             <div className="w-1/2 flex flex-col text-left text-[var(--foreground)] leading-5 tracking-wider">
                 <div className="h-1/2 mt-20 ml-10 px-12 pt-40 flex flex-row justify-start items-start gap-10 w-full">

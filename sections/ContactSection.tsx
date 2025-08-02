@@ -2,8 +2,39 @@ import React from 'react';
 import ContactForm from '@/components/Contact/ContactForm';
 import Link from 'next/link';
 import Image from 'next/image';
+import {useGSAP} from "@gsap/react";
+import gsap from "gsap";
 
 const ContactSection: React.FC = () => {
+    useGSAP(() => {
+        gsap.set(".sideTree", { opacity: 0 });
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".contact-form",
+                start: "top center",
+                onEnter: () => {
+                    tl.restart();
+                },
+                onEnterBack: () => {
+                    tl.restart();
+                },
+                onLeaveBack: () => {
+                    gsap.set(".sideTree", { opacity: 0 });
+                },
+                onLeave: () => {
+                    gsap.set(".sideTree", { opacity: 0 });
+                }
+            }
+        });
+
+        tl.to(".sideTree", {
+            opacity: 1,
+            duration: 1.5,
+            delay: 0.5,
+            ease: "power2.out"
+        })
+    })
     return (
         <section id="contact-section" className="relative w-screen h-screen z-[500]">
             {/* BACKGROUND DOT GRID */}
@@ -28,6 +59,10 @@ const ContactSection: React.FC = () => {
                         </div>
                     </Link>
                 ))}
+            </div>
+
+            <div className="sideTree absolute bottom-[-50px] right-0 w-1/2 z-5 mix-blend-multiply -scale-x-100">
+                <Image src="/backgrounds/sideTree.png" alt="mountain background" height={1000} width={1000}/>
             </div>
         </section>
     );

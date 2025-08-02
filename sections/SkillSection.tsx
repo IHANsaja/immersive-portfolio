@@ -24,6 +24,50 @@ export default function SkillSection() {
         });
     }, []);
 
+    useGSAP(() => {
+        gsap.set(".bigTree", { opacity: 0 });
+        gsap.set(".skills", { y: 100, opacity: 0 });
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".skillgrid",
+                start: "top center",
+                onEnter: () => {
+                    tl.restart();
+                },
+                onEnterBack: () => {
+                    tl.restart();
+                },
+                onLeaveBack: () => {
+                    gsap.set(".bigTree", { opacity: 0 });
+                    gsap.set(".skills", { y: 100, opacity: 0 });
+                },
+                onLeave: () => {
+                    gsap.set(".bigTree", { opacity: 0 });
+                    gsap.set(".skills", { y: 100, opacity: 0 });
+                }
+            }
+        });
+
+        tl.to(".bigTree", {
+            opacity: 1,
+            duration: 1.5,
+            delay: 0.5,
+            ease: "power2.out"
+        })
+            .to(".skills", {
+                y:0,
+                opacity: 1,
+                duration: 1.5,
+                stagger: {
+                    amount: 0.5,
+                    from: 'start',
+                    grid: [5, 5]
+                },
+                ease: "none"
+            });
+    }, []);
+
     // Clear refs before rendering
     useEffect(() => {
         allSkills.forEach((_, i) => {
@@ -50,6 +94,10 @@ export default function SkillSection() {
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
 
+            <div className="bigTree absolute bottom-[-50px] left-0 w-1/2 z-0 mix-blend-soft-light">
+                <Image src="/backgrounds/bigTree.png" alt="mountain background" height={1000} width={1000}/>
+            </div>
+
             <div
                 ref={containerRef}
                 className="skillgrid absolute w-1/2 h-3/4 left-20 top-1/2 -translate-y-1/2 grid grid-cols-5 gap-6 z-1"
@@ -57,7 +105,7 @@ export default function SkillSection() {
                 {allSkills.map((skill, i) => (
                     <div
                         key={i}
-                        className="flex flex-col items-center justify-center gap-2 relative z-10 bg-background border border-gray-500 rounded-sm transition-all duration-300"
+                        className="skills flex flex-col items-center justify-center gap-2 relative z-10 bg-background border border-gray-500 rounded-sm transition-all duration-300"
                         onMouseEnter={() => {
                             const square = squareRefs.current[i];
                             const name = nameRefs.current[i];

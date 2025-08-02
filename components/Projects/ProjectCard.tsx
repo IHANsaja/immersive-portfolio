@@ -91,7 +91,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
     }, []);
 
     return (
-        <div className="project-card flex flex-col bg-background rounded-lg shadow overflow-hidden">
+        <div className="projectCards project-card flex flex-col bg-background rounded-lg shadow overflow-hidden">
             <audio ref={audioRef} src={audioSrc} hidden preload="auto" />
 
             {/* Header */}

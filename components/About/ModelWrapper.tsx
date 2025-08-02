@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useLayoutEffect } from "react";
+import React, { useRef, useLayoutEffect, useEffect } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Model } from "@/components/About/IhanModel";
 import { Environment } from "@react-three/drei";
@@ -9,6 +9,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {useGSAP} from "@gsap/react";
 gsap.registerPlugin(ScrollTrigger);
+
+// Custom event for section pinning
+const SECTION_PINNED_EVENT = 'sectionPinned';
 
 interface ModelWrapperProps {
     cameraPosition?: [number, number, number];
@@ -27,6 +30,84 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
     // <-- Create a ref for your model/group
     const modelRef = useRef<THREE.Group>(null!);
 
+    // Create refs for the animations to be accessible in the event listener
+    const animationsRef = useRef<{
+        scenePositions: Record<string, { x: number, opacity: number }>;
+        cameraPositions: Record<string, { z: number }>;
+        modelPositions: Record<string, { x: number, y: number, z: number }>;
+    }>({
+        scenePositions: {
+            'hero-section': { x: 0, opacity: 0 },
+            'about-section': { x: 0, opacity: 1 },
+            'projects-section': { x: -1000, opacity: 1 },
+            'skill-section': { x: 500, opacity: 1 },
+            'contact-section': { x: -700, opacity: 1 }
+        },
+        cameraPositions: {
+            'hero-section': { z: initialCameraPos[2] },
+            'about-section': { z: initialCameraPos[2] },
+            'projects-section': { z: 4 },
+            'skill-section': { z: 2 },
+            'contact-section': { z: 4 }
+        },
+        modelPositions: {
+            'hero-section': { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] },
+            'about-section': { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] },
+            'projects-section': { x: 1, y: -1, z: -1.5 },
+            'skill-section': { x: 0, y: -1.5, z: 0 },
+            'contact-section': { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] }
+        }
+    });
+
+    // Set up event listener for section pinning
+    useEffect(() => {
+        if (!sceneRef.current || !modelRef.current) return;
+
+        const handleSectionPinned = (event: Event) => {
+            const customEvent = event as CustomEvent;
+            const { sectionId, action } = customEvent.detail;
+
+            // Get the animation values for this section
+            const scenePosition = animationsRef.current.scenePositions[sectionId];
+            const cameraPosition = animationsRef.current.cameraPositions[sectionId];
+            const modelPosition = animationsRef.current.modelPositions[sectionId];
+
+            if (scenePosition && cameraPosition && modelPosition) {
+                // Animate scene position
+                gsap.to(sceneRef.current, { 
+                    x: scenePosition.x, 
+                    opacity: scenePosition.opacity, 
+                    duration: 1, 
+                    ease: "circ.inOut" 
+                });
+
+                // Animate camera position
+                gsap.to(camera.position, { 
+                    z: cameraPosition.z, 
+                    duration: 1.5, 
+                    ease: "circ.inOut" 
+                });
+
+                // Animate model position
+                gsap.to(modelRef.current.position, { 
+                    x: modelPosition.x, 
+                    y: modelPosition.y, 
+                    z: modelPosition.z, 
+                    duration: 1.3, 
+                    ease: "circ.inOut" 
+                });
+            }
+        };
+
+        // Add event listener
+        window.addEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
+
+        // Clean up
+        return () => {
+            window.removeEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
+        };
+    }, [camera, sceneRef, modelRef, initialCameraPos, initialModelPos]);
+
     useGSAP(() => {
         if (!sceneRef.current || !modelRef.current) return;
         const ctx = gsap.context(() => {
@@ -38,134 +119,22 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
             // Create a primary timeline for better coordination
             const masterTimeline = gsap.timeline();
 
-            // Scene container animations
-            masterTimeline.add(
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#about-section",
-                        start: "19% top",
-                        end: "40% bottom",
-                        scrub: 0.5,
-                    }
-                }).to(sceneRef.current, { opacity: 1, duration: 1, ease: "circ.inOut" })
-            );
+            // Scene container and camera animations are now handled by the section pinning event listener
+            // We're removing the scroll-based animations to prevent the scene and camera
+            // from changing position when scrolling slightly after a section is pinned
 
-            masterTimeline.add(
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#projects-section",
-                        start: "40% top",
-                        end: "60% bottom",
-                        scrub: 0.5,
-                    }
-                }).to(sceneRef.current, { x: -1000, duration: 1.2, ease: "circ.inOut" })
-            );
+            // No initial fade-in animation for the scene
+            // The scene opacity will be controlled by the section pinning event
 
-            masterTimeline.add(
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#skill-section",
-                        start: "60% top",
-                        end: "80% bottom",
-                        scrub: 0.5,
-                    }
-                }).to(sceneRef.current, { x: 500, duration: 1.2, ease: "circ.inOut" })
-            );
-
-            masterTimeline.add(
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#contact-section",
-                        start: "80% top",
-                        end: "100% bottom",
-                        scrub: 0.5,
-                    }
-                }).to(sceneRef.current, { x: -700, duration: 1.2, ease: "circ.inOut" })
-            );
-
-            // Camera animations
-            const cameraTimeline = gsap.timeline();
-
-            cameraTimeline.add(
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#projects-section",
-                        start: "40% top",
-                        end: "60% bottom",
-                        scrub: 0.7,
-                    }
-                }).to(camera.position, { z: 4, duration: 1.5, ease: "circ.inOut" })
-            );
-
-            cameraTimeline.add(
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#skill-section",
-                        start: "60% top",
-                        end: "80% bottom",
-                        scrub: 0.7,
-                    }
-                }).to(camera.position, { z: 2, duration: 1.5, ease: "circ.inOut" })
-            );
-
-            cameraTimeline.add(
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#contact-section",
-                        start: "80% top",
-                        end: "100% bottom",
-                        scrub: 0.7,
-                    }
-                }).to(camera.position, { z: 4, duration: 1.5, ease: "circ.inOut" })
-            );
-
-            // Model position animations
-            const modelTimeline = gsap.timeline();
-
-            modelTimeline.add(
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#projects-section",
-                        start: "40% top",
-                        end: "60% bottom",
-                        scrub: 0.6,
-                    }
-                }).to(modelRef.current.position, { x: 1, z: -1.5, y: -1, duration: 1.3, ease: "circ.inOut" })
-            );
-
-            modelTimeline.add(
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#skill-section",
-                        start: "60% top",
-                        end: "80% bottom",
-                        scrub: 0.6,
-                    }
-                }).to(modelRef.current.position, { x: 0, y: -1.5, z: 0, duration: 1.3, ease: "circ.inOut" })
-            );
-
-            modelTimeline.add(
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#contact-section",
-                        start: "80% top",
-                        end: "100% bottom",
-                        scrub: 0.6,
-                    }
-                }).to(modelRef.current.position, { 
-                    x: initialModelPos[0], 
-                    y: initialModelPos[1], 
-                    z: initialModelPos[2], 
-                    duration: 1.3, 
-                    ease: "power3.inOut" 
-                })
-            );
+            // Model position animations are now handled by the section pinning event listener
+            // We're removing the scroll-based animations for model positioning to prevent
+            // the model from changing position when scrolling slightly after a section is pinned
 
 
         }, [sceneRef, modelRef, camera]);
 
         return () => ctx.revert();
-    }, [camera, sceneRef]);
+    }, [camera, sceneRef, initialCameraPos, initialModelPos]);
 
 
     useLayoutEffect(() => {

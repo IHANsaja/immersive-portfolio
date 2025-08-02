@@ -3,6 +3,8 @@ import Image from "next/image";
 import Spline from "@splinetool/react-spline";
 import GrButtons from "@/components/Hero/GrButtons";
 import Welcome from "@/components/Hero/Welcome";
+import React from "react";
+import { motion } from "framer-motion";
 
 const HeroSection = () => {
 
@@ -40,18 +42,29 @@ const HeroSection = () => {
             </div>
 
             <Welcome />
-
-            <div className="absolute bottom-0 left-0 w-full flex justify-center z-[9990] pointer-events-none mix-blend-plus-darker">
-                <img
-                    src="/PlanetRocks.png"
-                    alt="planet rocks"
-                    className="max-w-[50%] h-auto"
-                />
-                <img
-                    src="/PlanetRocks.png"
-                    alt="planet rocks"
-                    className="max-w-[50%] h-auto scale-x-[-1]"
-                />
+            <div className="absolute bottom-[-300px] left-0 w-screen z-[50] pointer-events-none overflow-visible flex justify-center">
+                <motion.div
+                    animate={{
+                        y: [0, -10, 0], // gentle up and down
+                        x: [0, 5, 0],   // slight horizontal drift
+                        scale: [1, 1.05, 1],
+                    }}
+                    transition={{
+                        duration: 10,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                    }}
+                    className="w-full max-w-[90vw]"
+                >
+                    <Image
+                        src="/backgrounds/clouds.png"
+                        alt="clouds"
+                        width={1920}
+                        height={200}
+                        className="w-full h-auto object-contain opacity-85"
+                        priority
+                    />
+                </motion.div>
             </div>
         </section>
     );
