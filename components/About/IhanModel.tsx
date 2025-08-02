@@ -94,7 +94,7 @@ export function Model(props: JSX.IntrinsicElements['group']) {
 
         const handleSectionPinned = (event: Event) => {
             const customEvent = event as CustomEvent;
-            const { sectionId, action } = customEvent.detail;
+            const { sectionId } = customEvent.detail;
 
             // Find the bones
             const neck = groupRef.current.getObjectByName('Neck');
