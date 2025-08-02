@@ -65,7 +65,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
 
         const handleSectionPinned = (event: Event) => {
             const customEvent = event as CustomEvent;
-            const { sectionId, action } = customEvent.detail;
+            const { sectionId } = customEvent.detail;
 
             // Get the animation values for this section
             const scenePosition = animationsRef.current.scenePositions[sectionId];
@@ -117,7 +117,7 @@ function SceneContent({ initialCameraPos, initialModelPos, sceneRef }: SceneCont
             gsap.set(modelRef.current.position, { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] });
 
             // Create a primary timeline for better coordination
-            const masterTimeline = gsap.timeline();
+            // const masterTimeline = gsap.timeline();
 
             // Scene container and camera animations are now handled by the section pinning event listener
             // We're removing the scroll-based animations to prevent the scene and camera
