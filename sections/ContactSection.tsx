@@ -22,9 +22,6 @@ const ContactSection: React.FC = () => {
                 onLeaveBack: () => {
                     gsap.set(".sideTree", { opacity: 0 });
                 },
-                onLeave: () => {
-                    gsap.set(".sideTree", { opacity: 0 });
-                }
             }
         });
 
