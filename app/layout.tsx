@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inconsolata } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import ToasterProvider from "@/components/Ui/ToasterProvider";
 
 const InconsolataSans = Inconsolata({
     variable: "--font-inconsolata-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
       <body
         className={`${InconsolataSans.variable} ${NeotriadSans.variable} ${AndvariSans.variable} antialiased`}
       >
+        <ToasterProvider />
         {children}
       </body>
     </html>

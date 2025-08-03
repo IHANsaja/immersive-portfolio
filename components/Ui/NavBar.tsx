@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Eye, Layers, Users, BarChart2, Briefcase, X } from 'lucide-react';
+import { Home, User, Files, BrainCog, Phone, X, Github} from 'lucide-react';
 import Image from "next/image";
 
 function polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
@@ -34,12 +34,12 @@ interface SpaceshipNavProps {
 
 const SLICE_DEGREE = 60;
 const navItems: NavItem[] = [
-    { id: 'vision', label: 'Vision', icon: Eye, angle: 30 },
-    { id: 'portfolio', label: 'Portfolio', icon: Layers, angle: 90 },
-    { id: 'people', label: 'People', icon: Users, angle: 150 },
-    { id: 'insights', label: 'Insights', icon: BarChart2, angle: 210 },
-    { id: 'careers', label: 'Careers', icon: Briefcase, angle: 270 },
-    { id: 'about', label: 'About Us', icon: FileText, angle: 330 },
+    { id: 'hero-section', label: 'Home', icon: Home, angle: 30 },
+    { id: 'about-section', label: 'About Me', icon: User, angle: 90 },
+    { id: 'projects-section', label: 'My Projects', icon: Files, angle: 150 },
+    { id: 'skills-section', label: 'My Skills', icon: BrainCog, angle: 210 },
+    { id: 'contact-section', label: 'Cantact Me', icon: Phone, angle: 270 },
+    { id: 'github', label: 'Github', icon: Github, angle: 330 },
 ];
 
 const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {

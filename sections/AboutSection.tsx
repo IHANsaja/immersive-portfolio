@@ -8,6 +8,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 import Image from "next/image";
+import { useMediaQuery } from "usehooks-ts";
 import ScrambledTextBlock from "@/components/About/EducationCard";
 
 gsap.registerPlugin(SplitText);
@@ -18,6 +19,7 @@ const AboutSection = () => {
     const line2 = useRef<HTMLSpanElement>(null);
     const line3 = useRef<HTMLSpanElement>(null);
     const line4 = useRef<HTMLSpanElement>(null);
+    const isMobile = useMediaQuery("(max-width: 768px)");
 
         const hoverEnter = () => {
             const lines = [line1, line2, line3, line4];
@@ -129,76 +131,83 @@ const AboutSection = () => {
     return (
         <section
             id="about-section"
-            className="w-screen h-screen flex flex-row gap-40 bg-[var(--background)] text-[#f0dbee] relative"
+            className="w-screen h-screen flex flex-col md:flex-row md:gap-30 bg-[var(--background)] text-[#f0dbee] relative z-0"
         >
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
 
+            {isMobile && (
+                <h1 className="block md:hidden font-neotriad-sans text-2xl text-center pt-5">
+                    About Me.
+                </h1>
+            )}
+
+
             {/* LEFT SIDE: BASIC INFO & SKILLS */}
-            <div className="w-1/2 flex flex-col text-left text-[var(--foreground)] leading-5 tracking-wider">
-                <div className="h-1/2 mt-20 ml-10 px-12 pt-40 flex flex-row justify-start items-start gap-10 w-full">
+            <div className="w-full h-full md:w-1/2 flex flex-col text-left text-[var(--foreground)] leading-5 tracking-wider">
+                <div className="md:h-1/2 md:mt-20 md:ml-10 px-12 pt-20 md:pt-40 flex flex-row justify-start items-start gap-10 w-full">
                     {/* Basic Info */}
                     <div>
                         <PoliceLights rectHeight={30} rectWidth={70} />
                         <br />
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scramble font-andvari-sans uppercase text-[11px] mb-2">// basic info</p>
-                        <p className="scramble font-andvari-sans text-[11px]">
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// basic info</p>
+                        <p className="scramble font-andvari-sans text-[9px] md:text-[11px]">
                             name → &quot;Ihan Hansaja&quot;
                         </p>
-                        <p className="scramble font-andvari-sans text-[11px]">
+                        <p className="scramble font-andvari-sans text-[9px] md:text-[11px]">
                             location → &quot;Kotikawatta&quot;
                         </p>
                         <br />
                         <br />
                         <br />
                         <br />
-                        <p className="font-andvari-sans text-[11px]">
+                        <p className="font-andvari-sans text-[9px] md:text-[11px]">
                             &lt;meta charset=&quot;UTF-8&quot;&gt;
                         </p>
                         <br />
                         <br />
-                        <p className="font-inconsolata-sans-sans w-full text-2xl">+ + + +</p>
+                        <p className="font-inconsolata-sans-sans w-full rext-sm md:text-2xl">+ + + +</p>
                     </div>
 
                     {/* Skills */}
                     <div>
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scramble font-andvari-sans uppercase text-[11px] mb-2">// areas of expertise</p>
-                        <p className="scramble font-andvari-sans uppercase text-[11px]">
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// areas of expertise</p>
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             [&quot; Full‑Stack Development &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[11px]">
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; Front‑End Development &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[11px]">
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; Back‑End Development &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[11px]">
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; UI/UX Design &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[11px]">
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; AI Engineering &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[11px]">
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; Machine Learning Engineering &quot;]
                         </p>
                         <br />
                         <br />
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scramble font-andvari-sans uppercase text-[11px] mb-2">// what i&apos;m building</p>
-                        <p className="scramble font-andvari-sans uppercase text-[11px]">
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// what i&apos;m building</p>
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             [&quot; AI‑driven Web Apps &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[11px]">
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; Immersive Websites &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[11px]">
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; AI SaaS Platforms &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[11px]">
+                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; Machine Learning Models &quot;]
                         </p>
                         <br />
@@ -211,7 +220,7 @@ const AboutSection = () => {
                     <div className="svgGsap">
                         <AnimatedSvg />
                     </div>
-                    <div className="font-inconsalata-sans w-full text-2xl flex justify-center items-center">
+                    <div className="font-inconsalata-sans w-full text-sm md:text-2xl flex justify-center items-center">
                         + + + +
                     </div>
                 </div>
@@ -220,16 +229,17 @@ const AboutSection = () => {
 
 
             {/* RIGHT SIDE: INTRO & PARAGRAPH */}
-            <div className="w-1/2 flex flex-col px-8 mr-20  text-[var(--foreground)] leading-5 tracking-wider">
-                <div className="w-full h-1/5 ml-20 mt-20 flex justify-start items-center text-2xl font-inconsolata-sans">
-                    + + + +
-                </div>
-                <div className="w-full h-2/5 text-right flex flex-col justify-start items-end gap-10">
-                    <h1 className="scramble font-neotriad-sans text-4xl">Hey I am IHAN HANSAJA</h1>
+            <div className="w-full h-full md:w-1/2 flex flex-col px-8 mr-20 text-[var(--foreground)] leading-5 tracking-wider">
+
+                <div className="w-full h-3/5 text-center md:text-right flex flex-col justify-start items-center md:items-end gap-4 md:gap-10">
+                    <div className="w-full ml-20 md:mt-20 flex justify-start items-start text-sm md:text-2xl font-inconsolata-sans">
+                        + + + +
+                    </div>
+                    <h1 className="scramble font-neotriad-sans text-xl md:text-4xl">Hey I am IHAN HANSAJA</h1>
 
                     <p
                         ref={paragraphRef}
-                        className="font-andvari-sans max-w-xl text-[11px] leading-relaxed"
+                        className="font-andvari-sans max-w-xl text-[9px] md:text-[11px] leading-6 text-center md:text-right"
                     >
                         I am a Software Engineering undergraduate with a strong passion for
                         building efficient, user-centric applications.
@@ -239,19 +249,19 @@ const AboutSection = () => {
                         collaborative environments that push my technical and creative
                         boundaries.
                     </p>
-                    <div className="buttonGsap">
+                    <div className="buttonGsap hidden md:block">
                         <AnimatedHoverButton bgColor={"#3F51B5"} text="PROJECTS" />
                     </div>
                 </div>
-                <div className="w-full h-2/5 flex flex-col justify-ceneter items-end gap-10 text-2xl font-inconsolata-sans z-10">
-                    <h1 className="scramble font-neotriad-sans text-4xl">Education</h1>
+                <div className="w-full h-2/5 flex flex-col items-center md:items-end gap-10 text-2xl font-inconsolata-sans z-10">
+                    <h1 className="scramble font-neotriad-sans text-xl md:text-4xl">Education</h1>
                     <div className="flex flex-row justify-start items-center gap-10">
                         <div className="h-full hidden md:flex justify-center items-start mr-10">
                             <PoliceLights rectHeight={30} rectWidth={70} />
                         </div>
                         <div
                             onMouseEnter={hoverEnter}
-                            className="h-75 w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-6 bg-background">
+                            className="h-40 w-25 md:h-70 md:w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-2 md:p-6 bg-background">
                             <Image
                                 src="/DSlogo.png"
                                 alt="DS senanayake college school logo"
@@ -271,7 +281,7 @@ const AboutSection = () => {
                         </div>
                         <div
                             onMouseEnter={hoverEnter}
-                            className="h-75 w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-6 bg-background">
+                            className="h-40 w-25 md:h-70 md:w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-2 md:p-6 bg-background">
                             <Image
                                 src="/cinecLogo.png"
                                 alt="DS senanayake college school logo"

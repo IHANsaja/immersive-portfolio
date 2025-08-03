@@ -168,7 +168,7 @@ export default function ModelWrapper({
     return (
         <div
             ref={sceneRef}
-            className="fixed top-0 left-0 z-0 w-screen h-screen pointer-events-none"
+            className="fixed top-0 left-0 z-0 w-screen h-screen hidden md:block pointer-events-none"
             style={{ opacity: 0 }}
         >
             <Canvas camera={{ fov: 35 }} style={{ pointerEvents: 'none' }}>
