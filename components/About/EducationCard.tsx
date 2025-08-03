@@ -33,7 +33,7 @@ export default function ScrambledTextBlock({ lines }: ScrambledTextBlockProps) {
     return (
         <p
             onMouseEnter={handleHover}
-            className="text-xl font-inconsolata-sans text-center text-[14px] leading-relaxed"
+            className="text-xl font-inconsolata-sans text-center text-[14px] leading-relaxed hidden md:block"
         >
             {lines.map((line, i) => (
                 <span

@@ -26,7 +26,7 @@ const Home: React.FC = () => {
             const smoother = ScrollSmoother.create({ 
                 smooth: 1, 
                 effects: true,
-                normalizeScroll: true, // helps with compatibility
+                normalizeScroll: { allowNestedScroll: true }, // helps with compatibility
             });
 
             // Create a timeline for section pinning

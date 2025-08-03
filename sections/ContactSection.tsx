@@ -33,17 +33,17 @@ const ContactSection: React.FC = () => {
         })
     })
     return (
-        <section id="contact-section" className="relative w-screen h-screen z-[500]">
+        <section id="contact-section" className="relative w-screen h-screen z-0">
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
 
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 h-auto sm:w-1/2 sm:h-1/2">
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 h-auto sm:w-1/2 sm:h-1/2 z-10">
                 <ContactForm />
             </div>
 
-            <div className="absolute bottom-5 right-5 md:right-20 md:bottom-10 flex flex-col md:flex-row gap-6 z-10 mb-8 pr-4">
+            <div className="absolute bottom-5 right-1/2 translate-x-1/2 md:right-20 md:translate-x-0 md:bottom-10 flex flex-row gap-6 z-0 mb-50 md:mb-8 md:pr-4">
                 {[
                     { href: 'mailto:ihanhansaja5@gmail.com', src: '/svg/gmail.svg', alt: 'gmail' },
                     { href: 'https://wa.me/94718995192', src: '/svg/whatsapp.svg', alt: 'whatsapp' },

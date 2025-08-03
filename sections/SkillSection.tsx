@@ -89,7 +89,7 @@ export default function SkillSection() {
     }, []);
 
     return (
-        <section id="skill-section" className="relative w-screen h-screen">
+        <section id="skill-section" className="relative w-screen h-screen z-0">
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
@@ -100,7 +100,7 @@ export default function SkillSection() {
 
             <div
                 ref={containerRef}
-                className="skillgrid absolute w-1/2 h-3/4 left-20 top-1/2 -translate-y-1/2 grid grid-cols-5 gap-6 z-1"
+                className="skillgrid absolute w-full md:w-1/2 h-3/4 px-8 md:left-20 top-1/2 -translate-y-1/2 grid grid-cols-4 md:grid-cols-5 gap-6 z-1"
             >
                 {allSkills.map((skill, i) => (
                     <div
@@ -154,7 +154,7 @@ export default function SkillSection() {
                             alt={`logo-${skill.name}`}
                             width={50}
                             height={50}
-                            className="transition-all duration-300 z-10"
+                            className="w-8 h-8 sm:w-[50px] sm:h-[50px] transition-all duration-300 z-10"
                         />
 
                         {/* Animated skill name */}
@@ -166,10 +166,11 @@ export default function SkillSection() {
                                 opacity: 0,
                                 transform: "translateY(10px)",
                             }}
-                            className="text-center font-inconsolata-sans z-10 pointer-events-none"
+                            className="text-sm sm:text-base text-center font-inconsolata-sans z-10 pointer-events-none"
                         >
                             {skill.name}
                         </div>
+
 
                         {/* Animated top-right color square */}
                         <div

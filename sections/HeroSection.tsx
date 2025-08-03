@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 const HeroSection = () => {
 
     return (
-        <section id="hero-section" className="relative w-screen h-screen">
+        <section id="hero-section" className="relative w-screen h-screen z-1">
             <GPUFluidCanvas />
 
             <div
@@ -42,7 +42,7 @@ const HeroSection = () => {
             </div>
 
             <Welcome />
-            <div className="absolute bottom-[-300px] left-0 w-screen z-[50] pointer-events-none overflow-visible flex justify-center">
+            <div className="absolute bottom-[-50px] md:bottom-[-300px] left-0 w-screen z-[9998] pointer-events-none overflow-visible flex justify-center">
                 <motion.div
                     animate={{
                         y: [0, -10, 0], // gentle up and down
