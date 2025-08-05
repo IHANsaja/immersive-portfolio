@@ -7,7 +7,7 @@
   --background-three: #170815;
   --clip-cut-size: 10px;
   --clip-border-color: #121212;
-  --ex: #c1afbf;
+  --ex: #e1cbdf;
 }
 
 @theme inline {
@@ -253,3 +253,4 @@ html, body {
   color: #191919;
   box-shadow: 0 0 20px #46a8f9, 0 0 40px #46b4f9;
 }
+

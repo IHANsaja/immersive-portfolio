@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import SvgFrame from '@/components/Hero/Frame';
 import gsap from 'gsap';
-import { ScrollTrigger, ScrollSmoother, ScrambleTextPlugin } from 'gsap/all';
+import { ScrollTrigger, ScrollSmoother, ScrambleTextPlugin, SplitText, ScrollToPlugin } from 'gsap/all';
 import ModelWrapper from '@/components/About/ModelWrapper';
 import HeroSection from '@/sections/HeroSection';
 import AboutSection from '@/sections/AboutSection';
@@ -11,11 +11,12 @@ import ProjectsSection from '@/sections/ProjectsSection';
 import ContactSection from '@/sections/ContactSection';
 import Menu from "@/components/Hero/Menu";
 import SkillSection from "@/sections/SkillSection";
+import MusicButton from "@/components/Ui/MusicButton";
 
 // Custom event for section pinning
 const SECTION_PINNED_EVENT = 'sectionPinned';
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrambleTextPlugin);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrambleTextPlugin, SplitText, ScrollToPlugin);
 
 const Home: React.FC = () => {
     const progressRef = useRef<HTMLDivElement>(null);
@@ -99,6 +100,9 @@ const Home: React.FC = () => {
             <ModelWrapper />
             <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-[10000]">
                 <Menu />
+            </div>
+            <div className="fixed top-10 left-10 z-[10000]">
+                <MusicButton />
             </div>
         </main>
     );

@@ -18,7 +18,7 @@ export const projects: Project[] = [
     },
     {
         title: "AI-driven Serendib WMS",
-        videoSrc: "/videos/Freya.mp4", // Assuming this video is in your public folder
+        videoSrc: "/videos/Serendib.mp4", // Assuming this video is in your public folder
         description: "Serendib WMS helps businesses manage their warehouses efficiently in real-time.",
         codeUrl: "https://github.com/IHANsaja/Serendib-Warehouse-Management-System",
         demoUrl: "https://github.com/IHANsaja/Serendib-Warehouse-Management-System",
@@ -34,7 +34,7 @@ export const projects: Project[] = [
     },
     {
         title: "CINEC Campus Navigator",
-        videoSrc: "/videos/Freya.mp4", // Assuming this video is in your public folder
+        videoSrc: "/videos/Navigator.mp4", // Assuming this video is in your public folder
         description: "A modern web app I developed to make it easier for students to find their way around the campus.",
         codeUrl: "https://github.com/IHANsaja/CINEC-Campus-Navigator",
         demoUrl: "https://github.com/IHANsaja/CINEC-Campus-Navigator",
@@ -58,7 +58,7 @@ export const projects: Project[] = [
     },
     {
         title: "HeritageLink Website",
-        videoSrc: "/videos/Freya.mp4", // Assuming this video is in your public folder
+        videoSrc: "/videos/Heritage.mp4", // Assuming this video is in your public folder
         description: "To protect and promote Sri Lanka’s rich cultural heritage through a modern digital experience",
         codeUrl: "https://github.com/IHANsaja/HeritageLink",
         demoUrl: "https://github.com/IHANsaja/HeritageLink",

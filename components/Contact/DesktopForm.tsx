@@ -9,8 +9,10 @@ const DesktopForm = () => {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const audioHoverRef = useRef<HTMLAudioElement | null>(null);
     const audioClickRef = useRef<HTMLAudioElement | null>(null);
-    const audioAppearRef = useRef<HTMLAudioElement | null>(null);
     const formRef = useRef<HTMLFormElement>(null);
+    const audioInitiateRef = useRef<HTMLAudioElement | null>(null);
+    const audioSuccessRef = useRef<HTMLAudioElement | null>(null);
+    const audioErrorRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
         audioHoverRef.current = new Audio('/sounds/hover.mp3');
@@ -19,8 +21,14 @@ const DesktopForm = () => {
         audioClickRef.current = new Audio('/sounds/click.mp3');
         audioClickRef.current.volume = 0.5;
 
-        audioAppearRef.current = new Audio('/sounds/appear.mp3');
-        audioAppearRef.current.volume = 0.5;
+        audioInitiateRef.current = new Audio('/sounds/initiating.wav');
+        audioInitiateRef.current.volume = 0.05;
+
+        audioSuccessRef.current = new Audio('/sounds/confirm.wav');
+        audioSuccessRef.current.volume = 0.1;
+
+        audioErrorRef.current = new Audio('/sounds/reject.wav');
+        audioErrorRef.current.volume = 0.1;
     }, []);
 
     // Initial rotation animation for circles
@@ -79,13 +87,21 @@ const DesktopForm = () => {
             }
         });
 
-        if (audioAppearRef.current) {
+        if (audioInitiateRef.current) {
             tl.add(() => {
-                audioAppearRef.current!.currentTime = 0;
-                audioAppearRef.current!.play().catch(err => {
+                const audio = audioInitiateRef.current!;
+                audio.currentTime = 0;
+                audio.play().catch(err => {
                     console.warn('Sound play prevented:', err);
                 });
-            }, "+=0"); // This adds the callback at the current timeline position
+
+                // Schedule audio stop at the end of timeline
+                const duration = tl.duration(); // Get total timeline duration
+                setTimeout(() => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }, duration * 1000); // Convert seconds to ms
+            }, "+=0");
         }
 
         tl.to(".appearlines", {
@@ -191,6 +207,12 @@ const DesktopForm = () => {
         // Optional: basic validation
         if (!name || !email || !message) {
             toast.error("Please fill in all fields.");
+            if (audioErrorRef.current) {
+                audioErrorRef.current.currentTime = 0;
+                audioErrorRef.current.play().catch(err => {
+                    console.warn('Sound play prevented:', err);
+                });
+            }
             return;
         }
 
@@ -206,11 +228,23 @@ const DesktopForm = () => {
         )
             .then(() => {
                 toast.success("Message sent successfully!");
+                if (audioSuccessRef.current) {
+                    audioSuccessRef.current.currentTime = 0;
+                    audioSuccessRef.current.play().catch(err => {
+                        console.warn('Sound play prevented:', err);
+                    });
+                }
                 formRef.current?.reset();
             })
             .catch((error) => {
                 console.error(error);
                 toast.error("Something went wrong. Please try again later.");
+                if (audioErrorRef.current) {
+                    audioErrorRef.current.currentTime = 0;
+                    audioErrorRef.current.play().catch(err => {
+                        console.warn('Sound play prevented:', err);
+                    });
+                }
             });
     };
 
@@ -302,32 +336,32 @@ const DesktopForm = () => {
             <form
                 ref={formRef}
                 onSubmit={handleSubmit}
-                className="Cform absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                className="Cform absolute inset-0 flex items-center justify-center z-[9999] pointer-events-none">
                 <div className="relative w-[1000px] h-[500px] pointer-events-none">
                     {/* Name Field */}
                     <input
                         type="text"
                         placeholder="Name"
                         name="name"
-                        className="absolute top-[10%] left-[42%] w-[160px] h-[36px] futuristic-input pointer-events-auto z-10"
+                        className="absolute top-[10%] left-[42%] w-[160px] h-[36px] futuristic-input pointer-events-auto bg-background"
                     />
                     {/* Email Field */}
                     <input
                         type="email"
                         placeholder="Email"
                         name="email"
-                        className="absolute top-[47%] left-[6%] w-[250px] h-[36px] futuristic-input pointer-events-auto z-10"
+                        className="absolute top-[47%] left-[10%] w-[200px] h-[36px] futuristic-input pointer-events-auto bg-background"
                     />
                     {/* Message Field */}
                     <textarea
                         placeholder="Message"
                         name="message"
-                        className="absolute top-[42%] right-[6%] w-[250px] h-[80px] resize-none futuristic-input pointer-events-auto z-20"
+                        className="absolute top-[42%] right-[10%] w-[200px] h-[80px] resize-none futuristic-input pointer-events-auto bg-background"
                     />
                     {/* Send Button */}
                     <button
                         type="submit"
-                        className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[100px] h-[100px] rounded-full futuristic-button pointer-events-auto z-20"
+                        className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[100px] h-[100px] rounded-full futuristic-button pointer-events-auto"
                     >
                         SEND
                     </button>

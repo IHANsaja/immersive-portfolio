@@ -23,6 +23,9 @@ const HeroSection = () => {
                     style={{ objectFit: "cover" }}
                     className="pointer-events-none mix-blend-plus-darker md:mix-blend-normal"
                     id="background-image"
+                    priority
+                    placeholder="blur"
+                    blurDataURL="data:image/webp;base64,..."
                 />
             </div>
 

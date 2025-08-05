@@ -9,8 +9,13 @@ const GrButtons = () => {
         window.open('https://github.com/IHANsaja', '_blank');
     }
     const resumeClick = () => {
-        window.open('https://github.com/IHANsaja', '_blank');
-    }
+        const link = document.createElement('a');
+        link.href = '/resume/Ihan_Hansaja_Resume.pdf'; // relative path to file in /public
+        link.download = 'Ihan_Hansaja_Resume.pdf'; // filename when downloaded
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     useGSAP(() => {
         gsap.from('#gr-buttons', {

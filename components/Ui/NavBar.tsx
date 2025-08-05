@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, User, Files, BrainCog, Phone, X, Github} from 'lucide-react';
 import Image from "next/image";
+import gsap from 'gsap';
 
 function polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
     const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
@@ -37,7 +38,7 @@ const navItems: NavItem[] = [
     { id: 'hero-section', label: 'Home', icon: Home, angle: 30 },
     { id: 'about-section', label: 'About Me', icon: User, angle: 90 },
     { id: 'projects-section', label: 'My Projects', icon: Files, angle: 150 },
-    { id: 'skills-section', label: 'My Skills', icon: BrainCog, angle: 210 },
+    { id: 'skill-section', label: 'My Skills', icon: BrainCog, angle: 210 },
     { id: 'contact-section', label: 'Cantact Me', icon: Phone, angle: 270 },
     { id: 'github', label: 'Github', icon: Github, angle: 330 },
 ];
@@ -99,9 +100,28 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
     }, [playSound]);
 
     const handleClick = useCallback((itemId: string) => {
-        console.log(`Navigating to ${itemId}`);
         playSound(clickAudioRef);
-    }, [playSound]);
+
+        if (itemId === "github") {
+            window.open("https://github.com/your-profile", "_blank");
+            return;
+        }
+
+        const section = document.getElementById(itemId);
+        if (section) {
+            gsap.to(window, {
+                duration: 1,
+                scrollTo: {
+                    y: section,
+                    offsetY: -50
+                },
+                ease: "power2.inOut"
+            });
+        }
+
+        onClose(); // Close the nav popup
+    }, [playSound, clickAudioRef, onClose]);
+
 
     const getJoystickAngle = useCallback((e: MouseEvent | TouchEvent) => {
         if (!joystickRef.current) return 0;

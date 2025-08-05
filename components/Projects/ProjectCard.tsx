@@ -103,16 +103,16 @@ const ProjectCard: FC<ProjectCardProps> = ({
             </div>
 
             {/* Body */}
-            <div className="flex flex-col flex-grow justify-start items-center w-full p-4 gap-4">
+            <div className="flex flex-col flex-grow justify-center items-center w-full p-4 gap-4">
                 {initiated ? (
                     <div
                         ref={containerRef}
-                        className="grid grid-cols-4 gap-2 w-full max-w-sm"
+                        className="grid grid-cols-4 gap-2"
                     >
                         {Array.from({ length: 16 }).map((_, i) => (
                             <div
                                 key={i}
-                                className="square w-4 h-4 bg-foreground rounded-sm"
+                                className="square w-2 h-2 bg-foreground rounded-sm"
                             />
                         ))}
                     </div>

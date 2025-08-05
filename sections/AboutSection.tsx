@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import AnimatedHoverButton from "@/components/Ui/Button";
 import AnimatedSvg from "@/components/Ui/AnimatedSvg";
 import PoliceLights from "@/components/Ui/PoliceLights";
@@ -11,8 +11,6 @@ import Image from "next/image";
 import { useMediaQuery } from "usehooks-ts";
 import ScrambledTextBlock from "@/components/About/EducationCard";
 
-gsap.registerPlugin(SplitText);
-
 const AboutSection = () => {
     const paragraphRef = useRef<HTMLParagraphElement>(null);
     const line1 = useRef<HTMLSpanElement>(null);
@@ -20,6 +18,13 @@ const AboutSection = () => {
     const line3 = useRef<HTMLSpanElement>(null);
     const line4 = useRef<HTMLSpanElement>(null);
     const isMobile = useMediaQuery("(max-width: 768px)");
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
+// Load the audio once
+    useEffect(() => {
+        audioRef.current = new Audio("/sounds/initiating.wav");
+        audioRef.current.volume = 0.05;
+    }, []);
 
         const hoverEnter = () => {
             const lines = [line1, line2, line3, line4];
@@ -62,7 +67,7 @@ const AboutSection = () => {
             scrollTrigger: {
                 trigger: paragraphRef.current,
                 start: "top 60%",
-                toggleActions: "restart none none none",
+                toggleActions: "restart none restart none",
             },
             delay: 5,
         });
@@ -81,9 +86,55 @@ const AboutSection = () => {
             scrollTrigger: {
                 trigger: "#about-section",
                 start: "top 60%",
-                toggleActions: "restart none none none",
+                toggleActions: "restart none restart none",
+                onEnter: () => {
+                    const audio = audioRef.current;
+                    if (audio) {
+                        audio.currentTime = 0;
+                        audio.play().catch((err) => {
+                            console.warn("Audio playback failed:", err);
+                        });
+
+                        setTimeout(() => {
+                            audio.pause();
+                            audio.currentTime = 0;
+                        }, 6000); // Stop after 5 seconds
+                    }
+                },
             },
         });
+
+        gsap.utils.toArray(".scrambleBI").forEach((el) => {
+            const element = el as HTMLElement; // <-- FIX: Type assertion
+            gsap.from(element, {
+                duration: 5,
+                ease: "circ.inOut",
+                scrambleText: {
+                    text: element.innerText,
+                    chars: "////////  /////// ////////",
+                    speed: 0.3,
+                },
+                scrollTrigger: {
+                    trigger: "#about-section",
+                    start: "top 60%",
+                    toggleActions: "restart none restart none",
+                },
+                stagger: 0.5,
+            });
+        });
+
+        gsap.from('.eduCard', {
+            opacity: 0,
+            duration: 1,
+            delay: 4,
+            y: 100,
+            scrollTrigger: {
+                trigger: "#about-section",
+                start: "top 60%",
+                toggleActions: "restart none restart none",
+            },
+            stagger: 0.5,
+        })
 
         gsap.from('.svgGsap', {
             duration: 4,
@@ -93,7 +144,7 @@ const AboutSection = () => {
             scrollTrigger: {
                 trigger: "#about-section",
                 start: "top 60%",
-                toggleActions: "restart none none none",
+                toggleActions: "restart none restart none",
             }
         });
 
@@ -105,7 +156,7 @@ const AboutSection = () => {
             scrollTrigger: {
                 trigger: "#about-section",
                 start: "top 60%",
-                toggleActions: "restart none none none",
+                toggleActions: "restart none restart none",
             }
         });
 
@@ -118,7 +169,7 @@ const AboutSection = () => {
             scrollTrigger: {
                 trigger: "#about-section",
                 start: "top 60%",
-                toggleActions: "restart none none none",
+                toggleActions: "restart none restart none",
             }
         });
 
@@ -153,11 +204,11 @@ const AboutSection = () => {
                         <PoliceLights rectHeight={30} rectWidth={70} />
                         <br />
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// basic info</p>
-                        <p className="scramble font-andvari-sans text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// basic info</p>
+                        <p className="scrambleBI font-andvari-sans text-[9px] md:text-[11px]">
                             name → &quot;Ihan Hansaja&quot;
                         </p>
-                        <p className="scramble font-andvari-sans text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans text-[9px] md:text-[11px]">
                             location → &quot;Kotikawatta&quot;
                         </p>
                         <br />
@@ -175,39 +226,39 @@ const AboutSection = () => {
                     {/* Skills */}
                     <div>
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// areas of expertise</p>
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// areas of expertise</p>
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             [&quot; Full‑Stack Development &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; Front‑End Development &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; Back‑End Development &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; UI/UX Design &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; AI Engineering &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; Machine Learning Engineering &quot;]
                         </p>
                         <br />
                         <br />
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// what i&apos;m building</p>
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// what i&apos;m building</p>
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             [&quot; AI‑driven Web Apps &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; Immersive Websites &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; AI SaaS Platforms &quot;,
                         </p>
-                        <p className="scramble font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
                             &quot; Machine Learning Models &quot;]
                         </p>
                         <br />
@@ -261,7 +312,7 @@ const AboutSection = () => {
                         </div>
                         <div
                             onMouseEnter={hoverEnter}
-                            className="h-40 w-25 md:h-70 md:w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-2 md:p-6 bg-background">
+                            className="eduCard h-40 w-25 md:h-70 md:w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-2 md:p-6 bg-background opacity-100">
                             <Image
                                 src="/DSlogo.png"
                                 alt="DS senanayake college school logo"
@@ -281,7 +332,7 @@ const AboutSection = () => {
                         </div>
                         <div
                             onMouseEnter={hoverEnter}
-                            className="h-40 w-25 md:h-70 md:w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-2 md:p-6 bg-background">
+                            className="eduCard h-40 w-25 md:h-70 md:w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-2 md:p-6 bg-background opacity-100">
                             <Image
                                 src="/cinecLogo.png"
                                 alt="DS senanayake college school logo"

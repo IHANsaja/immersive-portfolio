@@ -12,7 +12,7 @@ const ToasterProvider = () => {
             hideProgressBar={false}
             newestOnTop
             theme="colored"
-            className="z-[10000]"
+            className="z-[10002] mr-15 mt-15"
         />
     );
 };

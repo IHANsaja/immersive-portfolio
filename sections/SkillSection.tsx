@@ -5,6 +5,9 @@ import Image from "next/image";
 import { SkillLogos, Skill } from "@/constants/SkillConstants";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger"; // <-- Import ScrollTrigger
+
+gsap.registerPlugin(ScrollTrigger); // <-- Register the plugin
 
 const allSkills: Skill[] = SkillLogos.flat();
 
@@ -12,51 +15,95 @@ export default function SkillSection() {
     const containerRef = useRef<HTMLDivElement>(null);
     const squareRefs = useRef<HTMLDivElement[]>([]);
     const nameRefs = useRef<HTMLDivElement[]>([]);
+    const audioInitiateRef = useRef<HTMLAudioElement | null>(null);
 
-    // GSAP entry animation for the grid
-    useGSAP(() => {
-        gsap.from(".skillgrid", {
-            duration: 2,
-            y: 200,
-            opacity: 0,
-            ease: "power1.in",
-            delay: 0.5,
-        });
+    useEffect(() => {
+        audioInitiateRef.current = new Audio('/sounds/initiating.wav');
+        audioInitiateRef.current.volume = 0.05;
     }, []);
 
     useGSAP(() => {
+        // Corrected logic: Combine all GSAP setup into a single hook
+        // Set initial states for all elements
         gsap.set(".bigTree", { opacity: 0 });
         gsap.set(".skills", { y: 100, opacity: 0 });
+        gsap.set(".skills-title", { opacity: 0, y: -20 });
 
+        // Initialize the state of the hover elements (name and square)
+        allSkills.forEach((_, i) => {
+            gsap.set(squareRefs.current[i], {
+                width: "6px",
+                height: "6px",
+            });
+            gsap.set(nameRefs.current[i], {
+                autoAlpha: 0,
+                y: 10,
+            });
+        });
+
+        // Create the main animation timeline with a scroll trigger
         const tl = gsap.timeline({
             scrollTrigger: {
-                trigger: ".skillgrid",
+                trigger: "#skill-section", // <-- Use the section ID as a reliable trigger
                 start: "top center",
-                onEnter: () => {
-                    tl.restart();
-                },
-                onEnterBack: () => {
-                    tl.restart();
-                },
+                onEnter: () => tl.restart(),
+                onEnterBack: () => tl.restart(),
                 onLeaveBack: () => {
                     gsap.set(".bigTree", { opacity: 0 });
                     gsap.set(".skills", { y: 100, opacity: 0 });
+                    gsap.set(".skills-title", { opacity: 0, y: -20 });
                 },
                 onLeave: () => {
                     gsap.set(".bigTree", { opacity: 0 });
                     gsap.set(".skills", { y: 100, opacity: 0 });
+                    gsap.set(".skills-title", { opacity: 0, y: -20 });
                 }
             }
         });
 
-        tl.to(".bigTree", {
+        if (audioInitiateRef.current) {
+            tl.add(() => {
+                const audio = audioInitiateRef.current!;
+                audio.currentTime = 0;
+                audio.play().catch(err => {
+                    console.warn('Sound play prevented:', err);
+                });
+
+                // Schedule audio stop at the end of timeline
+                const duration = tl.duration(); // Get total timeline duration
+                setTimeout(() => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }, duration * 1000); // Convert seconds to ms
+            }, "+=0");
+        }
+
+        tl.to(".skills-title", {
             opacity: 1,
-            duration: 1.5,
-            delay: 0.5,
-            ease: "power2.out"
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
         })
+            .to(".skills-title", {
+                opacity: 0.3,
+                repeat: 3,
+                yoyo: true,
+                duration: 0.2,
+                ease: "power1.inOut"
+            })
+            .to(".skills-title", {
+                opacity: 1,
+                duration: 0.2,
+                ease: "power1.inOut"
+            })
+            .to(".bigTree", {
+                opacity: 1,
+                duration: 1.5,
+                delay: 0.5,
+                ease: "power2.out"
+            }, "<")
             .to(".skills", {
-                y:0,
+                y: 0,
                 opacity: 1,
                 duration: 1.5,
                 stagger: {
@@ -68,34 +115,19 @@ export default function SkillSection() {
             });
     }, []);
 
-    // Clear refs before rendering
-    useEffect(() => {
-        allSkills.forEach((_, i) => {
-            const square = squareRefs.current[i];
-            const name = nameRefs.current[i];
-
-            if (square && name) {
-                gsap.set(square, {
-                    width: "6px",
-                    height: "6px",
-                });
-
-                gsap.set(name, {
-                    autoAlpha: 0,
-                    y: 10,
-                });
-            }
-        });
-    }, []);
-
     return (
         <section id="skill-section" className="relative w-screen h-screen z-0">
+            {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
 
+            <div className="skills-title absolute top-10 right-1/2 translate-x-1/2 md:top-30 md:right-30 md:translate-x-0 z-10 font-neotriad-sans">
+                <h1 className="text-foreground text-4xl md:text-5xl">MY SKILLS</h1>
+            </div>
+
             <div className="bigTree absolute bottom-[-50px] left-0 w-1/2 z-0 mix-blend-soft-light">
-                <Image src="/backgrounds/bigTree.png" alt="mountain background" height={1000} width={1000}/>
+                <Image src="/backgrounds/bigTree.png" alt="big tree background" height={1000} width={1000}/>
             </div>
 
             <div
@@ -117,7 +149,6 @@ export default function SkillSection() {
                                     duration: 0.3,
                                 });
                             }
-
                             if (name) {
                                 gsap.to(name, {
                                     autoAlpha: 1,
@@ -138,7 +169,6 @@ export default function SkillSection() {
                                     duration: 0.3,
                                 });
                             }
-
                             if (name) {
                                 gsap.to(name, {
                                     autoAlpha: 0,
@@ -157,26 +187,15 @@ export default function SkillSection() {
                             className="w-8 h-8 sm:w-[50px] sm:h-[50px] transition-all duration-300 z-10"
                         />
 
-                        {/* Animated skill name */}
                         <div
-                            ref={(el) => {
-                                nameRefs.current[i] = el!;
-                            }}
-                            style={{
-                                opacity: 0,
-                                transform: "translateY(10px)",
-                            }}
+                            ref={(el) => { nameRefs.current[i] = el!; }}
                             className="text-sm sm:text-base text-center font-inconsolata-sans z-10 pointer-events-none"
                         >
                             {skill.name}
                         </div>
 
-
-                        {/* Animated top-right color square */}
                         <div
-                            ref={(el) => {
-                                squareRefs.current[i] = el!;
-                            }}
+                            ref={(el) => { squareRefs.current[i] = el!; }}
                             className="absolute top-0 right-0 z-5"
                             style={{
                                 backgroundColor: skill.color,

@@ -13,8 +13,10 @@ const MobileForm = () => {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const audioHoverRef = useRef<HTMLAudioElement | null>(null);
     const audioClickRef = useRef<HTMLAudioElement | null>(null);
-    const audioAppearRef = useRef<HTMLAudioElement | null>(null);
     const formRef = useRef<HTMLFormElement>(null);
+    const audioInitiateRef = useRef<HTMLAudioElement | null>(null);
+    const audioSuccessRef = useRef<HTMLAudioElement | null>(null);
+    const audioErrorRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
         audioHoverRef.current = new Audio('/sounds/hover.mp3');
@@ -23,8 +25,14 @@ const MobileForm = () => {
         audioClickRef.current = new Audio('/sounds/click.mp3');
         audioClickRef.current.volume = 0.5;
 
-        audioAppearRef.current = new Audio('/sounds/appear.mp3');
-        audioAppearRef.current.volume = 0.5;
+        audioInitiateRef.current = new Audio('/sounds/initiating.wav');
+        audioInitiateRef.current.volume = 0.05;
+
+        audioSuccessRef.current = new Audio('/sounds/confirm.wav');
+        audioSuccessRef.current.volume = 0.1;
+
+        audioErrorRef.current = new Audio('/sounds/reject.wav');
+        audioErrorRef.current.volume = 0.1;
     }, []);
 
     // Initial rotation animation
@@ -83,12 +91,20 @@ const MobileForm = () => {
             }
         });
 
-        if (audioAppearRef.current) {
+        if (audioInitiateRef.current) {
             tl.add(() => {
-                audioAppearRef.current!.currentTime = 0;
-                audioAppearRef.current!.play().catch(err => {
+                const audio = audioInitiateRef.current!;
+                audio.currentTime = 0;
+                audio.play().catch(err => {
                     console.warn('Sound play prevented:', err);
                 });
+
+                // Schedule audio stop at the end of timeline
+                const duration = tl.duration(); // Get total timeline duration
+                setTimeout(() => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }, duration * 1000); // Convert seconds to ms
             }, "+=0");
         }
 
@@ -200,6 +216,12 @@ const MobileForm = () => {
         // Optional: basic validation
         if (!name || !email || !message) {
             toast.error("Please fill in all fields.");
+            if (audioErrorRef.current) {
+                audioErrorRef.current.currentTime = 0;
+                audioErrorRef.current.play().catch(err => {
+                    console.warn('Sound play prevented:', err);
+                });
+            }
             return;
         }
 
@@ -215,11 +237,23 @@ const MobileForm = () => {
         )
             .then(() => {
                 toast.success("Message sent successfully!");
+                if (audioSuccessRef.current) {
+                    audioSuccessRef.current.currentTime = 0;
+                    audioSuccessRef.current.play().catch(err => {
+                        console.warn('Sound play prevented:', err);
+                    });
+                }
                 formRef.current?.reset();
             })
             .catch((error) => {
                 console.error(error);
                 toast.error("Something went wrong. Please try again later.");
+                if (audioErrorRef.current) {
+                    audioErrorRef.current.currentTime = 0;
+                    audioErrorRef.current.play().catch(err => {
+                        console.warn('Sound play prevented:', err);
+                    });
+                }
             });
     };
 

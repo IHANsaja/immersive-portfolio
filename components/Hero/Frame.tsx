@@ -5,11 +5,12 @@ import { useGSAP } from "@gsap/react";
 
 const SvgFrame = () => {
 
-    const tl = gsap.timeline();
-
     useGSAP(() => {
+        const tl = gsap.timeline({ repeat: -1, repeatDelay: 8 });
+
+        // Phase 1: INIT message
         tl.to('#uptext, #bottext', {
-            duration: 4,
+            duration: 3,
             ease: 'power1.in',
             scrambleText: {
                 text: "INITIATING UI...",
@@ -17,52 +18,32 @@ const SvgFrame = () => {
                 speed: 1,
             }
         });
+
+        // Phase 2: Dev Name
         tl.to('#uptext', {
             duration: 2,
             scrambleText: {
                 text: "[ DEV.NAME :: IHAN_HANSAJA ]",
                 chars: "//////////////",
                 speed: 0.2,
-                rightToLeft: false,
             },
-            delay: 5,
+            delay: 1,
         });
+
+        // Phase 3: System Log
         tl.to('#bottext', {
             duration: 2,
             scrambleText: {
                 text: "[ SYSTEM.LOG :: 2025 // ROLE::DEVELOPER ]",
                 chars: "//////////////",
                 speed: 0.2,
-                rightToLeft: false,
             },
-            delay: 5,
+            delay: 0.2,
         });
-        tl.from('#uptext', {
-            duration: 2,
-            scrambleText: {
-                text: "[ DEV.NAME :: IHAN_HANSAJA ]",
-                chars: "//////////////",
-                speed: 0.2,
-                rightToLeft: true,
-                revealDelay: 0.3,
-            },
-            delay: 5,
-            repeat: -1,
-            repeatDelay: 10,
-        });
-        tl.from('#bottext', {
-            duration: 2,
-            scrambleText: {
-                text: "[ SYSTEM.LOG :: 2025 // ROLE::DEVELOPER ]",
-                chars: "//////////////",
-                speed: 0.2,
-                rightToLeft: true,
-                revealDelay: 0.3,
-            },
-            repeat: -1,
-            repeatDelay: 10,
-        })
-    }, [])
+
+        // Optional small idle time before loop
+        tl.to({}, { duration: 2 });
+    }, []);
 
     return (
         <>

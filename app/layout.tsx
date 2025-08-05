@@ -3,6 +3,8 @@ import { Inconsolata } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import ToasterProvider from "@/components/Ui/ToasterProvider";
+import PreloaderWrapper from "@/components/Ui/PreloaderWrpper";
+import {MusicProvider} from "@/components/Ui/MusicProvider"; // 1. Import the wrapper
 
 const InconsolataSans = Inconsolata({
     variable: "--font-inconsolata-sans",
@@ -11,34 +13,39 @@ const InconsolataSans = Inconsolata({
 
 const NeotriadSans = localFont({
     variable: "--font-neotriad-sans",
-    src: "../public/fonts/Neotriad.otf", // Double-check this path relative to layout.tsx
-    display: 'swap', // Recommended for better performance/user experience
+    src: "../public/fonts/Neotriad.otf",
+    display: 'swap',
 });
 
 const AndvariSans = localFont({
     variable: '--font-andvari-sans',
-    src: '../public/fonts/andvari.ttf', // ✅ Correct path relative to the file in `app` or `pages`
+    src: '../public/fonts/andvari.ttf',
     display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: "Ihan Hansaja",
-  description: "Portfolio of Ihan Hansaja",
+    title: "Ihan Hansaja",
+    description: "Portfolio of Ihan Hansaja",
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
+                                       children,
+                                   }: Readonly<{
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        className={`${InconsolataSans.variable} ${NeotriadSans.variable} ${AndvariSans.variable} antialiased`}
-      >
+    return (
+        <html lang="en">
+        <body
+            className={`${InconsolataSans.variable} ${NeotriadSans.variable} ${AndvariSans.variable} antialiased bg-background`} // Added bg-background for seamless transition
+        >
         <ToasterProvider />
-        {children}
-      </body>
-    </html>
-  );
+        {/* 2. Wrap the children with the PreloaderWrapper */}
+        <MusicProvider>
+            <PreloaderWrapper>
+                {children}
+            </PreloaderWrapper>
+        </MusicProvider>
+        </body>
+        </html>
+    );
 }
