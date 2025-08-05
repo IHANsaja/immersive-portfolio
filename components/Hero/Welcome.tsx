@@ -12,39 +12,38 @@ const Welcome = () => {
         const headline = headlineRef.current;
         if (!headline) return;
 
-        // Set initial visibility to hidden
-        gsap.set(headline, { opacity: 0 });
+        // Wait until fonts are fully loaded
+        document.fonts.ready.then(() => {
+            // Safe to animate now
+            gsap.set(headline, { opacity: 0 });
 
-        const split = new SplitText(headline, { type: "words" });
+            const split = new SplitText(headline, { type: "words" });
 
-        // Final part of your animation timeline:
-        tl.to(headline, {
-            opacity: 1,
-            duration: 0.5,
+            tl.to(headline, {
+                opacity: 1,
+                duration: 0.5,
+            });
+
+            tl.from(split.words, {
+                duration: 1.5,
+                ease: "power2.inOut",
+                scrambleText: {
+                    text: "IHAN",
+                    chars: "@#$%^&*()",
+                    speed: 0.2,
+                    revealDelay: 0.2,
+                },
+                stagger: 0.3,
+                onComplete: () => split.revert(),
+            });
+
+            tl.from(headline, {
+                delay: 0.7,
+                y: -300,
+                duration: 2,
+                ease: "power2.inOut",
+            });
         });
-
-        tl.from(split.words, {
-            duration: 1.5,
-            ease: "power2.inOut",
-            scrambleText: {
-                text: "IHAN",
-                chars: "@#$%^&*()",
-                speed: 0.2,
-                revealDelay: 0.2,
-            },
-            stagger: 0.3,
-            onComplete: () => split.revert(),
-        });
-
-        tl.from(headline, {
-            delay: 0.7,
-            y: -300,
-            duration: 2,
-            ease: "power2.inOut",
-        });
-
-        // You can append more animations **before** the headline timeline here if needed.
-
     }, []);
 
     return (

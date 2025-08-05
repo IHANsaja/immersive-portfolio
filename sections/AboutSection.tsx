@@ -48,29 +48,35 @@ const AboutSection = () => {
     useGSAP(() => {
         if (!paragraphRef.current) return;
 
-        // LINES ANIMATION
-        const split = new SplitText(paragraphRef.current, {
-            type: "lines",
-            linesClass: "lineChild",
-        });
-        const parentSplit = new SplitText(paragraphRef.current, {
-            type: "lines",
-            linesClass: "lineParent overflow-hidden",
-        });
+        // declare here so cleanup can see them
+        let split: SplitText | null = null;
+        let parentSplit: SplitText | null = null;
 
-        gsap.from(split.lines, {
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-            stagger: 0.1,
-            scrollTrigger: {
-                trigger: paragraphRef.current,
-                start: "top 60%",
-                toggleActions: "restart none restart none",
-            },
-            delay: 5,
-        });
+        document.fonts.ready.then(() => {
+            split = new SplitText(paragraphRef.current!, {
+                type: "lines",
+                linesClass: "lineChild",
+            });
+            parentSplit = new SplitText(paragraphRef.current!, {
+                type: "lines",
+                linesClass: "lineParent overflow-hidden",
+            });
+
+            // animate your split lines once fonts are ready
+            gsap.from(split.lines, {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: paragraphRef.current,
+                    start: "top 60%",
+                    toggleActions: "restart none restart none",
+                },
+                delay: 5,
+            });
+        }); // ← properly close the .then callback here
 
         // SCRAMBLE TEXT ANIMATION
         gsap.from(".scramble", {
@@ -94,18 +100,17 @@ const AboutSection = () => {
                         audio.play().catch((err) => {
                             console.warn("Audio playback failed:", err);
                         });
-
                         setTimeout(() => {
                             audio.pause();
                             audio.currentTime = 0;
-                        }, 6000); // Stop after 5 seconds
+                        }, 6000);
                     }
                 },
             },
         });
 
         gsap.utils.toArray(".scrambleBI").forEach((el) => {
-            const element = el as HTMLElement; // <-- FIX: Type assertion
+            const element = el as HTMLElement;
             gsap.from(element, {
                 duration: 5,
                 ease: "circ.inOut",
@@ -134,7 +139,7 @@ const AboutSection = () => {
                 toggleActions: "restart none restart none",
             },
             stagger: 0.5,
-        })
+        });
 
         gsap.from('.svgGsap', {
             duration: 4,
@@ -160,22 +165,9 @@ const AboutSection = () => {
             }
         });
 
-        gsap.from('.card', {
-            delay: 4,
-            duration: 1,
-            scaleY: 0,
-            ease: "power2.in",
-            stagger: 0.3,
-            scrollTrigger: {
-                trigger: "#about-section",
-                start: "top 60%",
-                toggleActions: "restart none restart none",
-            }
-        });
-
         return () => {
-            split.revert();
-            parentSplit.revert();
+            split?.revert();
+            parentSplit?.revert();
         };
     }, []);
 

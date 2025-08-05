@@ -141,6 +141,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                                 width={240}
                                 height={240}
                                 className="object-contain scale-140"
+                                priority
                             />
                         </div>
 
@@ -150,6 +151,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                                 src="/logo.png"
                                 alt="Click to enter site"
                                 fill
+                                sizes="(max-width: 640px) 160px, (max-width: 768px) 192px, 224px"
                                 className="object-contain pb-4"
                                 priority
                             />

@@ -25,12 +25,30 @@ const ContactSection: React.FC = () => {
             }
         });
 
-        tl.to(".sideTree", {
+        tl.to(".contact-title", {
             opacity: 1,
-            duration: 1.5,
-            delay: 0.5,
-            ease: "power2.out"
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
         })
+            .to(".contact-title", {
+                opacity: 0.3,
+                repeat: 6,
+                yoyo: true,
+                duration: 0.1,
+                ease: "power1.inOut"
+            })
+            .to(".contact-title", {
+                opacity: 1,
+                duration: 0.2,
+                ease: "power1.inOut"
+            })
+            .to(".sideTree", {
+                opacity: 1,
+                duration: 1.5,
+                delay: 0.5,
+                ease: "power2.out"
+            })
     })
     return (
         <section id="contact-section" className="relative w-screen h-screen z-0">
@@ -38,6 +56,8 @@ const ContactSection: React.FC = () => {
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
+
+            <h1 className="contact-title hidden md:block absolute top-30 left-1/2 -translate-x-1/2 mt-4 font-neotriad-sans z-10 text-4xl">Contact Me.</h1>
 
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 h-auto sm:w-1/2 sm:h-1/2 z-10">
                 <ContactForm />

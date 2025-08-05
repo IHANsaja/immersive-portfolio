@@ -68,7 +68,6 @@ const DesktopForm = () => {
         gsap.set(".appearlines", { clipPath: "circle(0% at 50% 50%)" });
         gsap.set(".Cform", { clipPath: "circle(0% at 50% 50%)" });
         gsap.set(".sclines", { scaleX: 0 });
-        gsap.set(".contactme", { opacity: 0 });
 
         const tl = gsap.timeline({
             scrollTrigger: {
