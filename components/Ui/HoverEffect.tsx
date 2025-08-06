@@ -338,6 +338,7 @@ export default function GPUTrailCanvas() {
                 pointerEvents: 'none',
                 zIndex: 9997
             }}
+            className="hidden md:block"
         >
             <Suspense fallback={null}>
                 <GPUTrailContainer />

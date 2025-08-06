@@ -136,6 +136,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
                                 loop
                                 muted
                                 playsInline
+                                preload="true"
                             />
                         </div>
 

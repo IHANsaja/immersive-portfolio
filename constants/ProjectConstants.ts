@@ -26,7 +26,7 @@ export const projects: Project[] = [
     },
     {
         title: "Raven's Quill Bookstore",
-        videoSrc: "/videos/Freya.mp4", // Assuming this video is in your public folder
+        videoSrc: "/videos/Raven.mp4", // Assuming this video is in your public folder
         description: "Ravensquill Bookstore is a online bookstore that makes it easy for users to buy books from their home.",
         codeUrl: "https://github.com/IHANsaja/Ravensquill-Bookstore",
         demoUrl: "https://github.com/IHANsaja/Ravensquill-Bookstore",
@@ -42,7 +42,7 @@ export const projects: Project[] = [
     },
     {
         title: "Sri Padaya Website",
-        videoSrc: "/videos/Freya.mp4", // Assuming this video is in your public folder
+        videoSrc: "/videos/Sripadaya.mp4", // Assuming this video is in your public folder
         description: "A 3D interactive guide built to help travelers explore Adam's peak",
         codeUrl: "https://github.com/IHANsaja/sri-padaya-website",
         demoUrl: "https://ihansaja.github.io/sri-padaya-website/",

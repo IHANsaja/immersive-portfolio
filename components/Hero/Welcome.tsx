@@ -1,50 +1,10 @@
 "use client";
-import React, { useRef } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import { SplitText } from "gsap/SplitText";
 
-const Welcome = () => {
-    const headlineRef = useRef<HTMLHeadingElement>(null);
-    const tl = useRef(gsap.timeline()).current;
+interface WelcomeProps {
+    headlineRef?: React.RefObject<null>
+}
 
-    useGSAP(() => {
-        const headline = headlineRef.current;
-        if (!headline) return;
-
-        // Wait until fonts are fully loaded
-        document.fonts.ready.then(() => {
-            // Safe to animate now
-            gsap.set(headline, { opacity: 0 });
-
-            const split = new SplitText(headline, { type: "words" });
-
-            tl.to(headline, {
-                opacity: 1,
-                duration: 0.5,
-            });
-
-            tl.from(split.words, {
-                duration: 1.5,
-                ease: "power2.inOut",
-                scrambleText: {
-                    text: "IHAN",
-                    chars: "@#$%^&*()",
-                    speed: 0.2,
-                    revealDelay: 0.2,
-                },
-                stagger: 0.3,
-                onComplete: () => split.revert(),
-            });
-
-            tl.from(headline, {
-                delay: 0.7,
-                y: -300,
-                duration: 2,
-                ease: "power2.inOut",
-            });
-        });
-    }, []);
+const Welcome = ({headlineRef}: WelcomeProps) => {
 
     return (
         <div className="flex justify-center items-center h-screen w-screen overflow-hidden">
@@ -59,7 +19,7 @@ const Welcome = () => {
           px-4 sm:px-8 z-5
         "
             >
-                <span className="text-6xl">WELCOME TO </span><br />
+                <span className="text-6xl">WELCOME TO </span><br/>
                 MY PORTFOLIO
             </h1>
         </div>

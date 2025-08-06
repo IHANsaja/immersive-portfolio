@@ -180,6 +180,22 @@ html, body {
     @apply h-10 w-10 rounded-sm bg-foreground;
   }
 
+  .honeycomb-cell::before,
+  .honeycomb-cell::after {
+    content: '';
+    @apply absolute left-0 right-0 border-l-[12px] border-r-[12px] border-l-transparent border-r-transparent;
+  }
+
+  /* Creates the top part of the hexagon */
+  .honeycomb-cell::after {
+    @apply -top-1.5 border-b-[6px] border-b-gray-100; /* Use your desired color */
+  }
+
+  /* Creates the bottom part of the hexagon */
+  .honeycomb-cell::before {
+    @apply -bottom-1.5 border-t-[6px] border-t-gray-100; /* Use your desired color */
+  }
+
   .dot {
     --uib-size: 20px;
     --uib-speed: 2s;
@@ -252,4 +268,3 @@ html, body {
   color: #191919;
   box-shadow: 0 0 20px #46a8f9, 0 0 40px #46b4f9;
 }
-

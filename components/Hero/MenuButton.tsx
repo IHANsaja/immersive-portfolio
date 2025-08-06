@@ -17,7 +17,7 @@ export default function MenuButton({ onClick }: MenuButtonProps) {
             y: 200,
             opacity: 0,
             ease: 'power1.in',
-            delay: 4,
+            delay: 5,
         })
     }, [])
 

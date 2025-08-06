@@ -3,10 +3,58 @@ import Image from "next/image";
 import Spline from "@splinetool/react-spline";
 import GrButtons from "@/components/Hero/GrButtons";
 import Welcome from "@/components/Hero/Welcome";
-import React from "react";
+import React, {useRef} from "react";
 import { motion } from "framer-motion";
+import {useGSAP} from "@gsap/react";
+import gsap from "gsap";
+import {SplitText} from "gsap/SplitText";
 
 const HeroSection = () => {
+    const headlineRef = useRef(null);
+    const tl = useRef(gsap.timeline()).current;
+
+    useGSAP(() => {
+        const headline = headlineRef.current;
+        if (!headline) return;
+
+        document.fonts.ready.then(() => {
+            gsap.set(headline, { opacity: 0 });
+            const split = new SplitText(headline, { type: "words" });
+
+            tl.to(headline, {
+                opacity: 1,
+                duration: 0.5,
+            })
+                .from(split.words, {
+                    duration: 1.5,
+                    ease: "power2.inOut",
+                    scrambleText: {
+                        text: "IHAN",
+                        chars: "@#$%^&*()",
+                        speed: 0.2,
+                        revealDelay: 0.2,
+                    },
+                    stagger: 0.3,
+                    onComplete: () => split.revert(),
+                })
+                .from(headline, {
+                    y: -300,
+                    duration: 2,
+                    ease: "power2.inOut",
+                }, "+=0.2")
+                .from("#gr-buttons", {
+                    duration: 1,
+                    y: -200,
+                    opacity: 0,
+                    ease: "power1.in",
+                    stagger: {
+                        amount: 2,
+                        from: "random",
+                        grid: [1, 2],
+                    },
+                }, "+=0.5")
+        });
+    }, []);
 
     return (
         <section id="hero-section" className="relative w-screen h-screen z-1">
@@ -44,7 +92,8 @@ const HeroSection = () => {
                 <GrButtons />
             </div>
 
-            <Welcome />
+            <Welcome headlineRef={headlineRef} />
+
             <div className="absolute bottom-[-50px] md:bottom-[-300px] left-0 w-screen z-[9998] pointer-events-none overflow-visible flex justify-center">
                 <motion.div
                     animate={{

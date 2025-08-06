@@ -79,14 +79,14 @@ const SvgFrame = () => {
                             fill="#191919"
                         />
                     </svg>
-                    {/* Loader dots on the left middle - responsive */}
+                    {/* HoneycombLoader dots on the left middle - responsive */}
                     <div className="fixed top-1/2 left-[0.5%] -translate-y-1/2 hidden md:flex flex-col items-center justify-center gap-[11vh] pointer-events-none z-[10000]">
                         <div className="loader"><span></span></div>
                         <div className="loader"><span></span></div>
                         <div className="loader"><span></span></div>
                     </div>
 
-                    {/* Loader dots on the right middle - responsive */}
+                    {/* HoneycombLoader dots on the right middle - responsive */}
                     <div className="fixed top-1/2 right-[0.5%] -translate-y-1/2 hidden md:flex flex-col items-center justify-center gap-[11vh] pointer-events-none z-[10000]">
                         <div className="loader"><span></span></div>
                         <div className="loader"><span></span></div>

@@ -1,8 +1,6 @@
 "use client";
-import React from 'react'
+
 import AnimatedHoverButton from "@/components/Ui/Button";
-import {useGSAP} from "@gsap/react";
-import gsap from "gsap";
 
 const GrButtons = () => {
     const githubClick = () => {
@@ -16,21 +14,6 @@ const GrButtons = () => {
         link.click();
         document.body.removeChild(link);
     };
-
-    useGSAP(() => {
-        gsap.from('#gr-buttons', {
-            duration: 2,
-            y: -200,
-            opacity: 0,
-            ease: 'power1.in',
-            stagger: {
-                amount: 2,
-                from: 'random',
-                grid: [1, 2],
-            },
-            delay: 4,
-        })
-    }, [])
 
     return (
         <div id="gr-buttons" className="flex flex-row gap-8 mt-15 mr-15">

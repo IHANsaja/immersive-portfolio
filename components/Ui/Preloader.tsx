@@ -68,7 +68,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                     }
                 });
             }, 50); // speed of progress
-        }, 6000); // <-- delay before progress starts (in ms)
+        }, 5000); // <-- delay before progress starts (in ms)
 
         return () => clearTimeout(delay);
     }, []);
@@ -141,7 +141,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                                 width={240}
                                 height={240}
                                 className="object-contain scale-140"
-                                priority
+                                loading="lazy"
                             />
                         </div>
 
@@ -153,7 +153,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                                 fill
                                 sizes="(max-width: 640px) 160px, (max-width: 768px) 192px, 224px"
                                 className="object-contain pb-4"
-                                priority
+                                loading="lazy"
                             />
                         </div>
                     </button>
