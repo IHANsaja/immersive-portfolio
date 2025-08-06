@@ -127,7 +127,7 @@ export default function SkillSection() {
             </div>
 
             <div className="bigTree absolute bottom-[-50px] left-0 w-1/2 z-0 mix-blend-soft-light">
-                <Image src="/backgrounds/bigTree.png" alt="big tree background" height={1000} width={1000}/>
+                <Image src="/backgrounds/bigTree.png" alt="big tree background" height={1000} width={1000} loading="lazy" />
             </div>
 
             <div

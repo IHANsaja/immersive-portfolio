@@ -128,7 +128,7 @@ const ProjectsSection = () => {
             </div>
 
             <div className="mountain absolute bottom-[-50px] right-0 w-1/2 z-5 mix-blend-multiply">
-                <Image src="/backgrounds/mountain.png" alt="mountain background" height={1000} width={1000}/>
+                <Image src="/backgrounds/mountain.png" alt="mountain background" height={1000} width={1000} loading="lazy" />
             </div>
 
         </section>

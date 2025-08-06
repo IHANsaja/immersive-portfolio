@@ -72,14 +72,14 @@ const ContactSection: React.FC = () => {
                 ].map(({ href, src, alt }, idx) => (
                     <Link href={href} key={idx} target="_blank" className="group pointer-events-auto">
                         <div className="p-3 rounded-full border-2 border-white bg-white/5 backdrop-blur-md hover:bg-white/10 transition-all duration-300 shadow-lg group-hover:shadow-xl hover:scale-110">
-                            <Image src={src} alt={alt} height={36} width={36} className="transition-transform duration-300 group-hover:rotate-12" />
+                            <Image src={src} alt={alt} height={36} width={36} className="transition-transform duration-300 group-hover:rotate-12" loading="lazy" />
                         </div>
                     </Link>
                 ))}
             </div>
 
             <div className="sideTree absolute bottom-[-50px] right-0 w-1/2 z-5 mix-blend-multiply -scale-x-100">
-                <Image src="/backgrounds/sideTree.png" alt="mountain background" height={1000} width={1000}/>
+                <Image src="/backgrounds/sideTree.png" alt="mountain background" height={1000} width={1000} loading="lazy"/>
             </div>
         </section>
     );

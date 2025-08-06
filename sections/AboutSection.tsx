@@ -311,6 +311,7 @@ const AboutSection = () => {
                                 height={70}
                                 width={70}
                                 className="relative z-10"
+                                loading="lazy"
                             />
                             <ScrambledTextBlock
                                 lines={[
@@ -331,6 +332,7 @@ const AboutSection = () => {
                                 height={70}
                                 width={70}
                                 className="relative z-10"
+                                loading="lazy"
                             />
                             <ScrambledTextBlock
                                 lines={[
