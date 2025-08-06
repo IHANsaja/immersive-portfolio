@@ -257,6 +257,7 @@ const DesktopForm = () => {
                     alt="scifi contact form border"
                     fill
                     className="contact-border z-0"
+                    priority
                 />
 
                 {/* Appear-lines clip-path animation */}
@@ -265,6 +266,7 @@ const DesktopForm = () => {
                     alt="scifi contact form appear lines"
                     fill
                     className="appearlines p-16"
+                    priority
                 />
 
                 {/* Overlapping circles with manual padding */}
@@ -276,6 +278,7 @@ const DesktopForm = () => {
                             fill
                             style={{ objectFit: 'contain' }}
                             className="p-20"
+                            priority
                         />
                     </div>
                     <div className="circle circrot absolute inset-0 scale-0 p-2">
@@ -285,6 +288,7 @@ const DesktopForm = () => {
                             fill
                             style={{ objectFit: 'contain' }}
                             className="p-15"
+                            priority
                         />
                     </div>
                     <div className="circle circrot absolute inset-0 scale-0 p-3">
@@ -294,6 +298,7 @@ const DesktopForm = () => {
                             fill
                             style={{ objectFit: 'contain' }}
                             className="p-12"
+                            priority
                         />
                     </div>
                     <div className="circle circrot absolute inset-0 scale-0 p-4">
@@ -303,6 +308,7 @@ const DesktopForm = () => {
                             fill
                             style={{ objectFit: 'contain' }}
                             className="p-8"
+                            priority
                         />
                     </div>
                     <div className="circle absolute inset-0 scale-0 p-5">
@@ -312,6 +318,7 @@ const DesktopForm = () => {
                             fill
                             style={{ objectFit: 'contain' }}
                             className="p-0"
+                            priority
                         />
                     </div>
                 </div>

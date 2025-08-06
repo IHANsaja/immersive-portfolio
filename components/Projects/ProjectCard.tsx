@@ -89,7 +89,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
 
     return (
         <div className="project-card flex flex-col bg-background rounded-lg shadow w-full max-w-full h-auto">
-            <audio ref={audioRef} src={audioSrc} hidden preload="auto" />
+            <audio ref={audioRef} src={audioSrc} hidden />
 
             {/* Header */}
             <div
@@ -136,7 +136,6 @@ const ProjectCard: FC<ProjectCardProps> = ({
                                 loop
                                 muted
                                 playsInline
-                                preload="true"
                             />
                         </div>
 

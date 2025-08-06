@@ -185,6 +185,7 @@ export default function SkillSection() {
                             width={50}
                             height={50}
                             className="w-8 h-8 sm:w-[50px] sm:h-[50px] transition-all duration-300 z-10"
+                            priority
                         />
 
                         <div
