@@ -26,6 +26,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
     const [isExiting, setIsExiting] = useState(false);
     const [isClickable, setIsClickable] = useState(false);
     const [assetPreloader] = useState(() => new AssetPreloader());
+    const [loadingStage, setLoadingStage] = useState<'initializing' | 'loading' | 'ready'>('initializing');
 
     const getGreeting = () => {
         const hour = new Date().getHours();
@@ -65,65 +66,80 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
         // Set up progress callback
         assetPreloader.setProgressCallback((loadingProgress: LoadingProgress) => {
             setProgress(loadingProgress.percentage);
+            setLoadingStage('loading');
             
-            // Update loading text based on stage
+            // Update loading text based on stage with creative descriptions
             let stageText = "";
+            let creativeDescription = "";
+            
             switch (loadingProgress.stage) {
                 case 'images':
-                    stageText = "Loading Images";
+                    stageText = "Rendering Visual Assets";
+                    creativeDescription = "Preparing stunning visuals...";
                     break;
                 case 'videos':
-                    stageText = "Loading Videos";
+                    stageText = "Buffering Media Content";
+                    creativeDescription = "Loading cinematic experiences...";
                     break;
                 case 'audio':
-                    stageText = "Loading Audio";
+                    stageText = "Tuning Audio Systems";
+                    creativeDescription = "Calibrating sound frequencies...";
                     break;
                 case 'models':
-                    stageText = "Loading 3D Models";
+                    stageText = "Initializing 3D Environment";
+                    creativeDescription = "Building immersive worlds...";
                     break;
                 case 'spline':
-                    stageText = "Loading Spline Scene";
+                    stageText = "Loading Interactive Scene";
+                    creativeDescription = "Preparing 3D experience...";
                     break;
                 case 'complete':
-                    stageText = "Ready to Enter";
+                    stageText = "System Ready";
+                    creativeDescription = "All systems operational!";
+                    setLoadingStage('ready');
                     break;
                 default:
-                    stageText = "Loading Assets";
+                    stageText = "Optimizing Performance";
+                    creativeDescription = "Fine-tuning experience...";
             }
             
-            setLoadingText(`${stageText}... ${loadingProgress.currentAsset}`);
+            setLoadingText(`${stageText}... ${creativeDescription}`);
             
-            // Update progress bar
+            // Update progress bar with smooth animation
             if (progressBarRef.current) {
-                progressBarRef.current.style.width = `${loadingProgress.percentage}%`;
+                gsap.to(progressBarRef.current, {
+                    width: `${loadingProgress.percentage}%`,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
             }
         });
 
         // Set up completion callback
         assetPreloader.setCompleteCallback(() => {
-            setLoadingText("Ready to Enter");
+            setLoadingText("System Ready - All systems operational!");
+            setLoadingStage('ready');
             setIsClickable(true);
             console.log('Asset preloading completed successfully!');
         });
 
-        // Start preloading after a short delay
-        const delay = setTimeout(() => {
-            console.log('Starting asset preloading...');
-            assetPreloader.preloadAssets().catch((error) => {
-                console.error('Asset preloading failed:', error);
-                // Still allow user to proceed even if some assets fail
-                setLoadingText("Ready to Enter");
-                setIsClickable(true);
-            });
-        }, 3000); // Start after 3 seconds to allow animations to complete
-
-        return () => clearTimeout(delay);
+        // Start preloading immediately
+        console.log('Starting asset preloading...');
+        assetPreloader.preloadAssets().catch((error) => {
+            console.error('Asset preloading failed:', error);
+            // Still allow user to proceed even if some assets fail
+            setLoadingText("Ready to Enter");
+            setIsClickable(true);
+        });
     }, [assetPreloader]);
 
 
     const handleExitAnimation = () => {
         if (isExiting || !isClickable) return;
         setIsExiting(true);
+
+        // Dispatch preloader completion event
+        window.dispatchEvent(new CustomEvent('preloaderComplete'));
 
         const exitTl = gsap.timeline({ onComplete: onLoadingComplete });
 
@@ -154,6 +170,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
     return (
         <div
             ref={preloaderRef}
+            data-preloader="true"
             className="h-screen w-screen grid grid-cols-1 md:grid-cols-3 md:grid-rows-3 bg-[#191919] text-foreground fixed top-0 left-0 z-[10001]"
             style={{ clipPath: "circle(100% at 50% 50%)", willChange: "clip-path" }}
         >
@@ -216,7 +233,15 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
 
             <div className="flex flex-col items-end justify-center p-8 w-full">
                 <div ref={progressNumberRef} className="flex items-end justify-start p-8 font-neotriad-sans text-5xl tabular-nums">
-                    <p>{progress.toString().padStart(3, '0')}%</p>
+                    <p className="relative">
+                        {progress.toString().padStart(3, '0')}%
+                        {loadingStage === 'loading' && (
+                            <span className="absolute -right-2 top-0 text-2xl animate-pulse">⚡</span>
+                        )}
+                        {loadingStage === 'ready' && (
+                            <span className="absolute -right-2 top-0 text-2xl animate-bounce">✨</span>
+                        )}
+                    </p>
                 </div>
                 <div className="w-full h-1 bg-foreground/10">
                     <div ref={progressBarRef} className="h-full bg-foreground" style={{ width: '0%' }}></div>

@@ -155,23 +155,23 @@ const TrailDisplayShader = {
 // This new component manages BOTH trail simulations and the final display
 function GPUTrailManager({ backgroundTexture }: { backgroundTexture: THREE.Texture }) {
     const config = useMemo(() => ({
-        resolution: 512,
+        resolution: 256, // Reduced from 512 for better performance
         // Mouse trail settings
         mouseRadius: 0.02,
-        mouseIntensity: 0.2,
+        mouseIntensity: 0.15, // Reduced intensity
         mouseDissipation: 0.96,
         lag: 0.05,
         // Auto trail settings
         autoRadius: 0.015,
-        autoIntensity: 0.15,
+        autoIntensity: 0.1, // Reduced intensity
         autoDissipation: 0.97,
         // Display settings
-        alpha: 0.8,
-        blur: 0.002,
-        displacementScale: 0.05,
-        shatterScale: 200,
-        shatterStrength: 0.5,
-        dragStrength: 5,
+        alpha: 0.6, // Reduced alpha for less GPU load
+        blur: 0.003, // Slightly increased blur to compensate for lower resolution
+        displacementScale: 0.03, // Reduced displacement
+        shatterScale: 150, // Reduced shatter scale
+        shatterStrength: 0.3, // Reduced shatter strength
+        dragStrength: 3, // Reduced drag strength
     }), []);
 
     // --- State for MOUSE trail ---
@@ -266,8 +266,22 @@ function GPUTrailManager({ backgroundTexture }: { backgroundTexture: THREE.Textu
     }, []);
 
 
+    // Frame rate limiting
+    const lastFrameTime = useRef(0);
+    const targetFPS = 30; // Limit to 30 FPS for better performance
+    const frameInterval = 1000 / targetFPS;
+
     // --- Render Loop ---
     useFrame(({ gl }, delta) => {
+        const now = performance.now();
+        
+        // Skip frame if not enough time has passed
+        if (now - lastFrameTime.current < frameInterval) {
+            return;
+        }
+        
+        lastFrameTime.current = now;
+
         // --- 1. MOUSE TRAIL SIMULATION ---
         prevSimulatedMouse.current.copy(simulatedMouse.current);
         simulatedMouse.current.lerp(realMouse.current, config.lag);
