@@ -10,23 +10,30 @@ const PreloaderWrapper = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         setIsClient(true);
-        document.fonts.ready.then(() => setFontsLoaded(true));
+        // Wait for fonts to load before showing preloader
+        document.fonts.ready.then(() => {
+            setFontsLoaded(true);
+        });
     }, []);
 
     const handleLoadingComplete = () => {
+        // Add a small delay for smooth transition
         setTimeout(() => {
-            setShowPreloader(false); // Only now render the children
+            setShowPreloader(false);
         }, 300);
     };
 
-    if (!isClient || !fontsLoaded) return null;
+    // Don't render anything until client-side and fonts are loaded
+    if (!isClient || !fontsLoaded) {
+        return null;
+    }
 
     return (
         <>
             {showPreloader ? (
                 <Preloader onLoadingComplete={handleLoadingComplete} />
             ) : (
-                children // Only render children AFTER preloader completes
+                children
             )}
         </>
     );

@@ -1,19 +1,22 @@
 export interface Project {
     title: string;
-    videoSrc: string;
+    videoSrc: string; // Can be video or image URL
     description: string;
-    codeUrl: string;
-    demoUrl: string;
+    codeUrl?: string; // Optional code URL
+    demoUrl?: string; // Optional demo URL
+    figmaUrl?: string; // Optional Figma design URL
     audioSrc: string; // ✨ Changed from speakText to audioSrc
+    badge?: 'ui-design' | 'code-only' | 'full-project'; // Optional project type badge
 }
 
 export const projects: Project[] = [
     {
         title: "Freya - AI Voice Assistant",
-        videoSrc: "/videos/Freya.mp4", // Assuming this video is in your public folder
+        videoSrc: "/videos/Freya.mp4", // Local video file
         description: "AI voice assistant designed to simplify your daily tasks and engage in casual conversations.",
         codeUrl: "https://github.com/IHANsaja/Freya-TheVoiceAssistant",
-        demoUrl: "https://github.com/IHANsaja/Freya-TheVoiceAssistant",
+        demoUrl: "",
+        figmaUrl: "", // Replace with actual Figma URL
         audioSrc: "/voices/ProjectFreya.mp3", // ✨ Path to your custom audio file
     },
     {
@@ -21,8 +24,10 @@ export const projects: Project[] = [
         videoSrc: "/videos/Serendib.mp4", // Assuming this video is in your public folder
         description: "Serendib WMS helps businesses manage their warehouses efficiently in real-time.",
         codeUrl: "https://github.com/IHANsaja/Serendib-Warehouse-Management-System",
-        demoUrl: "https://github.com/IHANsaja/Serendib-Warehouse-Management-System",
+        demoUrl: "",
+        figmaUrl: "https://www.figma.com/design/UC9Jg0csr3ixsco1bkCT21/Serendib?node-id=0-1&t=efcJsAbHIsHftDim-1", // Replace with actual Figma URL
         audioSrc: "/voices/ProjectSerendib.mp3", // ✨ Path to your custom audio file
+        badge: "full-project", // Has both code and design
     },
     {
         title: "Raven's Quill Bookstore",
@@ -30,7 +35,9 @@ export const projects: Project[] = [
         description: "Ravensquill Bookstore is a online bookstore that makes it easy for users to buy books from their home.",
         codeUrl: "https://github.com/IHANsaja/Ravensquill-Bookstore",
         demoUrl: "https://github.com/IHANsaja/Ravensquill-Bookstore",
+        figmaUrl: "",
         audioSrc: "/voices/ProjectRaven.mp3", // ✨ Path to your custom audio file
+        badge: "code-only", // Only has code, no design
     },
     {
         title: "CINEC Campus Navigator",
@@ -38,6 +45,7 @@ export const projects: Project[] = [
         description: "A modern web app I developed to make it easier for students to find their way around the campus.",
         codeUrl: "https://github.com/IHANsaja/CINEC-Campus-Navigator",
         demoUrl: "https://github.com/IHANsaja/CINEC-Campus-Navigator",
+        figmaUrl: "", // Replace with actual Figma URL
         audioSrc: "/voices/ProjectCinec.mp3", // ✨ Path to your custom audio file
     },
     {
@@ -46,22 +54,56 @@ export const projects: Project[] = [
         description: "A 3D interactive guide built to help travelers explore Adam's peak",
         codeUrl: "https://github.com/IHANsaja/sri-padaya-website",
         demoUrl: "https://ihansaja.github.io/sri-padaya-website/",
+        figmaUrl: "", // Replace with actual Figma URL
         audioSrc: "/voices/ProjectAdam.mp3", // ✨ Path to your custom audio file
     },
     {
         title: "Zenofy E-Commerce Website",
-        videoSrc: "/videos/Freya.mp4", // Assuming this video is in your public folder
+        videoSrc: "/images/zenofy.jpg", // External image URL
         description: "A modern e-commerce website for a business that specializes in projectors and accessories.",
         codeUrl: "https://github.com/IHANsaja/zenofy-website",
-        demoUrl: "https://github.com/IHANsaja/zenofy-website",
+        demoUrl: "",
+        figmaUrl: "https://www.figma.com/design/fDjkJc9GviqSmVuzkiTbYz/Zenofy-Web-App?node-id=0-1&t=dQcPMZo46l27aVGN-1",
         audioSrc: "/voices/ProjectZenofy.mp3", // ✨ Path to your custom audio file
+        badge: "full-project", // Has both code and design
     },
     {
         title: "HeritageLink Website",
         videoSrc: "/videos/Heritage.mp4", // Assuming this video is in your public folder
-        description: "To protect and promote Sri Lanka’s rich cultural heritage through a modern digital experience",
+        description: "To protect and promote Sri Lanka's rich cultural heritage through a modern digital experience",
         codeUrl: "https://github.com/IHANsaja/HeritageLink",
         demoUrl: "https://github.com/IHANsaja/HeritageLink",
+        figmaUrl: "https://www.figma.com/design/vZuJm07ln2Vb8DbHQ0LWWF/HeritageLink?node-id=0-1&t=SlCOnK6vtoKMiRvv-1", // Replace with actual Figma URL
         audioSrc: "/voices/ProjectHeritage.mp3", // ✨ Path to your custom audio file
     },
+    {
+        title: "EcoVibe Mobile App",
+        videoSrc: "/images/ecovibe.jpg", // External image URL
+        description: "A modern mobile app designed to help users reduce their carbon footprint and live a more sustainable lifestyle.",
+        codeUrl: "",
+        demoUrl: "",
+        figmaUrl: "https://www.figma.com/design/PGzfaFxNWv8EFwbd9i3ZGc/greenUrbanCity-mobile-app?node-id=0-1&t=XZi9vefiJbSlsNlm-1", // Replace with actual Figma URL
+        audioSrc: "", // ✨ Path to your custom audio file
+        badge: "ui-design"
+    },
+    {
+        title: "Online Bus Ticket Booking System",
+        videoSrc: "/images/bus.jpg", // External image URL
+        description: "Modern bus ticket booking system designed to help users book tickets for buses in sri lanka.",
+        codeUrl: "",
+        demoUrl: "",
+        figmaUrl: "https://www.figma.com/design/Pl0HVYIZ5wZheUtih464nU/Online-Bus-System?node-id=0-1&t=czTezxQu1Zmhsap9-1", // Replace with actual Figma URL
+        audioSrc: "", // ✨ Path to your custom audio file
+        badge: "ui-design"
+    },
+    {
+        title: "CINEC ME Website",
+        videoSrc: "/images/fome.jpg", // External image URL
+        description: "Marine Engineering Faculty website designed to help users learn about the faculty and its programs.",
+        codeUrl: "",
+        demoUrl: "",
+        figmaUrl: "https://www.figma.com/design/DPTzzMA69YzRNJvWUR6Uvt/FOME?node-id=0-1&t=ngzucepFrxyodoBd-1", // Replace with actual Figma URL
+        audioSrc: "", // ✨ Path to your custom audio file
+        badge: "ui-design"
+    }
 ];

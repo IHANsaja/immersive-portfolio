@@ -5,6 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import MusicButton from "./MusicButton";
 import { useGSAP } from "@gsap/react";
+import { AssetPreloader, LoadingProgress } from "@/utils/AssetPreloader";
 
 interface PreloaderProps {
     onLoadingComplete: () => void;
@@ -18,10 +19,13 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
     const soundSectionRef2 = useRef<HTMLDivElement>(null);
     const progressNumberRef = useRef<HTMLDivElement>(null);
     const progressBarRef = useRef<HTMLDivElement>(null);
+    const loadingTextRef = useRef<HTMLDivElement>(null);
 
     const [progress, setProgress] = useState(0);
+    const [loadingText, setLoadingText] = useState("Initializing...");
     const [isExiting, setIsExiting] = useState(false);
     const [isClickable, setIsClickable] = useState(false);
+    const [assetPreloader] = useState(() => new AssetPreloader());
 
     const getGreeting = () => {
         const hour = new Date().getHours();
@@ -38,6 +42,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
         tl.from(soundSectionRef2.current, { autoAlpha: 0, x: 30 }, "-=0.4");
         tl.from(logoContainerRef.current, { autoAlpha: 0, scale: 0.8 }, "-=0.4");
         tl.from(progressNumberRef.current, { autoAlpha: 0, y: 20 }, "-=0.2");
+        tl.from(loadingTextRef.current, { autoAlpha: 0, y: 20 }, "-=0.2");
 
         const progressBarParent = progressBarRef.current?.parentElement;
         if (progressBarParent) {
@@ -51,27 +56,69 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
         }
     }, [progress]);
 
-    // Example simulated progress increment (remove if using actual loading logic)
+    // Initialize asset preloading
     useEffect(() => {
-        // Start progress after a 500ms delay
+        // Log asset statistics for debugging
+        const stats = assetPreloader.getAssetCount();
+        console.log('AssetPreloader Statistics:', stats);
+
+        // Set up progress callback
+        assetPreloader.setProgressCallback((loadingProgress: LoadingProgress) => {
+            setProgress(loadingProgress.percentage);
+            
+            // Update loading text based on stage
+            let stageText = "";
+            switch (loadingProgress.stage) {
+                case 'images':
+                    stageText = "Loading Images";
+                    break;
+                case 'videos':
+                    stageText = "Loading Videos";
+                    break;
+                case 'audio':
+                    stageText = "Loading Audio";
+                    break;
+                case 'models':
+                    stageText = "Loading 3D Models";
+                    break;
+                case 'spline':
+                    stageText = "Loading Spline Scene";
+                    break;
+                case 'complete':
+                    stageText = "Ready to Enter";
+                    break;
+                default:
+                    stageText = "Loading Assets";
+            }
+            
+            setLoadingText(`${stageText}... ${loadingProgress.currentAsset}`);
+            
+            // Update progress bar
+            if (progressBarRef.current) {
+                progressBarRef.current.style.width = `${loadingProgress.percentage}%`;
+            }
+        });
+
+        // Set up completion callback
+        assetPreloader.setCompleteCallback(() => {
+            setLoadingText("Ready to Enter");
+            setIsClickable(true);
+            console.log('Asset preloading completed successfully!');
+        });
+
+        // Start preloading after a short delay
         const delay = setTimeout(() => {
-            const interval = setInterval(() => {
-                setProgress((prev) => {
-                    if (prev < 100) {
-                        if (progressBarRef.current) {
-                            progressBarRef.current.style.width = `${prev + 1}%`;
-                        }
-                        return prev + 1;
-                    } else {
-                        clearInterval(interval);
-                        return prev;
-                    }
-                });
-            }, 50); // speed of progress
-        }, 5000); // <-- delay before progress starts (in ms)
+            console.log('Starting asset preloading...');
+            assetPreloader.preloadAssets().catch((error) => {
+                console.error('Asset preloading failed:', error);
+                // Still allow user to proceed even if some assets fail
+                setLoadingText("Ready to Enter");
+                setIsClickable(true);
+            });
+        }, 3000); // Start after 3 seconds to allow animations to complete
 
         return () => clearTimeout(delay);
-    }, []);
+    }, [assetPreloader]);
 
 
     const handleExitAnimation = () => {
@@ -85,6 +132,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
             soundSectionRef1.current,
             soundSectionRef2.current,
             progressNumberRef.current,
+            loadingTextRef.current,
         ];
 
         const progressBarParent = progressBarRef.current?.parentElement;
@@ -172,6 +220,9 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                 </div>
                 <div className="w-full h-1 bg-foreground/10">
                     <div ref={progressBarRef} className="h-full bg-foreground" style={{ width: '0%' }}></div>
+                </div>
+                <div ref={loadingTextRef} className="flex items-center justify-start p-2 font-inconsolata-sans text-sm text-foreground/70">
+                    <p>{loadingText}</p>
                 </div>
             </div>
 

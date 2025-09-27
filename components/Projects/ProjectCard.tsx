@@ -1,14 +1,18 @@
 import React, { FC, useState, useRef, useEffect } from 'react';
 import { FaCode } from 'react-icons/fa';
+import { FaFigma } from 'react-icons/fa';
 import { animate, stagger, utils } from 'animejs';
+import { toast } from 'react-toastify';
 
 interface ProjectCardProps {
     title: string;
-    videoSrc: string;
+    videoSrc: string; // Can be video or image URL
     description: string;
-    codeUrl: string;
-    demoUrl: string;
+    codeUrl?: string; // Optional code URL
+    demoUrl?: string; // Optional demo URL
+    figmaUrl?: string; // Optional Figma design URL
     audioSrc: string;
+    badge?: 'ui-design' | 'code-only' | 'full-project'; // Optional project type badge
 }
 
 const ProjectCard: FC<ProjectCardProps> = ({
@@ -17,7 +21,9 @@ const ProjectCard: FC<ProjectCardProps> = ({
                                                description,
                                                codeUrl,
                                                demoUrl,
+                                               figmaUrl,
                                                audioSrc,
+                                               badge,
                                            }) => {
     const [initiated, setInitiated] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -59,6 +65,12 @@ const ProjectCard: FC<ProjectCardProps> = ({
             animationRef.current = null;
             setInitiated(false);
         } else {
+            // Check if audioSrc is available
+            if (!audioSrc || audioSrc.trim() === '') {
+                toast.info('There is no audio available for this project');
+                return;
+            }
+            
             setInitiated(true);
             if (audioRef.current) {
                 audioRef.current.currentTime = 0;
@@ -80,6 +92,107 @@ const ProjectCard: FC<ProjectCardProps> = ({
         }
     };
 
+    const handleFigmaClick = () => {
+        if (figmaUrl && figmaUrl.trim() !== '') {
+            window.open(figmaUrl, '_blank');
+        } else {
+            toast.info('There is no Figma design for this application');
+        }
+    };
+
+    const handleCodeClick = () => {
+        if (codeUrl && codeUrl.trim() !== '') {
+            window.open(codeUrl, '_blank');
+        } else {
+            toast.info('There is no code repository for this application');
+        }
+    };
+
+    const handleDemoClick = () => {
+        if (demoUrl && demoUrl.trim() !== '') {
+            window.open(demoUrl, '_blank');
+        } else {
+            toast.info('There is no demo available for this application');
+        }
+    };
+
+    // Determine if videoSrc is a video or image
+    const isVideoFile = (src: string) => {
+        const videoExtensions = ['.mp4', '.webm', '.ogg', '.avi', '.mov', '.wmv'];
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
+        
+        const lowerSrc = src.toLowerCase();
+        
+        // Check for video extensions
+        if (videoExtensions.some(ext => lowerSrc.includes(ext))) {
+            return true;
+        }
+        
+        // Check for image extensions
+        if (imageExtensions.some(ext => lowerSrc.includes(ext))) {
+            return false;
+        }
+        
+        // Check for external video platforms
+        if (lowerSrc.includes('youtube.com') || lowerSrc.includes('youtu.be') || 
+            lowerSrc.includes('vimeo.com') || lowerSrc.includes('dailymotion.com')) {
+            return true;
+        }
+        
+        // Default to video for unknown formats
+        return true;
+    };
+
+    // Determine badge type based on available URLs
+    const getBadgeInfo = () => {
+        if (badge) {
+            return {
+                type: badge,
+                text: badge === 'ui-design' ? 'UI Design Only' : 
+                      badge === 'code-only' ? 'Code Only' : 'Full Project',
+                color: badge === 'ui-design' ? 'bg-gradient-to-r from-indigo-700 to-blue-800' : 
+                       badge === 'code-only' ? 'bg-gradient-to-r from-slate-600 to-gray-700' : 'bg-gradient-to-r from-emerald-600 to-green-600',
+                borderColor: badge === 'ui-design' ? 'border-indigo-500/30' : 
+                           badge === 'code-only' ? 'border-slate-500/30' : 'border-emerald-500/30',
+                textColor: badge === 'ui-design' ? 'text-indigo-100' : 
+                          badge === 'code-only' ? 'text-slate-100' : 'text-emerald-100'
+            };
+        }
+        
+        // Auto-detect based on available URLs
+        const hasCode = codeUrl && codeUrl.trim() !== '';
+        const hasDemo = demoUrl && demoUrl.trim() !== '';
+        const hasFigma = figmaUrl && figmaUrl.trim() !== '';
+        
+        if (hasFigma && !hasCode && !hasDemo) {
+            return { 
+                type: 'ui-design', 
+                text: 'UI Design Only', 
+                color: 'bg-gradient-to-r from-indigo-700 to-blue-800',
+                borderColor: 'border-indigo-500/30',
+                textColor: 'text-indigo-100'
+            };
+        } else if (hasCode && !hasFigma) {
+            return { 
+                type: 'code-only', 
+                text: 'Code Only', 
+                color: 'bg-gradient-to-r from-slate-600 to-gray-700',
+                borderColor: 'border-slate-500/30',
+                textColor: 'text-slate-100'
+            };
+        } else {
+            return { 
+                type: 'full-project', 
+                text: 'Full Project', 
+                color: 'bg-gradient-to-r from-emerald-600 to-green-600',
+                borderColor: 'border-emerald-500/30',
+                textColor: 'text-emerald-100'
+            };
+        }
+    };
+
+    const badgeInfo = getBadgeInfo();
+
     useEffect(() => {
         return () => {
             animationRef.current?.pause();
@@ -88,8 +201,15 @@ const ProjectCard: FC<ProjectCardProps> = ({
     }, []);
 
     return (
-        <div className="project-card flex flex-col bg-background rounded-lg shadow w-full max-w-full h-auto">
-            <audio ref={audioRef} src={audioSrc} hidden />
+        <div className="project-card flex flex-col bg-background rounded-lg shadow w-full max-w-full h-auto relative">
+            {audioSrc && audioSrc.trim() !== '' && (
+                <audio ref={audioRef} src={audioSrc} hidden />
+            )}
+
+            {/* Badge */}
+            <div className={`absolute top-1 left-2 z-10 px-2 py-1 rounded-full text-[12px] font-medium ${badgeInfo.color} ${badgeInfo.borderColor} ${badgeInfo.textColor} border backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105`}>
+                <span className="font-inconsalata-sans tracking-wide">{badgeInfo.text}</span>
+            </div>
 
             {/* Header */}
             <div
@@ -118,25 +238,34 @@ const ProjectCard: FC<ProjectCardProps> = ({
                     </div>
                 ) : (
                     <>
-                        {/* Video */}
-                        <div
-                            className="w-full aspect-video max-w-full overflow-visible rounded"
-                            onMouseEnter={() => videoRef.current?.play()}
-                            onMouseLeave={() => {
-                                if (videoRef.current) {
-                                    videoRef.current.pause();
-                                    videoRef.current.currentTime = 0;
-                                }
-                            }}
-                        >
-                            <video
-                                ref={videoRef}
-                                src={videoSrc}
-                                className="w-full h-full object-cover rounded"
-                                loop
-                                muted
-                                playsInline
-                            />
+                        {/* Video/Image */}
+                        <div className="w-full aspect-video max-w-full overflow-visible rounded">
+                            {isVideoFile(videoSrc) ? (
+                                <div
+                                    onMouseEnter={() => videoRef.current?.play()}
+                                    onMouseLeave={() => {
+                                        if (videoRef.current) {
+                                            videoRef.current.pause();
+                                            videoRef.current.currentTime = 0;
+                                        }
+                                    }}
+                                >
+                                    <video
+                                        ref={videoRef}
+                                        src={videoSrc}
+                                        className="w-full h-full object-cover rounded"
+                                        loop
+                                        muted
+                                        playsInline
+                                    />
+                                </div>
+                            ) : (
+                                <img
+                                    src={videoSrc}
+                                    alt={`${title} screenshot`}
+                                    className="w-full h-full object-cover rounded"
+                                />
+                            )}
                         </div>
 
                         {/* Content */}
@@ -152,7 +281,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
 
                             <div className="flex flex-col sm:flex-row gap-3 w-full justify-start">
                                 <button
-                                    onClick={() => window.open(codeUrl, '_blank')}
+                                    onClick={handleCodeClick}
                                     className="inline-flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-background bg-foreground border border-foreground rounded transition hover:bg-foreground hover:text-background focus:outline-none focus:ring-2 focus:ring-foreground w-full sm:w-auto"
                                 >
                                     <FaCode className="w-4 h-4" />
@@ -160,10 +289,18 @@ const ProjectCard: FC<ProjectCardProps> = ({
                                 </button>
 
                                 <button
-                                    onClick={() => window.open(demoUrl, '_blank')}
+                                    onClick={handleDemoClick}
                                     className="inline-flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full sm:w-auto"
                                 >
                                     DEMO
+                                </button>
+
+                                <button
+                                    onClick={handleFigmaClick}
+                                    className="inline-flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full sm:w-auto"
+                                >
+                                    <FaFigma className="w-4 h-4" />
+                                    FIGMA
                                 </button>
                             </div>
                         </div>
