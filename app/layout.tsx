@@ -63,14 +63,14 @@ export const metadata: Metadata = {
         address: false,
         telephone: false,
     },
-    metadataBase: new URL('https://ihanhansaja.dev'), // Replace with your actual domain
+    metadataBase: new URL('https://immersive-portfolio.vercel.app'), // Your Vercel deployment URL
     alternates: {
         canonical: '/',
     },
     openGraph: {
         title: "Ihan Hansaja - Full Stack Developer & AI Engineer",
         description: "Software Engineering undergraduate specializing in Full-Stack Development, AI Engineering, and Machine Learning. Explore innovative projects and cutting-edge web applications.",
-        url: 'https://ihanhansaja.dev', // Replace with your actual domain
+        url: 'https://immersive-portfolio.vercel.app', // Your Vercel deployment URL
         siteName: 'Ihan Hansaja Portfolio',
         images: [
             {
@@ -119,8 +119,8 @@ export default function RootLayout({
         "name": "Ihan Hansaja",
         "jobTitle": "Full Stack Developer & AI Engineer",
         "description": "Software Engineering undergraduate specializing in Full-Stack Development, AI Engineering, and Machine Learning",
-        "url": "https://ihanhansaja.dev",
-        "image": "https://ihanhansaja.dev/og-image.jpg",
+        "url": "https://immersive-portfolio.vercel.app",
+        "image": "https://immersive-portfolio.vercel.app/logo.png",
         "sameAs": [
             "https://github.com/IHANsaja",
             "https://linkedin.com/in/ihanhansaja",
