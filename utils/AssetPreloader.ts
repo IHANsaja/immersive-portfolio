@@ -83,9 +83,6 @@ export class AssetPreloader {
             '/svg/circ3.svg',
             '/svg/circ4.svg',
             '/svg/circ5.svg',
-            '/svg/file.svg',
-            '/svg/globe.svg',
-            '/svg/window.svg',
         ];
 
         // Videos

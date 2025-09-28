@@ -42,13 +42,8 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
         tl.from(soundSectionRef1.current, { autoAlpha: 0, x: -30 }, "-=0.4");
         tl.from(soundSectionRef2.current, { autoAlpha: 0, x: 30 }, "-=0.4");
         tl.from(logoContainerRef.current, { autoAlpha: 0, scale: 0.8 }, "-=0.4");
-        tl.from(progressNumberRef.current, { autoAlpha: 0, y: 20 }, "-=0.2");
-        tl.from(loadingTextRef.current, { autoAlpha: 0, y: 20 }, "-=0.2");
 
-        const progressBarParent = progressBarRef.current?.parentElement;
-        if (progressBarParent) {
-            tl.from(progressBarParent, { autoAlpha: 0, y: 20 }, "-=0.6");
-        }
+        // Progress numbers and loading text are visible from the beginning - no animation needed
     });
 
     useEffect(() => {
@@ -105,13 +100,9 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
             
             setLoadingText(`${stageText}... ${creativeDescription}`);
             
-            // Update progress bar with smooth animation
+            // Update progress bar directly without animation
             if (progressBarRef.current) {
-                gsap.to(progressBarRef.current, {
-                    width: `${loadingProgress.percentage}%`,
-                    duration: 0.5,
-                    ease: "power2.out"
-                });
+                progressBarRef.current.style.width = `${loadingProgress.percentage}%`;
             }
         });
 
@@ -232,7 +223,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
             <div className="hidden md:flex items-end justify-start p-8 font-neotriad-sans text-5xl tabular-nums"></div>
 
             <div className="flex flex-col items-end justify-center p-8 w-full">
-                <div ref={progressNumberRef} className="flex items-end justify-start p-8 font-neotriad-sans text-5xl tabular-nums">
+                <div ref={progressNumberRef} className="flex items-end justify-start p-8 font-neotriad-sans text-5xl tabular-nums opacity-100">
                     <p className="relative">
                         {progress.toString().padStart(3, '0')}%
                         {loadingStage === 'loading' && (
@@ -246,7 +237,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                 <div className="w-full h-1 bg-foreground/10">
                     <div ref={progressBarRef} className="h-full bg-foreground" style={{ width: '0%' }}></div>
                 </div>
-                <div ref={loadingTextRef} className="flex items-center justify-start p-2 font-inconsolata-sans text-sm text-foreground/70">
+                <div ref={loadingTextRef} className="flex items-center justify-start p-2 font-inconsolata-sans text-sm text-foreground/70 opacity-100">
                     <p>{loadingText}</p>
                 </div>
             </div>

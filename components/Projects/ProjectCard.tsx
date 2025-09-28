@@ -207,39 +207,39 @@ const ProjectCard: FC<ProjectCardProps> = ({
             )}
 
             {/* Badge */}
-            <div className={`absolute top-1 left-2 z-10 px-2 py-1 rounded-full text-[12px] font-medium ${badgeInfo.color} ${badgeInfo.borderColor} ${badgeInfo.textColor} border backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105`}>
+            <div className={`absolute top-1 left-2 z-10 px-2 py-1 rounded-full text-[10px] sm:text-[12px] font-medium ${badgeInfo.color} ${badgeInfo.borderColor} ${badgeInfo.textColor} border backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105`}>
                 <span className="font-inconsalata-sans tracking-wide">{badgeInfo.text}</span>
             </div>
 
             {/* Header */}
             <div
-                className="w-full flex justify-end items-center px-3 py-2 bg-background cursor-pointer border-b border-gray-500"
+                className="w-full flex justify-end items-center px-2 sm:px-3 py-2 bg-background cursor-pointer border-b border-gray-500"
                 onClick={handleInitiate}
             >
-                <div className="flex items-center gap-2 text-xs md:text-[10px] font-andvari-sans">
+                <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs font-andvari-sans">
                     <span className="dot"></span>
                     <p>Initiate Freya</p>
                 </div>
             </div>
 
             {/* Body */}
-            <div className="flex flex-col flex-grow justify-center items-center w-full p-4 gap-4">
+            <div className="flex flex-col flex-grow justify-center items-center w-full p-2 sm:p-4 gap-3 sm:gap-4">
                 {initiated ? (
                     <div
                         ref={containerRef}
-                        className="grid grid-cols-4 gap-2"
+                        className="grid grid-cols-4 gap-1 sm:gap-2"
                     >
                         {Array.from({ length: 16 }).map((_, i) => (
                             <div
                                 key={i}
-                                className="square w-2 h-2 bg-foreground rounded-sm"
+                                className="square w-1.5 sm:w-2 h-1.5 sm:h-2 bg-foreground rounded-sm"
                             />
                         ))}
                     </div>
                 ) : (
                     <>
                         {/* Video/Image */}
-                        <div className="w-full aspect-video max-w-full overflow-visible rounded">
+                        <div className="w-full aspect-video max-w-full overflow-hidden rounded">
                             {isVideoFile(videoSrc) ? (
                                 <div
                                     onMouseEnter={() => videoRef.current?.play()}
@@ -269,37 +269,37 @@ const ProjectCard: FC<ProjectCardProps> = ({
                         </div>
 
                         {/* Content */}
-                        <div className="w-full flex flex-col justify-between gap-4">
-                            <div>
-                                <h3 className="font-andvari-sans font-semibold text-lg md:text-base break-words text-foreground">
+                        <div className="w-full flex flex-col justify-between gap-3 sm:gap-4">
+                            <div className="space-y-2">
+                                <h3 className="font-andvari-sans font-semibold text-base sm:text-lg md:text-xl break-words text-foreground leading-tight">
                                     {title}
                                 </h3>
-                                <p className="mt-2 text-sm text-foreground font-inconsolata-sans break-words whitespace-pre-line">
+                                <p className="text-xs sm:text-sm text-foreground font-inconsolata-sans break-words leading-relaxed line-clamp-3 sm:line-clamp-4 md:line-clamp-none overflow-hidden text-ellipsis">
                                     {description}
                                 </p>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row gap-3 w-full justify-start">
+                            <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 w-full justify-start">
                                 <button
                                     onClick={handleCodeClick}
-                                    className="inline-flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-background bg-foreground border border-foreground rounded transition hover:bg-foreground hover:text-background focus:outline-none focus:ring-2 focus:ring-foreground w-full sm:w-auto"
+                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-background bg-foreground border border-foreground rounded transition hover:bg-foreground hover:text-background focus:outline-none focus:ring-2 focus:ring-foreground w-full xs:w-auto flex-shrink-0"
                                 >
-                                    <FaCode className="w-4 h-4" />
+                                    <FaCode className="w-3 h-3 sm:w-4 sm:h-4" />
                                     CODE
                                 </button>
 
                                 <button
                                     onClick={handleDemoClick}
-                                    className="inline-flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full sm:w-auto"
+                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full xs:w-auto flex-shrink-0"
                                 >
                                     DEMO
                                 </button>
 
                                 <button
                                     onClick={handleFigmaClick}
-                                    className="inline-flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full sm:w-auto"
+                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full xs:w-auto flex-shrink-0"
                                 >
-                                    <FaFigma className="w-4 h-4" />
+                                    <FaFigma className="w-3 h-3 sm:w-4 sm:h-4" />
                                     FIGMA
                                 </button>
                             </div>

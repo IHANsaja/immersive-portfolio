@@ -1,13 +1,43 @@
-import GPUFluidCanvas from "@/components/Ui/HoverEffect";
+"use client";
+
+import React, { useRef, useState, useEffect, Suspense, memo } from "react";
 import Image from "next/image";
-import Spline from "@splinetool/react-spline";
-import GrButtons from "@/components/Hero/GrButtons";
-import Welcome from "@/components/Hero/Welcome";
-import React, {useRef, useState, useEffect, Suspense} from "react";
 import { motion } from "framer-motion";
-import {useGSAP} from "@gsap/react";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import {SplitText} from "gsap/SplitText";
+import { SplitText } from "gsap/SplitText";
+
+// Lazy load heavy components
+const GPUFluidCanvas = React.lazy(() => import("@/components/Ui/HoverEffect"));
+const Spline = React.lazy(() => import("@splinetool/react-spline"));
+const GrButtons = React.lazy(() => import("@/components/Hero/GrButtons"));
+
+interface WelcomeProps {
+    headlineRef?: React.RefObject<null>
+}
+
+const Welcome = memo(({ headlineRef }: WelcomeProps) => {
+    return (
+        <div className="flex justify-center items-center h-screen w-screen overflow-hidden">
+            <h1
+                ref={headlineRef}
+                id="welcome"
+                className="
+          font-neotriad-sans
+          text-4xl sm:text-5xl md:text-6xl lg:text-8xl xl:text-[100px]
+          text-[var(--foreground)]
+          text-shadow-lg text-center whitespace-nowrap
+          px-4 sm:px-8 z-5
+        "
+            >
+                <span className="text-6xl">WELCOME TO </span><br/>
+                MY PORTFOLIO
+            </h1>
+        </div>
+    );
+});
+
+Welcome.displayName = 'Welcome';
 
 const HeroSection = () => {
     const headlineRef = useRef(null);
@@ -15,7 +45,7 @@ const HeroSection = () => {
     const [isReady, setIsReady] = useState(false);
     const [showSpline, setShowSpline] = useState(false);
     const [showGPUCanvas, setShowGPUCanvas] = useState(false);
-    const [hasAnimated, setHasAnimated] = useState(false);
+    const [showButtons, setShowButtons] = useState(false);
 
     // Initialize hero section immediately without waiting for fonts
     useGSAP(() => {
@@ -34,7 +64,7 @@ const HeroSection = () => {
                 duration: 0.5,
             })
                 .from(split.words, {
-                    duration: 1.5,
+                    duration: 1.2, // Slightly faster animation
                     ease: "power2.inOut",
                     scrambleText: {
                         text: "IHAN",
@@ -42,65 +72,39 @@ const HeroSection = () => {
                         speed: 0.2,
                         revealDelay: 0.2,
                     },
-                    stagger: 0.3,
+                    stagger: 0.2, // Faster stagger
                     onComplete: () => split.revert(),
                 })
                 .from(headline, {
                     y: -300,
-                    duration: 2,
+                    duration: 1.5, // Faster animation
                     ease: "power2.inOut",
                 }, "+=0.2")
-                .call(() => {
-                    setIsReady(true);
-                    setHasAnimated(true);
-                });
+                .call(() => setIsReady(true));
         });
     }, []);
 
-
     // Load heavy components after hero animation starts
     useEffect(() => {
-        const timer1 = setTimeout(() => setShowGPUCanvas(true), 1000);
-        const timer2 = setTimeout(() => setShowSpline(true), 2000);
+        const timer1 = setTimeout(() => setShowButtons(true), 200); // Faster button loading
+        const timer2 = setTimeout(() => setShowGPUCanvas(true), 1000);
+        const timer3 = setTimeout(() => setShowSpline(true), 2000);
         
         return () => {
             clearTimeout(timer1);
             clearTimeout(timer2);
-        };
-    }, []);
-
-    // Load Spline scene when user enters hero section (after preloader)
-    useEffect(() => {
-        const handlePreloaderComplete = () => {
-            // Load Spline scene immediately when preloader completes
-            setShowSpline(true);
-        };
-
-        // Listen for preloader completion
-        window.addEventListener('preloaderComplete', handlePreloaderComplete);
-        
-        // Also check if we're already past the preloader
-        const checkIfReady = () => {
-            const preloader = document.querySelector('[data-preloader]');
-            if (!preloader) {
-                setShowSpline(true);
-            }
-        };
-        
-        // Check immediately and after a delay
-        checkIfReady();
-        const checkTimer = setTimeout(checkIfReady, 1000);
-        
-        return () => {
-            window.removeEventListener('preloaderComplete', handlePreloaderComplete);
-            clearTimeout(checkTimer);
+            clearTimeout(timer3);
         };
     }, []);
 
     return (
         <section id="hero-section" className="relative w-screen h-screen z-1">
             {/* Load GPU Canvas after delay to prevent blocking */}
-            {showGPUCanvas && <GPUFluidCanvas />}
+            {showGPUCanvas && (
+                <Suspense fallback={null}>
+                    <GPUFluidCanvas />
+                </Suspense>
+            )}
 
             <div
                 id="background-container"
@@ -139,9 +143,19 @@ const HeroSection = () => {
                 )}
             </div>
 
-            <div className="absolute top-0 left-0 w-screen flex justify-end gap-8 items-center z-[10000]">
-                <GrButtons />
-            </div>
+            {/* Load buttons after delay - MADE VISIBLE */}
+            {showButtons && (
+                <div className="absolute top-0 left-0 w-screen flex justify-end gap-8 items-center z-[10000] p-4">
+                    <Suspense fallback={
+                        <div className="flex gap-8">
+                            <div className="w-24 h-12 bg-gray-800 animate-pulse rounded"></div>
+                            <div className="w-24 h-12 bg-gray-800 animate-pulse rounded"></div>
+                        </div>
+                    }>
+                        <GrButtons />
+                    </Suspense>
+                </div>
+            )}
 
             <Welcome headlineRef={headlineRef} />
 
