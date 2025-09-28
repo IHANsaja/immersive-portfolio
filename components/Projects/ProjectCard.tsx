@@ -208,7 +208,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
             )}
 
             {/* Badge */}
-            <div className={`absolute top-1 left-2 z-10 px-2 py-1 rounded-full text-[10px] sm:text-[12px] font-medium ${badgeInfo.color} ${badgeInfo.borderColor} ${badgeInfo.textColor} border backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105`}>
+            <div className={`absolute top-1 left-2 z-10 px-2 py-1 rounded-full text-[10px] sm:text-[12px] xl:text-[10px] 2xl:text-[12px] font-medium ${badgeInfo.color} ${badgeInfo.borderColor} ${badgeInfo.textColor} border backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105`}>
                 <span className="font-inconsalata-sans tracking-wide">{badgeInfo.text}</span>
             </div>
 
@@ -217,7 +217,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
                 className="w-full flex justify-end items-center px-2 sm:px-3 py-2 bg-background cursor-pointer border-b border-gray-500"
                 onClick={handleInitiate}
             >
-                <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs font-andvari-sans">
+                <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs xl:text-[10px] 2xl:text-xs font-andvari-sans">
                     <span className="dot"></span>
                     <p>Initiate Freya</p>
                 </div>
@@ -240,9 +240,10 @@ const ProjectCard: FC<ProjectCardProps> = ({
                 ) : (
                     <>
                         {/* Video/Image */}
-                        <div className="w-full aspect-video max-w-full overflow-hidden rounded">
+                        <div className="w-full aspect-video max-w-full overflow-hidden rounded relative">
                             {isVideoFile(videoSrc) ? (
                                 <div
+                                    className="w-full h-full"
                                     onMouseEnter={() => videoRef.current?.play()}
                                     onMouseLeave={() => {
                                         if (videoRef.current) {
@@ -273,10 +274,10 @@ const ProjectCard: FC<ProjectCardProps> = ({
                         {/* Content */}
                         <div className="w-full flex flex-col justify-between gap-3 sm:gap-4">
                             <div className="space-y-2">
-                                <h3 className="font-andvari-sans font-semibold text-base sm:text-lg md:text-xl break-words text-foreground leading-tight">
+                                <h3 className="font-andvari-sans font-semibold text-base sm:text-lg md:text-xl xl:text-lg 2xl:text-xl break-words text-foreground leading-tight">
                                     {title}
                                 </h3>
-                                <p className="text-xs sm:text-sm text-foreground font-inconsolata-sans break-words leading-relaxed line-clamp-3 sm:line-clamp-4 md:line-clamp-none overflow-hidden text-ellipsis">
+                                <p className="text-xs sm:text-sm xl:text-xs 2xl:text-sm text-foreground font-inconsolata-sans break-words leading-relaxed line-clamp-3 sm:line-clamp-4 xl:line-clamp-3 2xl:line-clamp-4 overflow-hidden text-ellipsis">
                                     {description}
                                 </p>
                             </div>
@@ -284,24 +285,24 @@ const ProjectCard: FC<ProjectCardProps> = ({
                             <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 w-full justify-start">
                                 <button
                                     onClick={handleCodeClick}
-                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-background bg-foreground border border-foreground rounded transition hover:bg-foreground hover:text-background focus:outline-none focus:ring-2 focus:ring-foreground w-full xs:w-auto flex-shrink-0"
+                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm xl:text-xs 2xl:text-sm font-semibold text-background bg-foreground border border-foreground rounded transition hover:bg-foreground hover:text-background focus:outline-none focus:ring-2 focus:ring-foreground w-full xs:w-auto flex-shrink-0"
                                 >
-                                    <FaCode className="w-3 h-3 sm:w-4 sm:h-4" />
+                                    <FaCode className="w-3 h-3 sm:w-4 sm:h-4 xl:w-3 xl:h-3 2xl:w-4 2xl:h-4" />
                                     CODE
                                 </button>
 
                                 <button
                                     onClick={handleDemoClick}
-                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full xs:w-auto flex-shrink-0"
+                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm xl:text-xs 2xl:text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full xs:w-auto flex-shrink-0"
                                 >
                                     DEMO
                                 </button>
 
                                 <button
                                     onClick={handleFigmaClick}
-                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full xs:w-auto flex-shrink-0"
+                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm xl:text-xs 2xl:text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full xs:w-auto flex-shrink-0"
                                 >
-                                    <FaFigma className="w-3 h-3 sm:w-4 sm:h-4" />
+                                    <FaFigma className="w-3 h-3 sm:w-4 sm:h-4 xl:w-3 xl:h-3 2xl:w-4 2xl:h-4" />
                                     FIGMA
                                 </button>
                             </div>
