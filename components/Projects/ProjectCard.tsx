@@ -3,6 +3,7 @@ import { FaCode } from 'react-icons/fa';
 import { FaFigma } from 'react-icons/fa';
 import { animate, stagger, utils } from 'animejs';
 import { toast } from 'react-toastify';
+import Image from 'next/image';
 
 interface ProjectCardProps {
     title: string;
@@ -260,10 +261,11 @@ const ProjectCard: FC<ProjectCardProps> = ({
                                     />
                                 </div>
                             ) : (
-                                <img
+                                <Image
                                     src={videoSrc}
                                     alt={`${title} screenshot`}
-                                    className="w-full h-full object-cover rounded"
+                                    fill
+                                    className="object-cover rounded"
                                 />
                             )}
                         </div>

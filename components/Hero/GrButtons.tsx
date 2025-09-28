@@ -56,14 +56,16 @@ const GrButtons = () => {
         };
 
         // Listen for section changes
-        window.addEventListener('sectionPinned', (event: any) => {
-            if (event.detail?.sectionId === 'hero-section') {
+        const handleSectionPinned = (event: Event) => {
+            const customEvent = event as CustomEvent<{ sectionId: string }>;
+            if (customEvent.detail?.sectionId === 'hero-section') {
                 handleSectionEnter();
             }
-        });
+        };
+        window.addEventListener('sectionPinned', handleSectionPinned);
 
         return () => {
-            window.removeEventListener('sectionPinned', handleSectionEnter);
+            window.removeEventListener('sectionPinned', handleSectionPinned);
         };
     }, [hasAnimated]);
 

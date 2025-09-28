@@ -72,7 +72,7 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [showPopup, onClose]);
+    }, [showPopup, onClose, playSound]);
 
     useEffect(() => {
         const updateSize = () => {
