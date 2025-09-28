@@ -55,6 +55,13 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
     const clickAudioRef = useRef<HTMLAudioElement | null>(null);
     const appearAudioRef = useRef<HTMLAudioElement | null>(null);
 
+    const playSound = useCallback((audioRef: React.RefObject<HTMLAudioElement | null>) => {
+        if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(e => console.error("Audio play failed:", e));
+        }
+    }, []);
+
     useEffect(() => {
         if (hoverAudioRef.current) hoverAudioRef.current.volume = 0.5;
         if (clickAudioRef.current) clickAudioRef.current.volume = 0.5;
@@ -86,13 +93,6 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
         }
         return () => window.removeEventListener('resize', updateSize);
     }, [showPopup]);
-
-    const playSound = useCallback((audioRef: React.RefObject<HTMLAudioElement | null>) => {
-        if (audioRef.current) {
-            audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(e => console.error("Audio play failed:", e));
-        }
-    }, []);
 
     const handleMouseEnter = useCallback((itemId: string) => {
         setActiveItem(itemId);
