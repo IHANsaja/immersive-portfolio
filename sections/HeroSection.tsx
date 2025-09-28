@@ -31,7 +31,8 @@ const Welcome = memo(({ headlineRef }: WelcomeProps) => {
         "
             >
                 <span className="text-6xl">WELCOME TO </span><br/>
-                MY PORTFOLIO
+                <span className="text-6xl">IHAN HANSAJA'S </span><br/>
+                PORTFOLIO
             </h1>
         </div>
     );

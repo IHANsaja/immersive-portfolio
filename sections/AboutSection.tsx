@@ -278,14 +278,15 @@ const AboutSection = () => {
                     <div className="w-full ml-20 md:mt-20 flex justify-start items-start text-sm md:text-2xl font-inconsolata-sans">
                         + + + +
                     </div>
-                    <h1 className="scramble font-neotriad-sans text-xl md:text-4xl">Hey I am IHAN HANSAJA</h1>
+                    <h2 className="scramble font-neotriad-sans text-xl md:text-4xl">Hey I am <strong>IHAN HANSAJA</strong></h2>
 
                     <p
                         ref={paragraphRef}
                         className="font-andvari-sans max-w-xl text-[9px] md:text-[11px] leading-6 text-center md:text-right"
                     >
-                        I am a Software Engineering undergraduate with a strong passion for
-                        building efficient, user-centric applications.
+                        I am a <strong>Software Engineering undergraduate</strong> with a strong passion for
+                        building efficient, user-centric applications. As a <strong>Full Stack Developer</strong> and <strong>AI Engineer</strong>,
+                        I specialize in creating <strong>AI-driven web applications</strong> and <strong>immersive websites</strong>.
                         I enjoy solving real-world problems through clean code, intuitive
                         design, and continuous learning. Whether it&apos;s creating
                         scalable systems or crafting interactive frontends, I thrive in
@@ -297,7 +298,7 @@ const AboutSection = () => {
                     </div>
                 </div>
                 <div className="w-full h-2/5 flex flex-col items-center md:items-end gap-10 text-2xl font-inconsolata-sans z-10">
-                    <h1 className="scramble font-neotriad-sans text-xl md:text-4xl">Education</h1>
+                    <h3 className="scramble font-neotriad-sans text-xl md:text-4xl">Education</h3>
                     <div className="flex flex-row justify-start items-center gap-10">
                         <div className="h-full hidden md:flex justify-center items-start mr-10">
                             <PoliceLights rectHeight={30} rectWidth={70} />

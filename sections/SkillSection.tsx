@@ -123,7 +123,7 @@ export default function SkillSection() {
             </div>
 
             <div className="skills-title absolute top-10 right-1/2 translate-x-1/2 md:top-30 md:right-30 md:translate-x-0 z-10 font-neotriad-sans">
-                <h1 className="text-foreground text-4xl md:text-5xl">MY SKILLS</h1>
+                <h2 className="text-foreground text-4xl md:text-5xl">MY SKILLS & TECHNOLOGIES</h2>
             </div>
 
             <div className="bigTree absolute bottom-[-50px] left-0 w-1/2 z-0 mix-blend-soft-light">
