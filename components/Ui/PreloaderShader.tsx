@@ -108,14 +108,14 @@ const MinimalGrid = () => {
     return (
         <points ref={pointsRef} material={shaderMaterial}>
             <bufferGeometry>
-                {/* @ts-expect-error */}
+                {/* @ts-expect-error - BufferAttribute types are tricky in R3F */}
                 <bufferAttribute
                     attach="attributes-position"
                     count={particles.positions.length / 3}
                     array={particles.positions}
                     itemSize={3}
                 />
-                {/* @ts-expect-error */}
+                {/* @ts-expect-error - BufferAttribute types are tricky in R3F */}
                 <bufferAttribute
                     attach="attributes-aRandom"
                     count={particles.randoms.length}

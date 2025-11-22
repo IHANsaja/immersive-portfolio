@@ -62,7 +62,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
         // Set up progress callback
         assetPreloader.setProgressCallback((loadingProgress: LoadingProgress) => {
             setProgress(loadingProgress.percentage);
-            setLoadingStage('loading');
+
 
             // Update loading text based on stage with creative descriptions
             let stageText = "";
@@ -92,7 +92,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                 case 'complete':
                     stageText = "System Ready";
                     creativeDescription = "All systems operational!";
-                    setLoadingStage('ready');
+
                     break;
                 default:
                     stageText = "Optimizing Performance";
@@ -110,7 +110,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
         // Set up completion callback
         assetPreloader.setCompleteCallback(() => {
             setLoadingText("System Ready - All systems operational!");
-            setLoadingStage('ready');
+
             setIsClickable(true);
             console.log('Asset preloading completed successfully!');
         });
