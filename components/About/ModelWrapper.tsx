@@ -41,11 +41,11 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
         const animations = {
             // Scene visibility and position
             scene: {
-                'hero-section': { x: 0, opacity: 0 },
-                'about-section': { x: 0, opacity: 1 },
-                'projects-section': { x: -1000, opacity: 1 },
-                'skill-section': { x: 500, opacity: 1 },
-                'contact-section': { x: -700, opacity: 1 }
+                'hero-section': { xPercent: 0, opacity: 0 },
+                'about-section': { xPercent: 0, opacity: 1 },
+                'projects-section': { xPercent: -50, opacity: 1 },
+                'skill-section': { xPercent: 25, opacity: 1 },
+                'contact-section': { xPercent: -35, opacity: 1 }
             },
             // Camera zoom level
             camera: {
@@ -75,7 +75,8 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
             // This check ensures the sectionId is valid before running animations.
             if (sectionId in animations.scene) {
                 const ease = "circ.inOut";
-                gsap.to(sceneRef.current, { ...animations.scene[sectionId], duration: 1, ease });
+                // Ensure x is reset to 0 when using xPercent to avoid conflicts if x was previously set
+                gsap.to(sceneRef.current, { ...animations.scene[sectionId], x: 0, duration: 1, ease });
                 gsap.to(camera.position, { ...animations.camera[sectionId], duration: 1.5, ease });
                 gsap.to(modelRef.current.position, { ...animations.model[sectionId], duration: 1.3, ease });
             }
@@ -111,9 +112,9 @@ const DEFAULT_MODEL_POS: [number, number, number] = [0, -1.5, 0];
 
 // --- Memoized ModelWrapper Component ---
 const ModelWrapper = memo(({
-                               cameraPosition = DEFAULT_CAMERA_POS,
-                               modelPosition = DEFAULT_MODEL_POS,
-                           }: ModelWrapperProps) => {
+    cameraPosition = DEFAULT_CAMERA_POS,
+    modelPosition = DEFAULT_MODEL_POS,
+}: ModelWrapperProps) => {
     const sceneRef = useRef<HTMLDivElement>(null);
 
     return (

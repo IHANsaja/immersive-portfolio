@@ -2,6 +2,7 @@
 
 import { ReactNode, useRef, useLayoutEffect, MouseEventHandler, useEffect } from 'react';
 import gsap from 'gsap'; // Make sure this path is correct
+import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
 
 interface AnimatedHoverButtonProps {
     text?: string;
@@ -11,11 +12,12 @@ interface AnimatedHoverButtonProps {
 }
 
 export default function AnimatedHoverButton({
-                                                text,
-                                                children,
-                                                onClick,
-                                                bgColor,
-                                            }: AnimatedHoverButtonProps) {
+    text,
+    children,
+    onClick,
+    bgColor,
+}: AnimatedHoverButtonProps) {
+    const { isPlaying } = useMusic(); // Get global sound state
     const label = typeof children === 'string' ? children : text ?? '';
 
     const textRef = useRef<HTMLSpanElement | null>(null);
@@ -25,7 +27,7 @@ export default function AnimatedHoverButton({
     const audioClickRef = useRef<HTMLAudioElement | null>(null);
 
     useLayoutEffect(() => {
-        const ctx = gsap.context(() => {}, [textRef, canvasRef]);
+        const ctx = gsap.context(() => { }, [textRef, canvasRef]);
         return () => {
             ctx.revert();
             if (animRef.current) {
@@ -64,7 +66,7 @@ export default function AnimatedHoverButton({
         const rows = Math.floor(canvas.height / spacing);
 
         const render = () => {
-            if(!ctx2d) return;
+            if (!ctx2d) return;
             ctx2d.clearRect(0, 0, canvas.width, canvas.height);
 
             for (let y = 0; y < rows; y++) {
@@ -98,7 +100,7 @@ export default function AnimatedHoverButton({
         stopCanvas();
         startCanvas();
 
-        if (audioRef.current) {
+        if (audioRef.current && isPlaying) { // Check isPlaying
             audioRef.current.currentTime = 0;
             audioRef.current.play().catch(err => {
                 console.warn('Sound play prevented:', err);
@@ -133,9 +135,9 @@ export default function AnimatedHoverButton({
     };
 
     const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
-        if (audioClickRef.current) {
+        if (audioClickRef.current && isPlaying) { // Check isPlaying
             audioClickRef.current.currentTime = 0;
-            audioClickRef.current.play().catch(() => {});
+            audioClickRef.current.play().catch(() => { });
         }
         if (onClick) onClick(e);
     };

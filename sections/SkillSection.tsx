@@ -9,9 +9,12 @@ import ScrollTrigger from "gsap/ScrollTrigger"; // <-- Import ScrollTrigger
 
 gsap.registerPlugin(ScrollTrigger); // <-- Register the plugin
 
+import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
+
 const allSkills: Skill[] = SkillLogos.flat();
 
 export default function SkillSection() {
+    const { isPlaying } = useMusic(); // Get global sound state
     const containerRef = useRef<HTMLDivElement>(null);
     const squareRefs = useRef<HTMLDivElement[]>([]);
     const nameRefs = useRef<HTMLDivElement[]>([]);
@@ -63,18 +66,20 @@ export default function SkillSection() {
 
         if (audioInitiateRef.current) {
             tl.add(() => {
-                const audio = audioInitiateRef.current!;
-                audio.currentTime = 0;
-                audio.play().catch(err => {
-                    console.warn('Sound play prevented:', err);
-                });
-
-                // Schedule audio stop at the end of timeline
-                const duration = tl.duration(); // Get total timeline duration
-                setTimeout(() => {
-                    audio.pause();
+                if (isPlaying) { // Check isPlaying
+                    const audio = audioInitiateRef.current!;
                     audio.currentTime = 0;
-                }, duration * 1000); // Convert seconds to ms
+                    audio.play().catch(err => {
+                        console.warn('Sound play prevented:', err);
+                    });
+
+                    // Schedule audio stop at the end of timeline
+                    const duration = tl.duration(); // Get total timeline duration
+                    setTimeout(() => {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }, duration * 1000); // Convert seconds to ms
+                }
             }, "+=0");
         }
 
@@ -113,7 +118,7 @@ export default function SkillSection() {
                 },
                 ease: "none"
             });
-    }, []);
+    }, [isPlaying]); // Add isPlaying dependency
 
     return (
         <section id="skill-section" className="relative w-screen h-screen z-0">

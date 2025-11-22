@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, lazy } from 'react';
+import React, { useEffect, useRef } from 'react';
 import SvgFrame from '@/components/Hero/Frame';
 import gsap from 'gsap';
 // Import only the GSAP plugins you need to reduce bundle size
@@ -18,12 +18,11 @@ gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin);
 // Custom event for section pinning
 const SECTION_PINNED_EVENT = 'sectionPinned';
 
-// --- Lazy-load your page sections ---
-const HeroSection = lazy(() => import('@/sections/HeroSection'));
-const AboutSection = lazy(() => import('@/sections/AboutSection'));
-const ProjectsSection = lazy(() => import('@/sections/ProjectsSection'));
-const SkillSection = lazy(() => import('@/sections/SkillSection'));
-const ContactSection = lazy(() => import('@/sections/ContactSection'));
+import HeroSection from '@/sections/HeroSection';
+import AboutSection from '@/sections/AboutSection';
+import ProjectsSection from '@/sections/ProjectsSection';
+import SkillSection from '@/sections/SkillSection';
+import ContactSection from '@/sections/ContactSection';
 
 const Home: React.FC = () => {
     const progressRef = useRef<HTMLDivElement>(null);

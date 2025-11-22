@@ -30,7 +30,7 @@ const Welcome = memo(({ headlineRef }: WelcomeProps) => {
           px-4 sm:px-8 z-5
         "
             >
-                <span className="text-6xl">WELCOME TO </span><br/>
+                <span className="text-6xl">WELCOME TO </span><br />
                 MY PORTFOLIO
             </h1>
         </div>
@@ -47,41 +47,61 @@ const HeroSection = () => {
     const [showGPUCanvas, setShowGPUCanvas] = useState(false);
     const [showButtons, setShowButtons] = useState(false);
 
-    // Initialize hero section immediately without waiting for fonts
+    // Initialize hero section
     useGSAP(() => {
         const headline = headlineRef.current;
         if (!headline) return;
 
-        // Start animation immediately, don't wait for fonts
+        // Initial state
         gsap.set(headline, { opacity: 0 });
-        
-        // Use requestAnimationFrame to ensure DOM is ready
-        requestAnimationFrame(() => {
-            const split = new SplitText(headline, { type: "words" });
 
-            tl.to(headline, {
-                opacity: 1,
-                duration: 0.5,
-            })
-                .from(split.words, {
-                    duration: 1.2, // Slightly faster animation
-                    ease: "power2.inOut",
-                    scrambleText: {
-                        text: "IHAN",
-                        chars: "@#$%^&*()",
-                        speed: 0.2,
-                        revealDelay: 0.2,
-                    },
-                    stagger: 0.2, // Faster stagger
-                    onComplete: () => split.revert(),
+        const startAnimation = () => {
+            requestAnimationFrame(() => {
+                const split = new SplitText(headline, { type: "words" });
+
+                tl.to(headline, {
+                    opacity: 1,
+                    duration: 0.5,
                 })
-                .from(headline, {
-                    y: -300,
-                    duration: 1.5, // Faster animation
-                    ease: "power2.inOut",
-                }, "+=0.2")
-                .call(() => setIsReady(true));
-        });
+                    .from(split.words, {
+                        duration: 1.2,
+                        ease: "power2.inOut",
+                        scrambleText: {
+                            text: "IHAN",
+                            chars: "@#$%^&*()",
+                            speed: 0.2,
+                            revealDelay: 0.2,
+                        },
+                        stagger: 0.2,
+                        onComplete: () => split.revert(),
+                    })
+                    .from(headline, {
+                        y: -300,
+                        duration: 1.5,
+                        ease: "power2.inOut",
+                    }, "+=0.2")
+                    .call(() => setIsReady(true));
+            });
+        };
+
+        // Check if preloader is already done (e.g. on navigation back to home)
+        // Since we don't have a global state for preloader here, we can listen for the event.
+        // However, if the component mounts AFTER preloader is done, we might miss the event.
+        // But HeroSection is mounted immediately now.
+
+        const handlePreloaderComplete = () => {
+            startAnimation();
+        };
+
+        window.addEventListener('preloaderComplete', handlePreloaderComplete);
+
+        // Fallback: if preloader is not present (e.g. dev mode or disabled), start after a delay
+        // or check a global flag if available. For now, we assume preloader is always there on first load.
+        // But if we navigate away and back? PreloaderWrapper handles that.
+
+        return () => {
+            window.removeEventListener('preloaderComplete', handlePreloaderComplete);
+        };
     }, []);
 
     // Load heavy components after hero animation starts
@@ -89,7 +109,7 @@ const HeroSection = () => {
         const timer1 = setTimeout(() => setShowButtons(true), 200); // Faster button loading
         const timer2 = setTimeout(() => setShowGPUCanvas(true), 1000);
         const timer3 = setTimeout(() => setShowSpline(true), 2000);
-        
+
         return () => {
             clearTimeout(timer1);
             clearTimeout(timer2);

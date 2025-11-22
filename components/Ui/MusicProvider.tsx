@@ -50,17 +50,31 @@ export const MusicProvider = ({ children }: { children: React.ReactNode }) => {
     }, [isPlaying]);
 
     const toggleMusic = () => {
-        setIsPlaying((prev) => !prev);
-        if (clickAudioRef.current) {
-            try {
-                clickAudioRef.current.currentTime = 0;
-                clickAudioRef.current.play().catch(() => {});
-            } catch {}
-        }
+        setIsPlaying((prev) => {
+            const newState = !prev;
+            // Only play click sound if we are turning ON, or if we want it to play on toggle regardless?
+            // User said: "if user didn't clicked on sound on button other sound effects also should not play"
+            // Usually the toggle button itself might make a sound.
+            // Let's play sound if the NEW state is true, or if we decide the button always makes sound.
+            // BUT, strictly following "if sound off, no sound", maybe the "Turn On" click should make a sound?
+            // Let's assume if it's currently OFF, clicking it turns it ON, so sound should play.
+            // If it's ON, clicking it turns OFF, maybe sound plays then silence?
+            // Let's stick to: play sound if `newState` is true OR if we want feedback.
+            // Actually, simpler: Check `isPlaying`? No, `isPlaying` is the OLD state here due to closure?
+            // Wait, `setIsPlaying` is async.
+            // Let's just play the click sound if we are turning it ON.
+            if (newState && clickAudioRef.current) {
+                try {
+                    clickAudioRef.current.currentTime = 0;
+                    clickAudioRef.current.play().catch(() => {});
+                } catch {}
+            }
+            return newState;
+        });
     };
 
     const playHover = () => {
-        if (!hasInteracted.current) return; // Skip hover sound if no interaction
+        if (!hasInteracted.current || !isPlaying) return; // Check isPlaying
         if (hoverAudioRef.current) {
             try {
                 hoverAudioRef.current.currentTime = 0;

@@ -1,11 +1,14 @@
-import React, {MouseEventHandler, useEffect, useRef} from 'react'
-import {useGSAP} from "@gsap/react";
+import React, { MouseEventHandler, useEffect, useRef } from 'react'
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Image from "next/image";
 import emailjs from 'emailjs-com';
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
+
+import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
 
 const DesktopForm = () => {
+    const { isPlaying } = useMusic(); // Get global sound state
     const wrapperRef = useRef<HTMLDivElement>(null);
     const audioHoverRef = useRef<HTMLAudioElement | null>(null);
     const audioClickRef = useRef<HTMLAudioElement | null>(null);
@@ -88,18 +91,20 @@ const DesktopForm = () => {
 
         if (audioInitiateRef.current) {
             tl.add(() => {
-                const audio = audioInitiateRef.current!;
-                audio.currentTime = 0;
-                audio.play().catch(err => {
-                    console.warn('Sound play prevented:', err);
-                });
-
-                // Schedule audio stop at the end of timeline
-                const duration = tl.duration(); // Get total timeline duration
-                setTimeout(() => {
-                    audio.pause();
+                if (isPlaying) { // Check isPlaying
+                    const audio = audioInitiateRef.current!;
                     audio.currentTime = 0;
-                }, duration * 1000); // Convert seconds to ms
+                    audio.play().catch(err => {
+                        console.warn('Sound play prevented:', err);
+                    });
+
+                    // Schedule audio stop at the end of timeline
+                    const duration = tl.duration(); // Get total timeline duration
+                    setTimeout(() => {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }, duration * 1000); // Convert seconds to ms
+                }
             }, "+=0");
         }
 
@@ -142,7 +147,7 @@ const DesktopForm = () => {
                 delay: 2,
                 ease: "power2.out"
             })
-    }, []);
+    }, [isPlaying]); // Add isPlaying dependency
 
     // Hover scale and glow effect
     useGSAP(() => {
@@ -150,7 +155,7 @@ const DesktopForm = () => {
         if (!wrapper) return;
 
         const enter = () => {
-            if (audioHoverRef.current) {
+            if (audioHoverRef.current && isPlaying) { // Check isPlaying
                 audioHoverRef.current.currentTime = 0;
                 audioHoverRef.current.play().catch(err => {
                     console.warn('Sound play prevented:', err);
@@ -180,14 +185,12 @@ const DesktopForm = () => {
             wrapper.removeEventListener('mouseenter', enter);
             wrapper.removeEventListener('mouseleave', leave);
         };
-    }, []);
+    }, [isPlaying]); // Add isPlaying dependency
 
     const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
-        if (audioClickRef.current) {
+        if (audioClickRef.current && isPlaying) { // Check isPlaying
             audioClickRef.current.currentTime = 0;
-            audioClickRef.current.play().catch(() => {});
-        } else {
-            console.warn('Audio not found');
+            audioClickRef.current.play().catch(() => { });
         }
         e.currentTarget.blur();
         const wrapper = wrapperRef.current;
@@ -206,7 +209,7 @@ const DesktopForm = () => {
         // Optional: basic validation
         if (!name || !email || !message) {
             toast.error("Please fill in all fields.");
-            if (audioErrorRef.current) {
+            if (audioErrorRef.current && isPlaying) { // Check isPlaying
                 audioErrorRef.current.currentTime = 0;
                 audioErrorRef.current.play().catch(err => {
                     console.warn('Sound play prevented:', err);
@@ -227,7 +230,7 @@ const DesktopForm = () => {
         )
             .then(() => {
                 toast.success("Message sent successfully!");
-                if (audioSuccessRef.current) {
+                if (audioSuccessRef.current && isPlaying) { // Check isPlaying
                     audioSuccessRef.current.currentTime = 0;
                     audioSuccessRef.current.play().catch(err => {
                         console.warn('Sound play prevented:', err);
@@ -238,7 +241,7 @@ const DesktopForm = () => {
             .catch((error) => {
                 console.error(error);
                 toast.error("Something went wrong. Please try again later.");
-                if (audioErrorRef.current) {
+                if (audioErrorRef.current && isPlaying) { // Check isPlaying
                     audioErrorRef.current.currentTime = 0;
                     audioErrorRef.current.play().catch(err => {
                         console.warn('Sound play prevented:', err);
@@ -343,7 +346,7 @@ const DesktopForm = () => {
                 ref={formRef}
                 onSubmit={handleSubmit}
                 className="Cform absolute inset-0 flex items-center justify-center z-[9999] pointer-events-none">
-                <div className="relative w-[1000px] h-[500px] pointer-events-none">
+                <div className="relative w-full h-full pointer-events-none">
                     {/* Name Field */}
                     <input
                         type="text"

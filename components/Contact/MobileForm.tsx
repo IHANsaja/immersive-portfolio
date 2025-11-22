@@ -5,11 +5,14 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import emailjs from "emailjs-com";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 gsap.registerPlugin(ScrollTrigger);
 
+import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
+
 const MobileForm = () => {
+    const { isPlaying } = useMusic(); // Get global sound state
     const wrapperRef = useRef<HTMLDivElement>(null);
     const audioHoverRef = useRef<HTMLAudioElement | null>(null);
     const audioClickRef = useRef<HTMLAudioElement | null>(null);
@@ -93,18 +96,20 @@ const MobileForm = () => {
 
         if (audioInitiateRef.current) {
             tl.add(() => {
-                const audio = audioInitiateRef.current!;
-                audio.currentTime = 0;
-                audio.play().catch(err => {
-                    console.warn('Sound play prevented:', err);
-                });
-
-                // Schedule audio stop at the end of timeline
-                const duration = tl.duration(); // Get total timeline duration
-                setTimeout(() => {
-                    audio.pause();
+                if (isPlaying) { // Check isPlaying
+                    const audio = audioInitiateRef.current!;
                     audio.currentTime = 0;
-                }, duration * 1000); // Convert seconds to ms
+                    audio.play().catch(err => {
+                        console.warn('Sound play prevented:', err);
+                    });
+
+                    // Schedule audio stop at the end of timeline
+                    const duration = tl.duration(); // Get total timeline duration
+                    setTimeout(() => {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }, duration * 1000); // Convert seconds to ms
+                }
             }, "+=0");
         }
 
@@ -151,7 +156,7 @@ const MobileForm = () => {
                 duration: 1,
                 ease: "power2.out"
             });
-    }, []);
+    }, [isPlaying]); // Add isPlaying dependency
 
     // Hover sound and glow
     useGSAP(() => {
@@ -159,7 +164,7 @@ const MobileForm = () => {
         if (!wrapper) return;
 
         const enter = () => {
-            if (audioHoverRef.current) {
+            if (audioHoverRef.current && isPlaying) { // Check isPlaying
                 audioHoverRef.current.currentTime = 0;
                 audioHoverRef.current.play().catch(err => {
                     console.warn('Sound play prevented:', err);
@@ -192,14 +197,14 @@ const MobileForm = () => {
             wrapper.removeEventListener('mouseenter', enter);
             wrapper.removeEventListener('mouseleave', leave);
         };
-    }, []);
+    }, [isPlaying]); // Add isPlaying dependency
 
     const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
-        if (audioClickRef.current) {
+        if (audioClickRef.current && isPlaying) { // Check isPlaying
             audioClickRef.current.currentTime = 0;
-            audioClickRef.current.play().catch(() => {});
+            audioClickRef.current.play().catch(() => { });
         } else {
-            console.warn('Audio not found');
+            // console.warn('Audio not found');
         }
         e.currentTarget.blur();
     };
@@ -216,7 +221,7 @@ const MobileForm = () => {
         // Optional: basic validation
         if (!name || !email || !message) {
             toast.error("Please fill in all fields.");
-            if (audioErrorRef.current) {
+            if (audioErrorRef.current && isPlaying) { // Check isPlaying
                 audioErrorRef.current.currentTime = 0;
                 audioErrorRef.current.play().catch(err => {
                     console.warn('Sound play prevented:', err);
@@ -237,7 +242,7 @@ const MobileForm = () => {
         )
             .then(() => {
                 toast.success("Message sent successfully!");
-                if (audioSuccessRef.current) {
+                if (audioSuccessRef.current && isPlaying) { // Check isPlaying
                     audioSuccessRef.current.currentTime = 0;
                     audioSuccessRef.current.play().catch(err => {
                         console.warn('Sound play prevented:', err);
@@ -248,7 +253,7 @@ const MobileForm = () => {
             .catch((error) => {
                 console.error(error);
                 toast.error("Something went wrong. Please try again later.");
-                if (audioErrorRef.current) {
+                if (audioErrorRef.current && isPlaying) { // Check isPlaying
                     audioErrorRef.current.currentTime = 0;
                     audioErrorRef.current.play().catch(err => {
                         console.warn('Sound play prevented:', err);

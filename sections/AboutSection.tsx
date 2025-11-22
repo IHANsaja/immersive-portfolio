@@ -10,8 +10,10 @@ import { SplitText } from "gsap/SplitText";
 import Image from "next/image";
 import { useMediaQuery } from "usehooks-ts";
 import ScrambledTextBlock from "@/components/About/EducationCard";
+import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
 
 const AboutSection = () => {
+    const { isPlaying } = useMusic(); // Get global sound state
     const paragraphRef = useRef<HTMLParagraphElement>(null);
     const line1 = useRef<HTMLSpanElement>(null);
     const line2 = useRef<HTMLSpanElement>(null);
@@ -20,30 +22,30 @@ const AboutSection = () => {
     const isMobile = useMediaQuery("(max-width: 768px)");
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-// Load the audio once
+    // Load the audio once
     useEffect(() => {
         audioRef.current = new Audio("/sounds/initiating.wav");
         audioRef.current.volume = 0.05;
     }, []);
 
-        const hoverEnter = () => {
-            const lines = [line1, line2, line3, line4];
+    const hoverEnter = () => {
+        const lines = [line1, line2, line3, line4];
 
-            lines.forEach((ref, i) => {
-                if (ref.current) {
-                    gsap.to(ref.current, {
-                        duration: 1.2,
-                        delay: i * 0.1, // stagger effect
-                        scrambleText: {
-                            text: ref.current.innerText,
-                            chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()",
-                            speed: 1,
-                            revealDelay: 0.2,
-                        },
-                    });
-                }
-            });
-        };
+        lines.forEach((ref, i) => {
+            if (ref.current) {
+                gsap.to(ref.current, {
+                    duration: 1.2,
+                    delay: i * 0.1, // stagger effect
+                    scrambleText: {
+                        text: ref.current.innerText,
+                        chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()",
+                        speed: 1,
+                        revealDelay: 0.2,
+                    },
+                });
+            }
+        });
+    };
 
     useGSAP(() => {
         if (!paragraphRef.current) return;
@@ -95,7 +97,7 @@ const AboutSection = () => {
                 toggleActions: "restart none restart none",
                 onEnter: () => {
                     const audio = audioRef.current;
-                    if (audio) {
+                    if (audio && isPlaying) { // Check isPlaying
                         audio.currentTime = 0;
                         audio.play().catch((err) => {
                             console.warn("Audio playback failed:", err);
@@ -258,7 +260,7 @@ const AboutSection = () => {
                     </div>
                 </div>
 
-                    {/* LEFT SVG */}
+                {/* LEFT SVG */}
                 <div className="h-1/2 w-full ml-30 hidden md:flex flex-col justify-center items-start">
                     <div className="svgGsap">
                         <AnimatedSvg />

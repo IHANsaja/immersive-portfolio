@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import ToasterProvider from "@/components/Ui/ToasterProvider";
 import PreloaderWrapper from "@/components/Ui/PreloaderWrpper";
-import {MusicProvider} from "@/components/Ui/MusicProvider"; // 1. Import the wrapper
+import { MusicProvider } from "@/components/Ui/MusicProvider"; // 1. Import the wrapper
 
 const InconsolataSans = Inconsolata({
     variable: "--font-inconsolata-sans",
@@ -23,13 +23,20 @@ const AndvariSans = localFont({
     display: 'swap',
 });
 
+export const viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    themeColor: '#000000',
+};
+
 export const metadata: Metadata = {
     title: "Ihan Hansaja - Full Stack Developer & AI Engineer | Portfolio",
     description: "Ihan Hansaja is a Software Engineering undergraduate specializing in Full-Stack Development, AI Engineering, and Machine Learning. Explore my portfolio featuring AI-driven web applications, immersive websites, and innovative projects built with React, Next.js, Three.js, and modern technologies.",
     keywords: [
         "Ihan Hansaja",
         "Full Stack Developer",
-        "AI Engineer", 
+        "AI Engineer",
         "Machine Learning Engineer",
         "Software Engineer",
         "React Developer",
@@ -109,8 +116,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
+    children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
     const structuredData = {
@@ -133,7 +140,7 @@ export default function RootLayout({
         },
         "knowsAbout": [
             "Full Stack Development",
-            "AI Engineering", 
+            "AI Engineering",
             "Machine Learning",
             "React",
             "Next.js",
@@ -164,23 +171,23 @@ export default function RootLayout({
 
     return (
         <html lang="en">
-        <head>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-            />
-        </head>
-        <body
-            className={`${InconsolataSans.variable} ${NeotriadSans.variable} ${AndvariSans.variable} antialiased bg-background`} // Added bg-background for seamless transition
-        >
-        <ToasterProvider />
-        {/* 2. Wrap the children with the PreloaderWrapper */}
-        <MusicProvider>
-            <PreloaderWrapper>
-                {children}
-            </PreloaderWrapper>
-        </MusicProvider>
-        </body>
+            <head>
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+                />
+            </head>
+            <body
+                className={`${InconsolataSans.variable} ${NeotriadSans.variable} ${AndvariSans.variable} antialiased bg-background`} // Added bg-background for seamless transition
+            >
+                <ToasterProvider />
+                {/* 2. Wrap the children with the PreloaderWrapper */}
+                <MusicProvider>
+                    <PreloaderWrapper>
+                        {children}
+                    </PreloaderWrapper>
+                </MusicProvider>
+            </body>
         </html>
     );
 }

@@ -62,11 +62,11 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
         assetPreloader.setProgressCallback((loadingProgress: LoadingProgress) => {
             setProgress(loadingProgress.percentage);
             setLoadingStage('loading');
-            
+
             // Update loading text based on stage with creative descriptions
             let stageText = "";
             let creativeDescription = "";
-            
+
             switch (loadingProgress.stage) {
                 case 'images':
                     stageText = "Rendering Visual Assets";
@@ -97,9 +97,9 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                     stageText = "Optimizing Performance";
                     creativeDescription = "Fine-tuning experience...";
             }
-            
+
             setLoadingText(`${stageText}... ${creativeDescription}`);
-            
+
             // Update progress bar directly without animation
             if (progressBarRef.current) {
                 progressBarRef.current.style.width = `${loadingProgress.percentage}%`;
@@ -173,7 +173,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
 
             <div className="flex items-center justify-center p-8 gap-6" ref={soundSectionRef1}>
                 <div className="shadow-md shadow-foreground"><MusicButton /></div>
-                <p className="font-inconsolata-sans text-md text-ex">C://Protocol_Freya/<br/>&gt;&gt; Enable Sound</p>
+                <p className="font-inconsolata-sans text-md text-ex">C://Protocol_Freya/<br />&gt;&gt; Enable Sound</p>
             </div>
 
             <div ref={logoContainerRef} className="relative flex flex-col items-center justify-center">
@@ -181,9 +181,8 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                     <button
                         onClick={handleExitAnimation}
                         disabled={!isClickable}
-                        className={`w-full h-full focus:outline-none transition-transform duration-300 group-hover:scale-110 ${
-                            isClickable ? "cursor-pointer" : "cursor-default"
-                        }`}
+                        className={`w-full h-full focus:outline-none transition-transform duration-300 group-hover:scale-110 ${isClickable ? "cursor-pointer" : "cursor-default"
+                            }`}
                         style={{ opacity: isClickable ? 1 : 0.4 }}
                     >
                         {/* Spinning SVG - larger and behind */}
@@ -191,13 +190,13 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                             className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 animate-spin opacity-20"
                             style={{ animationDuration: '6s' }}
                         >
-                        <Image
+                            <Image
                                 src="/svg/clickToEnter.svg"
                                 alt="click to enter button guide"
                                 width={240}
                                 height={240}
                                 className="object-contain scale-140"
-                                loading="lazy"
+                                priority
                             />
                         </div>
 
@@ -209,7 +208,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                                 fill
                                 sizes="(max-width: 640px) 160px, (max-width: 768px) 192px, 224px"
                                 className="object-contain pb-4"
-                                loading="lazy"
+                                priority
                             />
                         </div>
                     </button>
@@ -217,7 +216,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
             </div>
 
             <div className="flex items-center justify-center p-8 gap-3" ref={soundSectionRef2}>
-                <p className="font-inconsolata-sans text-base text-justify">A://Best_Experience/<br/>&gt;&gt; From Headphones</p>
+                <p className="font-inconsolata-sans text-base text-justify">A://Best_Experience/<br />&gt;&gt; From Headphones</p>
             </div>
 
             <div className="hidden md:flex items-end justify-start p-8 font-neotriad-sans text-5xl tabular-nums"></div>

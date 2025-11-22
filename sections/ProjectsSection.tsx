@@ -1,13 +1,16 @@
 "use client";
 
-import React, {useEffect, useRef} from 'react'
+import React, { useEffect, useRef } from 'react'
 import ProjectCard from "@/components/Projects/ProjectCard";
 import { projects } from "@/constants/ProjectConstants"
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
+import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
+
 const ProjectsSection = () => {
+    const { isPlaying } = useMusic(); // Get global sound state
     const audioInitiateRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
@@ -47,18 +50,20 @@ const ProjectsSection = () => {
 
         if (audioInitiateRef.current) {
             tl.add(() => {
-                const audio = audioInitiateRef.current!;
-                audio.currentTime = 0;
-                audio.play().catch(err => {
-                    console.warn('Sound play prevented:', err);
-                });
-
-                // Schedule audio stop at the end of timeline
-                const duration = tl.duration(); // Get total timeline duration
-                setTimeout(() => {
-                    audio.pause();
+                if (isPlaying) { // Check isPlaying
+                    const audio = audioInitiateRef.current!;
                     audio.currentTime = 0;
-                }, duration * 1000); // Convert seconds to ms
+                    audio.play().catch(err => {
+                        console.warn('Sound play prevented:', err);
+                    });
+
+                    // Schedule audio stop at the end of timeline
+                    const duration = tl.duration(); // Get total timeline duration
+                    setTimeout(() => {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }, duration * 1000); // Convert seconds to ms
+                }
             }, "+=0");
         }
 
@@ -92,7 +97,7 @@ const ProjectsSection = () => {
                 duration: 0.5,
             }, "<")
             .to(".project-card", {
-                y:0,
+                y: 0,
                 opacity: 1,
                 duration: 1.5,
                 stagger: {
@@ -102,7 +107,7 @@ const ProjectsSection = () => {
                 },
                 ease: "none"
             });
-    }, []);
+    }, [isPlaying]); // Add isPlaying dependency
 
     return (
         <section id="projects-section" className="relative w-screen h-screen z-0">

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, User, Files, BrainCog, Phone, X, Github} from 'lucide-react';
+import { Home, User, Files, BrainCog, Phone, X, Github } from 'lucide-react';
 import Image from "next/image";
 import gsap from 'gsap';
 
@@ -43,7 +43,10 @@ const navItems: NavItem[] = [
     { id: 'github', label: 'Github', icon: Github, angle: 330 },
 ];
 
+import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
+
 const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
+    const { isPlaying } = useMusic(); // Get global sound state
     const [activeItem, setActiveItem] = useState<string | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [joystickAngle, setJoystickAngle] = useState(0);
@@ -56,11 +59,11 @@ const SpaceshipNav: React.FC<SpaceshipNavProps> = ({ showPopup, onClose }) => {
     const appearAudioRef = useRef<HTMLAudioElement | null>(null);
 
     const playSound = useCallback((audioRef: React.RefObject<HTMLAudioElement | null>) => {
-        if (audioRef.current) {
+        if (audioRef.current && isPlaying) { // Check isPlaying
             audioRef.current.currentTime = 0;
             audioRef.current.play().catch(e => console.error("Audio play failed:", e));
         }
-    }, []);
+    }, [isPlaying]); // Add isPlaying dependency
 
     useEffect(() => {
         if (hoverAudioRef.current) hoverAudioRef.current.volume = 0.5;
