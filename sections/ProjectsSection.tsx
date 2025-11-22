@@ -11,6 +11,13 @@ import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
 
 const ProjectsSection = () => {
     const { isPlaying } = useMusic(); // Get global sound state
+    const isPlayingRef = useRef(isPlaying); // Ref to track isPlaying
+
+    // Update ref when isPlaying changes
+    useEffect(() => {
+        isPlayingRef.current = isPlaying;
+    }, [isPlaying]);
+
     const audioInitiateRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
@@ -50,7 +57,7 @@ const ProjectsSection = () => {
 
         if (audioInitiateRef.current) {
             tl.add(() => {
-                if (isPlaying) { // Check isPlaying
+                if (isPlayingRef.current) { // Check ref instead of state
                     const audio = audioInitiateRef.current!;
                     audio.currentTime = 0;
                     audio.play().catch(err => {
@@ -107,7 +114,7 @@ const ProjectsSection = () => {
                 },
                 ease: "none"
             });
-    }, [isPlaying]); // Add isPlaying dependency
+    }, []); // Remove isPlaying dependency
 
     return (
         <section id="projects-section" className="relative w-screen h-screen z-0">

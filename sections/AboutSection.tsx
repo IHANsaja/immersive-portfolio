@@ -14,6 +14,13 @@ import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
 
 const AboutSection = () => {
     const { isPlaying } = useMusic(); // Get global sound state
+    const isPlayingRef = useRef(isPlaying); // Ref to track isPlaying
+
+    // Update ref when isPlaying changes
+    useEffect(() => {
+        isPlayingRef.current = isPlaying;
+    }, [isPlaying]);
+
     const paragraphRef = useRef<HTMLParagraphElement>(null);
     const line1 = useRef<HTMLSpanElement>(null);
     const line2 = useRef<HTMLSpanElement>(null);
@@ -97,7 +104,7 @@ const AboutSection = () => {
                 toggleActions: "restart none restart none",
                 onEnter: () => {
                     const audio = audioRef.current;
-                    if (audio && isPlaying) { // Check isPlaying
+                    if (audio && isPlayingRef.current) { // Check ref instead of state
                         audio.currentTime = 0;
                         audio.play().catch((err) => {
                             console.warn("Audio playback failed:", err);

@@ -15,6 +15,13 @@ const allSkills: Skill[] = SkillLogos.flat();
 
 export default function SkillSection() {
     const { isPlaying } = useMusic(); // Get global sound state
+    const isPlayingRef = useRef(isPlaying); // Ref to track isPlaying without re-triggering effect
+
+    // Update ref when isPlaying changes
+    useEffect(() => {
+        isPlayingRef.current = isPlaying;
+    }, [isPlaying]);
+
     const containerRef = useRef<HTMLDivElement>(null);
     const squareRefs = useRef<HTMLDivElement[]>([]);
     const nameRefs = useRef<HTMLDivElement[]>([]);
@@ -66,7 +73,7 @@ export default function SkillSection() {
 
         if (audioInitiateRef.current) {
             tl.add(() => {
-                if (isPlaying) { // Check isPlaying
+                if (isPlayingRef.current) { // Check ref instead of state
                     const audio = audioInitiateRef.current!;
                     audio.currentTime = 0;
                     audio.play().catch(err => {
@@ -118,7 +125,7 @@ export default function SkillSection() {
                 },
                 ease: "none"
             });
-    }, [isPlaying]); // Add isPlaying dependency
+    }, []); // Remove isPlaying dependency
 
     return (
         <section id="skill-section" className="relative w-screen h-screen z-0">

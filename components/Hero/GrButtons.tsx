@@ -11,7 +11,7 @@ const GrButtons = () => {
     const [hasAnimated, setHasAnimated] = useState(false);
 
     // Animate buttons like menu button with same delay
-    useGSAP(() => {
+    const { contextSafe } = useGSAP(() => {
         // Set initial state - make them visible immediately
         gsap.set('#github-button', { y: 0, opacity: 1 });
         gsap.set('#resume-button', { y: 0, opacity: 1 });
@@ -34,8 +34,17 @@ const GrButtons = () => {
 
     // Re-animate when returning to hero section
     useEffect(() => {
-        const handleSectionEnter = () => {
+        const handleSectionEnter = contextSafe(() => {
             if (hasAnimated) {
+                // Kill any running animations on these elements to prevent conflicts
+                gsap.killTweensOf('#github-button, #resume-button');
+
+                // Reset to starting position for the "enter" animation
+                // We want them to fly UP from the bottom (y: 200 -> y: 0)
+                // But first, ensure they are visible so the 'from' tween works
+                gsap.set('#github-button', { opacity: 1, y: 0 });
+                gsap.set('#resume-button', { opacity: 1, y: 0 });
+
                 gsap.from('#github-button', {
                     duration: 1,
                     y: 200,
@@ -53,7 +62,7 @@ const GrButtons = () => {
                     onComplete: () => setShowResume(true)
                 });
             }
-        };
+        });
 
         // Listen for section changes
         const handleSectionPinned = (event: Event) => {
@@ -67,7 +76,7 @@ const GrButtons = () => {
         return () => {
             window.removeEventListener('sectionPinned', handleSectionPinned);
         };
-    }, [hasAnimated]);
+    }, [hasAnimated, contextSafe]);
 
     const githubClick = () => {
         if (showGithub) {
@@ -89,16 +98,16 @@ const GrButtons = () => {
     return (
         <div id="gr-buttons" className="flex flex-row gap-8 mt-15 mr-15 relative z-[10002]">
             <div id="github-button" className="pointer-events-auto" style={{ opacity: 1, transform: 'translateY(0px)' }}>
-                <AnimatedHoverButton 
-                    text="github" 
-                    bgColor={'#3F51B5'} 
+                <AnimatedHoverButton
+                    text="github"
+                    bgColor={'#3F51B5'}
                     onClick={githubClick}
                 />
             </div>
             <div id="resume-button" className="pointer-events-auto" style={{ opacity: 1, transform: 'translateY(0px)' }}>
-                <AnimatedHoverButton 
-                    text="resume" 
-                    bgColor={'#191919'} 
+                <AnimatedHoverButton
+                    text="resume"
+                    bgColor={'#191919'}
                     onClick={resumeClick}
                 />
             </div>
