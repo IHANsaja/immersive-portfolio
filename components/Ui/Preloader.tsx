@@ -6,6 +6,7 @@ import gsap from "gsap";
 import MusicButton from "./MusicButton";
 import { useGSAP } from "@gsap/react";
 import { AssetPreloader, LoadingProgress } from "@/utils/AssetPreloader";
+import PreloaderShader from "./PreloaderShader"; // Import the shader
 
 interface PreloaderProps {
     onLoadingComplete: () => void;
@@ -165,18 +166,21 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
             className="h-screen w-screen grid grid-cols-1 md:grid-cols-3 md:grid-rows-3 bg-[#191919] text-foreground fixed top-0 left-0 z-[10001]"
             style={{ clipPath: "circle(100% at 50% 50%)", willChange: "clip-path" }}
         >
+            {/* Background Shader */}
+            <PreloaderShader />
+
             <div></div>
-            <div ref={greetingRef} className="flex items-start justify-center p-8 font-neotriad-sans text-4xl">
+            <div ref={greetingRef} className="flex items-start justify-center p-8 font-neotriad-sans text-4xl relative z-10">
                 <p>{getGreeting()}</p>
             </div>
             <div className="hidden md:block"></div>
 
-            <div className="flex items-center justify-center p-8 gap-6" ref={soundSectionRef1}>
+            <div className="flex items-center justify-center p-8 gap-6 relative z-10" ref={soundSectionRef1}>
                 <div className="shadow-md shadow-foreground"><MusicButton /></div>
                 <p className="font-inconsolata-sans text-md text-ex">C://Protocol_Freya/<br />&gt;&gt; Enable Sound</p>
             </div>
 
-            <div ref={logoContainerRef} className="relative flex flex-col items-center justify-center">
+            <div ref={logoContainerRef} className="relative flex flex-col items-center justify-center z-10">
                 <div className="group relative w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56">
                     <button
                         onClick={handleExitAnimation}
@@ -215,22 +219,16 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                 </div>
             </div>
 
-            <div className="flex items-center justify-center p-8 gap-3" ref={soundSectionRef2}>
+            <div className="flex items-center justify-center p-8 gap-3 relative z-10" ref={soundSectionRef2}>
                 <p className="font-inconsolata-sans text-base text-justify">A://Best_Experience/<br />&gt;&gt; From Headphones</p>
             </div>
 
             <div className="hidden md:flex items-end justify-start p-8 font-neotriad-sans text-5xl tabular-nums"></div>
 
-            <div className="flex flex-col items-end justify-center p-8 w-full">
+            <div className="flex flex-col items-end justify-center p-8 w-full relative z-10">
                 <div ref={progressNumberRef} className="flex items-end justify-start p-8 font-neotriad-sans text-5xl tabular-nums opacity-100">
                     <p className="relative">
                         {progress.toString().padStart(3, '0')}%
-                        {loadingStage === 'loading' && (
-                            <span className="absolute -right-2 top-0 text-2xl animate-pulse">⚡</span>
-                        )}
-                        {loadingStage === 'ready' && (
-                            <span className="absolute -right-2 top-0 text-2xl animate-bounce">✨</span>
-                        )}
                     </p>
                 </div>
                 <div className="w-full h-1 bg-foreground/10">
