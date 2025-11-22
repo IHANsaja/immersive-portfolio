@@ -27,7 +27,7 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
     const [isExiting, setIsExiting] = useState(false);
     const [isClickable, setIsClickable] = useState(false);
     const [assetPreloader] = useState(() => new AssetPreloader());
-    const [loadingStage, setLoadingStage] = useState<'initializing' | 'loading' | 'ready'>('initializing');
+
 
     const getGreeting = () => {
         const hour = new Date().getHours();

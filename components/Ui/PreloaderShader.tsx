@@ -9,7 +9,7 @@ const MinimalGrid = () => {
 
     // Generate a structured grid of points
     const particles = useMemo(() => {
-        const spacing = 0.5; // Space between dots
+
         const rows = 40;
         const cols = 40;
         const count = rows * cols;
@@ -108,14 +108,14 @@ const MinimalGrid = () => {
     return (
         <points ref={pointsRef} material={shaderMaterial}>
             <bufferGeometry>
-                {/* @ts-ignore */}
+                {/* @ts-expect-error */}
                 <bufferAttribute
                     attach="attributes-position"
                     count={particles.positions.length / 3}
                     array={particles.positions}
                     itemSize={3}
                 />
-                {/* @ts-ignore */}
+                {/* @ts-expect-error */}
                 <bufferAttribute
                     attach="attributes-aRandom"
                     count={particles.randoms.length}
