@@ -31,7 +31,7 @@ const MobileForm = () => {
         audioInitiateRef.current = new Audio('/sounds/initiating.wav');
         audioInitiateRef.current.volume = 0.05;
 
-        audioSuccessRef.current = new Audio('/sounds/confirm.wav');
+        audioSuccessRef.current = new Audio(`/sounds/confirm.wav?v=${Date.now()}`);
         audioSuccessRef.current.volume = 0.1;
 
         audioErrorRef.current = new Audio('/sounds/reject.wav');
@@ -54,19 +54,7 @@ const MobileForm = () => {
             repeat: -1
         });
 
-        gsap.to('.scrambleContact', {
-            duration: 2,
-            delay: 4,
-            repeat: -1,
-            repeatDelay: 5,
-            opacity: 1,
-            scrambleText: {
-                text: "|||||||||||||||||||",
-                chars: "///////////////////////",
-                speed: 0.2,
-                revealDelay: 0.2,
-            },
-        });
+
     }, []);
 
     // Main animation timeline with .contactme included
@@ -74,7 +62,7 @@ const MobileForm = () => {
         gsap.set(".contact-border", { opacity: 0 });
         gsap.set(".appearlines", { clipPath: "circle(0% at 50% 50%)" });
         gsap.set(".Cform", { clipPath: "circle(0% at 50% 50%)" });
-        gsap.set(".sclines", { scaleX: 0 });
+
         gsap.set(".circle", { scale: 0 });
         gsap.set(".contactme", { opacity: 0 });
 
@@ -87,7 +75,7 @@ const MobileForm = () => {
                     gsap.set(".contact-border", { opacity: 0 });
                     gsap.set(".appearlines", { clipPath: "circle(0% at 50% 50%)" });
                     gsap.set(".Cform", { clipPath: "circle(0% at 50% 50%)" });
-                    gsap.set(".sclines", { scaleX: 0 });
+
                     gsap.set(".circle", { scale: 0 });
                     gsap.set(".contactme", { opacity: 0 });
                 },
@@ -131,11 +119,7 @@ const MobileForm = () => {
                 duration: 1,
                 ease: "power2.out"
             })
-            .to(".sclines", {
-                scaleX: 1,
-                duration: 1,
-                ease: "power2.out"
-            })
+
             .to(".circle", {
                 scale: 1,
                 duration: 1,

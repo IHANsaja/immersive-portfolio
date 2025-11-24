@@ -183,7 +183,7 @@ const AboutSection = () => {
     return (
         <section
             id="about-section"
-            className="w-screen h-screen flex flex-col md:flex-row md:gap-30 bg-[var(--background)] text-[#f0dbee] relative z-0"
+            className="w-screen min-h-screen md:h-screen flex flex-col md:flex-row md:gap-30 bg-[var(--background)] text-[#f0dbee] relative z-0 py-20 md:py-0"
         >
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
@@ -191,75 +191,75 @@ const AboutSection = () => {
             </div>
 
             {isMobile && (
-                <h1 className="block md:hidden font-neotriad-sans text-2xl text-center pt-5">
+                <h1 className="block md:hidden font-neotriad-sans text-3xl text-center mb-10">
                     About Me.
                 </h1>
             )}
 
 
             {/* LEFT SIDE: BASIC INFO & SKILLS */}
-            <div className="w-full h-full md:w-1/2 flex flex-col text-left text-[var(--foreground)] leading-5 tracking-wider">
-                <div className="md:h-1/2 md:mt-20 md:ml-10 px-12 pt-20 md:pt-40 flex flex-row justify-start items-start gap-10 w-full">
+            <div className="w-full md:h-full md:w-1/2 flex flex-col text-left text-[var(--foreground)] leading-5 tracking-wider order-2 md:order-1 px-6 md:px-0">
+                <div className="md:h-1/2 md:mt-20 md:ml-10 pt-10 md:pt-40 flex flex-row justify-between md:justify-start items-start gap-4 md:gap-10 w-full">
                     {/* Basic Info */}
                     <div>
                         <PoliceLights rectHeight={30} rectWidth={70} />
                         <br />
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// basic info</p>
-                        <p className="scrambleBI font-andvari-sans text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px] mb-2">// basic info</p>
+                        <p className="scrambleBI font-andvari-sans text-[10px] md:text-[11px]">
                             name → &quot;Ihan Hansaja&quot;
                         </p>
-                        <p className="scrambleBI font-andvari-sans text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans text-[10px] md:text-[11px]">
                             location → &quot;Kotikawatta&quot;
                         </p>
                         <br />
                         <br />
                         <br />
                         <br />
-                        <p className="font-andvari-sans text-[9px] md:text-[11px]">
+                        <p className="font-andvari-sans text-[10px] md:text-[11px]">
                             &lt;meta charset=&quot;UTF-8&quot;&gt;
                         </p>
                         <br />
                         <br />
-                        <p className="font-inconsolata-sans-sans w-full rext-sm md:text-2xl">+ + + +</p>
+                        <p className="font-inconsolata-sans-sans w-full text-xl md:text-2xl">+ + + +</p>
                     </div>
 
                     {/* Skills */}
                     <div>
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// areas of expertise</p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px] mb-2">// areas of expertise</p>
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
                             [&quot; Full‑Stack Development &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
                             &quot; Front‑End Development &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
                             &quot; Back‑End Development &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
                             &quot; UI/UX Design &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
                             &quot; AI Engineering &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
                             &quot; Machine Learning Engineering &quot;]
                         </p>
                         <br />
                         <br />
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px] mb-2">// what i&apos;m building</p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px] mb-2">// what i&apos;m building</p>
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
                             [&quot; AI‑driven Web Apps &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
                             &quot; Immersive Websites &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
                             &quot; AI SaaS Platforms &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[9px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
                             &quot; Machine Learning Models &quot;]
                         </p>
                         <br />
@@ -278,20 +278,18 @@ const AboutSection = () => {
                 </div>
             </div>
 
-
-
             {/* RIGHT SIDE: INTRO & PARAGRAPH */}
-            <div className="w-full h-full md:w-1/2 flex flex-col px-8 mr-20 text-[var(--foreground)] leading-5 tracking-wider">
+            <div className="w-full md:h-full md:w-1/2 flex flex-col px-6 md:px-8 md:mr-20 text-[var(--foreground)] leading-5 tracking-wider order-1 md:order-2">
 
-                <div className="w-full h-3/5 text-center md:text-right flex flex-col justify-start items-center md:items-end gap-4 md:gap-10">
-                    <div className="w-full ml-20 md:mt-20 flex justify-start items-start text-sm md:text-2xl font-inconsolata-sans">
+                <div className="w-full md:h-3/5 text-center md:text-right flex flex-col justify-start items-center md:items-end gap-6 md:gap-10">
+                    <div className="w-full md:ml-20 md:mt-20 flex justify-center md:justify-start items-start text-xl md:text-2xl font-inconsolata-sans">
                         + + + +
                     </div>
-                    <h2 className="scramble font-neotriad-sans text-xl md:text-4xl">Hey I am <strong>IHAN HANSAJA</strong></h2>
+                    <h2 className="scramble font-neotriad-sans text-3xl md:text-4xl">Hey I am <strong>IHAN HANSAJA</strong></h2>
 
                     <p
                         ref={paragraphRef}
-                        className="font-andvari-sans max-w-xl text-[9px] md:text-[11px] leading-6 text-center md:text-right"
+                        className="font-andvari-sans max-w-xl text-[11px] md:text-[11px] leading-6 text-center md:text-right"
                     >
                         I am a <strong>Software Engineering undergraduate</strong> with a strong passion for
                         building efficient, user-centric applications. As a <strong>Full Stack Developer</strong> and <strong>AI Engineer</strong>,
@@ -302,25 +300,25 @@ const AboutSection = () => {
                         collaborative environments that push my technical and creative
                         boundaries.
                     </p>
-                    <div className="buttonGsap hidden md:block">
+                    <div className="buttonGsap block md:block">
                         <AnimatedHoverButton bgColor={"#3F51B5"} text="PROJECTS" />
                     </div>
                 </div>
-                <div className="w-full h-2/5 flex flex-col items-center md:items-end gap-10 text-2xl font-inconsolata-sans z-10">
-                    <h3 className="scramble font-neotriad-sans text-xl md:text-4xl">Education</h3>
-                    <div className="flex flex-row justify-start items-center gap-10">
+                <div className="w-full md:h-2/5 flex flex-col items-center md:items-end gap-6 md:gap-10 text-2xl font-inconsolata-sans z-10 mt-10 md:mt-0">
+                    <h3 className="scramble font-neotriad-sans text-2xl md:text-4xl">Education</h3>
+                    <div className="flex flex-col md:flex-row justify-center md:justify-start items-center gap-6 md:gap-10 w-full md:w-auto">
                         <div className="h-full hidden md:flex justify-center items-start mr-10">
                             <PoliceLights rectHeight={30} rectWidth={70} />
                         </div>
                         <div
                             onMouseEnter={hoverEnter}
-                            className="eduCard h-40 w-25 md:h-70 md:w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-2 md:p-6 bg-background opacity-100">
+                            className="eduCard h-auto w-full max-w-[280px] md:h-70 md:w-50 flex flex-col items-center gap-3 md:gap-5 border border-gray-500 rounded-sm p-4 md:p-6 bg-background opacity-100">
                             <Image
                                 src="/DSlogo.png"
                                 alt="DS senanayake college school logo"
                                 height={70}
                                 width={70}
-                                className="relative z-10"
+                                className="relative z-10 w-12 h-12 md:w-[70px] md:h-[70px]"
                                 loading="lazy"
                             />
                             <ScrambledTextBlock
@@ -331,17 +329,17 @@ const AboutSection = () => {
                                     "Advanced Level",
                                 ]}
                             />
-                            <span className="text-center font-inconsolata-sans text-sm">RES: 9A / 1C 2S</span>
+                            <span className="text-center font-inconsolata-sans text-[10px] md:text-sm">RES: 9A / 1C 2S</span>
                         </div>
                         <div
                             onMouseEnter={hoverEnter}
-                            className="eduCard h-40 w-25 md:h-70 md:w-50 flex flex-col items-center gap-5 border border-gray-500 rounded-sm p-2 md:p-6 bg-background opacity-100">
+                            className="eduCard h-auto w-full max-w-[280px] md:h-70 md:w-50 flex flex-col items-center gap-3 md:gap-5 border border-gray-500 rounded-sm p-4 md:p-6 bg-background opacity-100">
                             <Image
                                 src="/cinecLogo.png"
                                 alt="DS senanayake college school logo"
                                 height={70}
                                 width={70}
-                                className="relative z-10"
+                                className="relative z-10 w-12 h-12 md:w-[70px] md:h-[70px]"
                                 loading="lazy"
                             />
                             <ScrambledTextBlock
@@ -352,7 +350,7 @@ const AboutSection = () => {
                                     "Engineering",
                                 ]}
                             />
-                            <span className="text-center font-inconsolata-sans text-sm">GPA: above 3.80</span>
+                            <span className="text-center font-inconsolata-sans text-[10px] md:text-sm">GPA: above 3.80</span>
                         </div>
                     </div>
 

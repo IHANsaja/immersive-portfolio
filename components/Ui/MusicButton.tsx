@@ -56,7 +56,7 @@ const MusicButton = () => {
         <button
             onMouseEnter={playHover}
             onClick={toggleMusic}
-            className="sound-button relative w-12 h-6 bg-[#191919] rounded-sm flex items-center justify-center overflow-hidden cursor-pointer"
+            className="sound-button relative w-12 h-6 bg-[#191919] rounded-sm flex items-center justify-center overflow-hidden cursor-pointer border border-[#46a0f9] md:border-none"
         >
             {isPlaying ? (
                 <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 20" preserveAspectRatio="none">

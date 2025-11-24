@@ -184,7 +184,7 @@ export class AssetPreloader {
             try {
                 await this.loadAsset(asset);
                 totalLoaded++;
-                
+
                 const progress: LoadingProgress = {
                     loaded: totalLoaded,
                     total: totalAssets,
@@ -197,7 +197,7 @@ export class AssetPreloader {
             } catch (error) {
                 console.warn(`Failed to load critical asset ${asset.url}:`, error);
                 totalLoaded++;
-                
+
                 const progress: LoadingProgress = {
                     loaded: totalLoaded,
                     total: totalAssets,
@@ -215,7 +215,7 @@ export class AssetPreloader {
             try {
                 await this.loadAsset(asset);
                 totalLoaded++;
-                
+
                 const progress: LoadingProgress = {
                     loaded: totalLoaded,
                     total: totalAssets,
@@ -228,7 +228,7 @@ export class AssetPreloader {
             } catch (error) {
                 console.warn(`Failed to load ${asset.url}:`, error);
                 totalLoaded++;
-                
+
                 const progress: LoadingProgress = {
                     loaded: totalLoaded,
                     total: totalAssets,
@@ -246,32 +246,32 @@ export class AssetPreloader {
             try {
                 await this.loadAsset(asset);
                 totalLoaded++;
-                
+
                 const progress: LoadingProgress = {
                     loaded: totalLoaded,
                     total: totalAssets,
                     percentage: Math.round((totalLoaded / totalAssets) * 100),
                     currentAsset: asset.name,
-                    stage: asset.type === 'video' ? 'videos' : 
-                           asset.type === 'audio' ? 'audio' : 
-                           asset.type === 'model' ? 'models' : 
-                           asset.type === 'spline' ? 'spline' : 'images',
+                    stage: asset.type === 'video' ? 'videos' :
+                        asset.type === 'audio' ? 'audio' :
+                            asset.type === 'model' ? 'models' :
+                                asset.type === 'spline' ? 'spline' : 'images',
                 };
 
                 this.onProgress?.(progress);
             } catch (error) {
                 console.warn(`Failed to load ${asset.url}:`, error);
                 totalLoaded++;
-                
+
                 const progress: LoadingProgress = {
                     loaded: totalLoaded,
                     total: totalAssets,
                     percentage: Math.round((totalLoaded / totalAssets) * 100),
                     currentAsset: asset.name,
-                    stage: asset.type === 'video' ? 'videos' : 
-                           asset.type === 'audio' ? 'audio' : 
-                           asset.type === 'model' ? 'models' : 
-                           asset.type === 'spline' ? 'spline' : 'images',
+                    stage: asset.type === 'video' ? 'videos' :
+                        asset.type === 'audio' ? 'audio' :
+                            asset.type === 'model' ? 'models' :
+                                asset.type === 'spline' ? 'spline' : 'images',
                 };
 
                 this.onProgress?.(progress);
@@ -350,7 +350,7 @@ export class AssetPreloader {
             audio.oncanplaythrough = () => resolve();
             audio.onerror = () => reject(new Error(`Failed to load audio: ${url}`));
             audio.preload = 'metadata';
-            audio.src = url;
+            audio.src = `${url}?v=${Date.now()}`;
         });
     }
 

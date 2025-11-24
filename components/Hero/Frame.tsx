@@ -50,20 +50,34 @@ const SvgFrame = () => {
             {/* Full-screen fixed wrapper */}
             <div className="fixed inset-0 w-screen h-screen pointer-events-none z-[10000]">
                 {/* Mobile Frame: visible on small screens */}
-                <div className="relative w-full h-full md:hidden">
-                    <svg
-                        className="w-full h-full"
-                        viewBox="0 0 440 956"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        preserveAspectRatio="none"
-                    >
-                        <path d="M441 0V956H0V0H441ZM10 10V946H431V10H10Z" fill="#191919" />
-                        <path d="M27 4V6H6V27H4V4H27Z" fill="#D9D9D9" />
-                        <path d="M27 952V950H6V929H4V952H27Z" fill="#D9D9D9" />
-                        <path d="M414 952V950H435V929H437V952H414Z" fill="#D9D9D9" />
-                        <path d="M414 4V6H435V27H437V4H414Z" fill="#D9D9D9" />
-                    </svg>
+                {/* Mobile Frame: visible on small screens */}
+                <div className="relative w-full h-full md:hidden pointer-events-none">
+                    {/* Main Border */}
+                    <div className="absolute inset-0 border-[10px] border-[#191919] pointer-events-none"></div>
+
+                    {/* Top Left Corner */}
+                    <div className="absolute top-[4px] left-[4px] w-[23px] h-[23px] pointer-events-none z-10">
+                        <div className="absolute top-0 left-0 w-[2px] h-full bg-[#D9D9D9]"></div>
+                        <div className="absolute top-0 left-0 w-full h-[2px] bg-[#D9D9D9]"></div>
+                    </div>
+
+                    {/* Top Right Corner */}
+                    <div className="absolute top-[4px] right-[4px] w-[23px] h-[23px] pointer-events-none z-10">
+                        <div className="absolute top-0 right-0 w-[2px] h-full bg-[#D9D9D9]"></div>
+                        <div className="absolute top-0 right-0 w-full h-[2px] bg-[#D9D9D9]"></div>
+                    </div>
+
+                    {/* Bottom Left Corner */}
+                    <div className="absolute bottom-[4px] left-[4px] w-[23px] h-[23px] pointer-events-none z-10">
+                        <div className="absolute bottom-0 left-0 w-[2px] h-full bg-[#D9D9D9]"></div>
+                        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#D9D9D9]"></div>
+                    </div>
+
+                    {/* Bottom Right Corner */}
+                    <div className="absolute bottom-[4px] right-[4px] w-[23px] h-[23px] pointer-events-none z-10">
+                        <div className="absolute bottom-0 right-0 w-[2px] h-full bg-[#D9D9D9]"></div>
+                        <div className="absolute bottom-0 right-0 w-full h-[2px] bg-[#D9D9D9]"></div>
+                    </div>
                 </div>
 
                 {/* Desktop Frame: visible on md and up */}

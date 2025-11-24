@@ -27,7 +27,7 @@ const DesktopForm = () => {
         audioInitiateRef.current = new Audio('/sounds/initiating.wav');
         audioInitiateRef.current.volume = 0.05;
 
-        audioSuccessRef.current = new Audio('/sounds/confirm.wav');
+        audioSuccessRef.current = new Audio(`/sounds/confirm.wav?v=${Date.now()}`);
         audioSuccessRef.current.volume = 0.1;
 
         audioErrorRef.current = new Audio('/sounds/reject.wav');

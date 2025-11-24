@@ -17,15 +17,15 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: FC<ProjectCardProps> = ({
-                                               title,
-                                               videoSrc,
-                                               description,
-                                               codeUrl,
-                                               demoUrl,
-                                               figmaUrl,
-                                               audioSrc,
-                                               badge,
-                                           }) => {
+    title,
+    videoSrc,
+    description,
+    codeUrl,
+    demoUrl,
+    figmaUrl,
+    audioSrc,
+    badge,
+}) => {
     const [initiated, setInitiated] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -71,7 +71,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
                 toast.info('There is no audio available for this project');
                 return;
             }
-            
+
             setInitiated(true);
             if (audioRef.current) {
                 audioRef.current.currentTime = 0;
@@ -121,25 +121,25 @@ const ProjectCard: FC<ProjectCardProps> = ({
     const isVideoFile = (src: string) => {
         const videoExtensions = ['.mp4', '.webm', '.ogg', '.avi', '.mov', '.wmv'];
         const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
-        
+
         const lowerSrc = src.toLowerCase();
-        
+
         // Check for video extensions
         if (videoExtensions.some(ext => lowerSrc.includes(ext))) {
             return true;
         }
-        
+
         // Check for image extensions
         if (imageExtensions.some(ext => lowerSrc.includes(ext))) {
             return false;
         }
-        
+
         // Check for external video platforms
-        if (lowerSrc.includes('youtube.com') || lowerSrc.includes('youtu.be') || 
+        if (lowerSrc.includes('youtube.com') || lowerSrc.includes('youtu.be') ||
             lowerSrc.includes('vimeo.com') || lowerSrc.includes('dailymotion.com')) {
             return true;
         }
-        
+
         // Default to video for unknown formats
         return true;
     };
@@ -149,42 +149,42 @@ const ProjectCard: FC<ProjectCardProps> = ({
         if (badge) {
             return {
                 type: badge,
-                text: badge === 'ui-design' ? 'UI Design Only' : 
-                      badge === 'code-only' ? 'Code Only' : 'Full Project',
-                color: badge === 'ui-design' ? 'bg-gradient-to-r from-indigo-700 to-blue-800' : 
-                       badge === 'code-only' ? 'bg-gradient-to-r from-slate-600 to-gray-700' : 'bg-gradient-to-r from-emerald-600 to-green-600',
-                borderColor: badge === 'ui-design' ? 'border-indigo-500/30' : 
-                           badge === 'code-only' ? 'border-slate-500/30' : 'border-emerald-500/30',
-                textColor: badge === 'ui-design' ? 'text-indigo-100' : 
-                          badge === 'code-only' ? 'text-slate-100' : 'text-emerald-100'
+                text: badge === 'ui-design' ? 'UI Design Only' :
+                    badge === 'code-only' ? 'Code Only' : 'Full Project',
+                color: badge === 'ui-design' ? 'bg-gradient-to-r from-indigo-700 to-blue-800' :
+                    badge === 'code-only' ? 'bg-gradient-to-r from-slate-600 to-gray-700' : 'bg-gradient-to-r from-emerald-600 to-green-600',
+                borderColor: badge === 'ui-design' ? 'border-indigo-500/30' :
+                    badge === 'code-only' ? 'border-slate-500/30' : 'border-emerald-500/30',
+                textColor: badge === 'ui-design' ? 'text-indigo-100' :
+                    badge === 'code-only' ? 'text-slate-100' : 'text-emerald-100'
             };
         }
-        
+
         // Auto-detect based on available URLs
         const hasCode = codeUrl && codeUrl.trim() !== '';
         const hasDemo = demoUrl && demoUrl.trim() !== '';
         const hasFigma = figmaUrl && figmaUrl.trim() !== '';
-        
+
         if (hasFigma && !hasCode && !hasDemo) {
-            return { 
-                type: 'ui-design', 
-                text: 'UI Design Only', 
+            return {
+                type: 'ui-design',
+                text: 'UI Design Only',
                 color: 'bg-gradient-to-r from-indigo-700 to-blue-800',
                 borderColor: 'border-indigo-500/30',
                 textColor: 'text-indigo-100'
             };
         } else if (hasCode && !hasFigma) {
-            return { 
-                type: 'code-only', 
-                text: 'Code Only', 
+            return {
+                type: 'code-only',
+                text: 'Code Only',
                 color: 'bg-gradient-to-r from-slate-600 to-gray-700',
                 borderColor: 'border-slate-500/30',
                 textColor: 'text-slate-100'
             };
         } else {
-            return { 
-                type: 'full-project', 
-                text: 'Full Project', 
+            return {
+                type: 'full-project',
+                text: 'Full Project',
                 color: 'bg-gradient-to-r from-emerald-600 to-green-600',
                 borderColor: 'border-emerald-500/30',
                 textColor: 'text-emerald-100'
@@ -266,6 +266,7 @@ const ProjectCard: FC<ProjectCardProps> = ({
                                     src={videoSrc}
                                     alt={`${title} screenshot`}
                                     fill
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                     className="object-cover rounded"
                                 />
                             )}

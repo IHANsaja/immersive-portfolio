@@ -165,7 +165,7 @@ const HeroSection = () => {
 
             {/* Load buttons after delay - MADE VISIBLE */}
             {showButtons && (
-                <div className="absolute top-0 left-0 w-screen flex justify-end gap-8 items-center z-[10000] p-4">
+                <div className="absolute top-0 left-0 w-screen flex justify-center md:justify-end gap-8 items-center z-[10000] p-4">
                     <Suspense fallback={
                         <div className="flex gap-8">
                             <div className="w-24 h-12 bg-gray-800 animate-pulse rounded"></div>

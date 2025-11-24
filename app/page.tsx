@@ -32,32 +32,62 @@ const Home: React.FC = () => {
         const smoother = ScrollSmoother.create({
             smooth: 1,
             effects: true,
+            smoothTouch: 0, // Disable smooth scrolling on touch devices
         });
 
         const sections = ["#hero-section", "#about-section", "#projects-section", "#skill-section", "#contact-section"];
 
-        sections.forEach((section, index) => {
-            ScrollTrigger.create({
-                trigger: section,
-                start: "top top",
-                pin: true,
-                pinSpacing: true,
-                anticipatePin: 1,
-                onUpdate: (self) => {
-                    if (progressRef.current) {
-                        const width = (index + self.progress) / sections.length * 100;
-                        progressRef.current.style.width = `${width}%`;
-                    }
-                },
-                onEnter: () => {
-                    const sectionId = section.replace('#', '');
-                    window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
-                },
-                onEnterBack: () => {
-                    const sectionId = section.replace('#', '');
-                    window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
-                }
-            });
+        ScrollTrigger.matchMedia({
+            // Desktop: Pin sections
+            "(min-width: 800px)": function () {
+                sections.forEach((section, index) => {
+                    ScrollTrigger.create({
+                        trigger: section,
+                        start: "top top",
+                        pin: true,
+                        pinSpacing: true,
+                        anticipatePin: 1,
+                        onUpdate: (self) => {
+                            if (progressRef.current) {
+                                const width = (index + self.progress) / sections.length * 100;
+                                progressRef.current.style.width = `${width}%`;
+                            }
+                        },
+                        onEnter: () => {
+                            const sectionId = section.replace('#', '');
+                            window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
+                        },
+                        onEnterBack: () => {
+                            const sectionId = section.replace('#', '');
+                            window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
+                        }
+                    });
+                });
+            },
+            // Mobile: No pinning, just progress update
+            "(max-width: 799px)": function () {
+                sections.forEach((section, index) => {
+                    ScrollTrigger.create({
+                        trigger: section,
+                        start: "top top",
+                        onUpdate: (self) => {
+                            if (progressRef.current) {
+                                // Simple progress approximation for mobile
+                                const width = (index + self.progress) / sections.length * 100;
+                                progressRef.current.style.width = `${width}%`;
+                            }
+                        },
+                        onEnter: () => {
+                            const sectionId = section.replace('#', '');
+                            window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
+                        },
+                        onEnterBack: () => {
+                            const sectionId = section.replace('#', '');
+                            window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
+                        }
+                    });
+                });
+            }
         });
 
         // Cleanup on unmount
@@ -93,7 +123,7 @@ const Home: React.FC = () => {
             <div className="fixed bottom-10 md:bottom-20 left-1/2 transform -translate-x-1/2 z-[10000]">
                 <Menu />
             </div>
-            <div className="fixed top-10 left-10 z-[10000]">
+            <div className="fixed top-5 left-5 md:top-10 md:left-10 z-[10000]">
                 <MusicButton />
             </div>
         </main>

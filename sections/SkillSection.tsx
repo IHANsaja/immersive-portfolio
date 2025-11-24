@@ -134,8 +134,8 @@ export default function SkillSection() {
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
 
-            <div className="skills-title absolute top-10 right-1/2 translate-x-1/2 md:top-30 md:right-30 md:translate-x-0 z-10 font-neotriad-sans">
-                <h2 className="text-foreground text-4xl md:text-5xl">MY SKILLS</h2>
+            <div className="skills-title absolute top-16 left-1/2 -translate-x-1/2 md:top-30 md:right-30 md:left-auto md:translate-x-0 z-10 font-neotriad-sans w-full text-center md:text-right">
+                <h2 className="text-foreground text-3xl sm:text-4xl md:text-5xl">MY SKILLS</h2>
             </div>
 
             <div className="bigTree absolute bottom-[-50px] left-0 w-1/2 z-0 mix-blend-soft-light">
@@ -144,7 +144,7 @@ export default function SkillSection() {
 
             <div
                 ref={containerRef}
-                className="skillgrid absolute w-full md:w-1/2 h-3/4 px-8 md:left-20 top-1/2 -translate-y-1/2 grid grid-cols-4 md:grid-cols-5 gap-6 z-1"
+                className="skillgrid absolute w-full md:w-1/2 h-3/4 px-4 md:px-8 md:left-20 top-[55%] md:top-1/2 -translate-y-1/2 grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 gap-4 md:gap-6 z-1 content-start md:content-center overflow-y-auto md:overflow-visible pb-20 md:pb-0"
             >
                 {allSkills.map((skill, i) => (
                     <div

@@ -123,16 +123,16 @@ const ProjectsSection = () => {
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
 
-            <div className="projects-title absolute top-20 left-1/2 -translate-x-1/2 md:top-30 md:left-30 md:-translate-x-0 xl:top-24 xl:left-24 z-10 font-neotriad-sans">
-                <h1 className="text-foreground text-4xl md:text-5xl xl:text-3xl 2xl:text-4xl">MY PROJECTS</h1>
+            <div className="projects-title absolute top-16 left-1/2 -translate-x-1/2 md:top-30 md:left-30 md:-translate-x-0 xl:top-24 xl:left-24 z-10 font-neotriad-sans w-full text-center md:text-left">
+                <h1 className="text-foreground text-3xl sm:text-4xl md:text-5xl xl:text-3xl 2xl:text-4xl">MY PROJECTS</h1>
             </div>
 
             <div
                 data-scroller-ignore
-                className="projects absolute right-0 md:right-20 xl:right-16 2xl:right-20 px-30 py-30 md:py-0 xl:px-4 2xl:px-2 top-1/2 z-10 h-3/4 w-full md:w-2/3 xl:w-3/5 2xl:w-2/3 overflow-scroll gap-5 md:px-2"
-                style={{ transform: 'translateY(calc(-50% - 30px))' }}
+                className="projects absolute right-0 md:right-20 xl:right-16 2xl:right-20 px-4 md:px-0 top-[55%] md:top-1/2 z-10 h-[65%] md:h-3/4 w-full md:w-2/3 xl:w-3/5 2xl:w-2/3 overflow-y-auto overflow-x-hidden gap-5"
+                style={{ transform: 'translateY(-50%)' }}
             >
-                <div className="flex flex-col md:grid md:grid-cols-4 xl:grid-cols-3 2xl:grid-cols-4 md:auto-rows-auto gap-5 xl:gap-4 2xl:gap-5">
+                <div className="flex flex-col gap-8 pb-20 md:grid md:grid-cols-4 xl:grid-cols-3 2xl:grid-cols-4 md:auto-rows-auto md:gap-5 xl:gap-4 2xl:gap-5 md:pb-0 items-center md:items-start">
                     {projects.map((p, i) => (
                         <ProjectCard key={i} {...p} />
                     ))}

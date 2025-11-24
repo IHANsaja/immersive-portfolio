@@ -96,7 +96,7 @@ const GrButtons = () => {
     };
 
     return (
-        <div id="gr-buttons" className="flex flex-row gap-8 mt-15 mr-15 relative z-[10002]">
+        <div id="gr-buttons" className="flex flex-row gap-8 mt-5 md:mt-15 mr-0 md:mr-15 relative z-[10002]">
             <div id="github-button" className="pointer-events-auto" style={{ opacity: 1, transform: 'translateY(0px)' }}>
                 <AnimatedHoverButton
                     text="github"
