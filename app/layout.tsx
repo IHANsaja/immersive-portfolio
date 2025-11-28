@@ -176,6 +176,7 @@ export default function RootLayout({
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
                 />
+                <meta name="google-site-verification" content="crIO90yWHga2Fbh5XrcWR2BvcBs3n5Hsfnme0BI-Htg" />
             </head>
             <body
                 className={`${InconsolataSans.variable} ${NeotriadSans.variable} ${AndvariSans.variable} antialiased bg-background`} // Added bg-background for seamless transition
