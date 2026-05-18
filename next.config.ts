@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+  // Transpile Three.js packages to prevent multiple instance issues in Next.js production builds
+  transpilePackages: ['three', '@react-three/fiber', '@react-three/drei', 'three-stdlib'],
+
   // Webpack config to force a single Three.js instance (for production)
   webpack: (config) => {
     config.resolve.alias = {
