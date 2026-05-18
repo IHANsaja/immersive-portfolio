@@ -3,7 +3,7 @@ const path = require('path');
 const https = require('https');
 
 // Token provided by the user. Fallback to env GITHUB_TOKEN if available.
-const TOKEN = process.env.GITHUB_TOKEN || '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';
+const TOKEN = process.env.GITHUB_TOKEN;
 
 const headers = {
   'User-Agent': 'immersive-portfolio-analytics-updater',

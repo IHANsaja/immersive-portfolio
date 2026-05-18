@@ -29,6 +29,7 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
 
     // Set initial positions with useLayoutEffect for synchronous update before paint
     useLayoutEffect(() => {
+        if (!modelRef.current || !sceneRef.current) return;
         gsap.set(camera.position, { ...camera.position, z: initialCameraPos[2] });
         gsap.set(modelRef.current.position, { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] });
         gsap.set(sceneRef.current, { opacity: 0, x: 0 });
@@ -76,9 +77,9 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
             if (sectionId in animations.scene) {
                 const ease = "circ.inOut";
                 // Ensure x is reset to 0 when using xPercent to avoid conflicts if x was previously set
-                gsap.to(sceneRef.current, { ...animations.scene[sectionId], x: 0, duration: 1, ease });
+                if (sceneRef.current) gsap.to(sceneRef.current, { ...animations.scene[sectionId], x: 0, duration: 1, ease });
                 gsap.to(camera.position, { ...animations.camera[sectionId], duration: 1.5, ease });
-                gsap.to(modelRef.current.position, { ...animations.model[sectionId], duration: 1.3, ease });
+                if (modelRef.current) gsap.to(modelRef.current.position, { ...animations.model[sectionId], duration: 1.3, ease });
             }
         };
 

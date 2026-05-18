@@ -52,5 +52,11 @@
     "tailwind-clip-path": "^1.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "three": "^0.178.0"
+  },
+  "resolutions": {
+    "three": "^0.178.0"
   }
 }
