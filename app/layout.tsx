@@ -34,23 +34,45 @@ export const metadata: Metadata = {
     title: "Ihan Hansaja - Full Stack Developer & AI Engineer | Portfolio",
     description: "Ihan Hansaja is a Software Engineering undergraduate specializing in Full-Stack Development, AI Engineering, and Machine Learning. Explore my portfolio featuring AI-driven web applications, immersive websites, and innovative projects built with React, Next.js, Three.js, and modern technologies.",
     keywords: [
+        // Main target keywords
         "Ihan Hansaja",
-        "Full Stack Developer",
+        "developer portfolio",
+        "full stack developer portfolio",
         "AI Engineer",
         "Machine Learning Engineer",
         "Software Engineer",
         "React Developer",
         "Next.js Developer",
         "Three.js Developer",
-        "Portfolio",
         "Web Developer",
         "Frontend Developer",
         "Backend Developer",
         "UI/UX Designer",
+        
+        // Typos and variations
+        "Ihan",
+        "Hansaja",
+        "ihanhansaja",
+        "ihan hansja",
+        "ihaan hansaja",
+        "ihan hasaja",
+        "ihan hansa",
+        "ethan hansaja",
+        "ihan hansaje",
+        "fullstack developer portfolio",
+        "full stack dev portfolio",
+        "ihan hansaja developer",
+        "Ihan Hansaja Portfolio",
+        
+        // Specific niche keywords
+        "Sri Lanka Developer",
+        "Sri Lankan Software Engineer",
+        "Machine Learning Portfolio",
+        "AI Engineer Portfolio",
         "AI-driven Web Apps",
         "Immersive Websites",
-        "CINEC Campus",
-        "Software Engineering",
+        
+        // Technologies
         "TypeScript",
         "Node.js",
         "Python",
@@ -122,51 +144,67 @@ export default function RootLayout({
 }>) {
     const structuredData = {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Ihan Hansaja",
-        "jobTitle": "Full Stack Developer & AI Engineer",
-        "description": "Software Engineering undergraduate specializing in Full-Stack Development, AI Engineering, and Machine Learning",
-        "url": "https://immersive-portfolio.vercel.app",
-        "image": "https://immersive-portfolio.vercel.app/logo.png",
-        "sameAs": [
-            "https://github.com/IHANsaja",
-            "https://linkedin.com/in/ihanhansaja",
-            "https://twitter.com/ihanhansaja"
-        ],
-        "alumniOf": {
-            "@type": "EducationalOrganization",
-            "name": "CINEC Campus",
-            "description": "Software Engineering"
-        },
-        "knowsAbout": [
-            "Full Stack Development",
-            "AI Engineering",
-            "Machine Learning",
-            "React",
-            "Next.js",
-            "Three.js",
-            "TypeScript",
-            "Node.js",
-            "Python",
-            "Java",
-            "MongoDB",
-            "MySQL",
-            "Supabase",
-            "Firebase",
-            "AWS",
-            "Docker",
-            "UI/UX Design"
-        ],
-        "hasOccupation": {
-            "@type": "Occupation",
-            "name": "Software Engineer",
-            "description": "Full Stack Developer specializing in AI-driven web applications and immersive websites"
-        },
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Kotikawatta",
-            "addressCountry": "Sri Lanka"
-        }
+        "@graph": [
+            {
+                "@type": "Person",
+                "@id": "https://immersive-portfolio.vercel.app/#person",
+                "name": "Ihan Hansaja",
+                "jobTitle": "Full Stack Developer & AI Engineer",
+                "description": "Software Engineering undergraduate specializing in Full-Stack Development, AI Engineering, and Machine Learning.",
+                "url": "https://immersive-portfolio.vercel.app",
+                "image": "https://immersive-portfolio.vercel.app/og-image.jpg",
+                "sameAs": [
+                    "https://github.com/IHANsaja",
+                    "https://linkedin.com/in/ihanhansaja",
+                    "https://twitter.com/ihanhansaja"
+                ],
+                "alumniOf": {
+                    "@type": "EducationalOrganization",
+                    "name": "CINEC Campus",
+                    "description": "Software Engineering"
+                },
+                "knowsAbout": [
+                    "Full Stack Development",
+                    "AI Engineering",
+                    "Machine Learning",
+                    "React",
+                    "Next.js",
+                    "Three.js",
+                    "TypeScript",
+                    "Node.js",
+                    "Python",
+                    "Java",
+                    "MongoDB",
+                    "MySQL",
+                    "Supabase",
+                    "Firebase",
+                    "AWS",
+                    "Docker",
+                    "UI/UX Design"
+                ],
+                "hasOccupation": {
+                    "@type": "Occupation",
+                    "name": "Software Engineer",
+                    "description": "Full Stack Developer specializing in AI-driven web applications and immersive websites."
+                },
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Kotikawatta",
+                    "addressCountry": "Sri Lanka"
+                }
+            },
+            {
+                "@type": "WebSite",
+                "@id": "https://immersive-portfolio.vercel.app/#website",
+                "url": "https://immersive-portfolio.vercel.app",
+                "name": "Ihan Hansaja - Portfolio",
+                "description": "The personal portfolio of Ihan Hansaja, Full Stack Developer and AI Engineer.",
+                "publisher": {
+                    "@id": "https://immersive-portfolio.vercel.app/#person"
+                },
+                "inLanguage": "en-US"
+            }
+        ]
     };
 
     return (

@@ -262,18 +262,21 @@ const MobileForm = () => {
                     fill
                     className="appearlines p-16"
                 />
-                <div ref={wrapperRef} onClick={handleClick} className="relative w-[300px] h-[300px]">
-                    {['circ1', 'circ2', 'circ3', 'circ4', 'circ5'].map((src, idx) => (
-                        <div key={idx} className={`circle ${idx < 4 ? 'circrot' : ''} absolute inset-0 scale-0 p-${idx + 1}`}>
-                            <Image
-                                src={`/svg/${src}.svg`}
-                                alt={`scifi contact form ${src}`}
-                                fill
-                                style={{ objectFit: 'contain' }}
-                                className={`p-${20 - idx * 5}`}
-                            />
-                        </div>
-                    ))}
+                <div ref={wrapperRef} onClick={handleClick} className="relative w-[180px] h-[180px]">
+                    {['circ1', 'circ2', 'circ3', 'circ4', 'circ5'].map((src, idx) => {
+                        const paddings = ['p-[55px]', 'p-[42px]', 'p-[32px]', 'p-[22px]', 'p-0'];
+                        return (
+                            <div key={idx} className={`circle ${idx < 4 ? 'circrot' : ''} absolute inset-0 scale-0`}>
+                                <Image
+                                    src={`/svg/${src}.svg`}
+                                    alt={`scifi contact form ${src}`}
+                                    fill
+                                    style={{ objectFit: 'contain' }}
+                                    className={paddings[idx]}
+                                />
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
 
@@ -281,13 +284,11 @@ const MobileForm = () => {
                 ref={formRef}
                 onSubmit={handleSubmit}
                 className="Cform absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-                <div className="relative w-[1000px] h-screen pointer-events-none">
-                    <div className="flex flex-col justify-center items-center gap-5 pt-20">
-                        <input type="text" placeholder="Name" name="name" className="futuristic-input pointer-events-auto z-10" />
-                        <input type="email" placeholder="Email" name="email" className="futuristic-input pointer-events-auto z-10" />
-                        <textarea placeholder="Message" name="message" className="resize-none futuristic-input pointer-events-auto z-10" />
-                        <button type="submit" className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[100px] h-[100px] rounded-full futuristic-button pointer-events-auto z-20">SEND</button>
-                    </div>
+                <div className="relative w-full h-full pointer-events-none flex flex-col items-center justify-start pt-24 gap-4 px-6">
+                    <input type="text" placeholder="Name" name="name" className="futuristic-input pointer-events-auto z-10 w-full max-w-[280px]" />
+                    <input type="email" placeholder="Email" name="email" className="futuristic-input pointer-events-auto z-10 w-full max-w-[280px]" />
+                    <textarea placeholder="Message" name="message" className="resize-none futuristic-input pointer-events-auto z-10 w-full max-w-[280px] h-[75px]" />
+                    <button type="submit" className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[60px] h-[60px] rounded-full futuristic-button pointer-events-auto z-20 text-[10px] font-neotriad-sans flex items-center justify-center">SEND</button>
                 </div>
             </form>
         </div>

@@ -1,95 +1,110 @@
 "use client";
 
-import React, { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import React, { useRef, useMemo, useEffect } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-const MinimalGrid = () => {
+const InteractiveSwarm = () => {
     const pointsRef = useRef<THREE.Points>(null);
+    const { viewport } = useThree();
 
-    // Generate a structured grid of points
+    // Generate a dense field of particles
     const particles = useMemo(() => {
-
-        const rows = 40;
-        const cols = 40;
-        const count = rows * cols;
-
+        const count = 12000;
         const positions = new Float32Array(count * 3);
         const randoms = new Float32Array(count);
+        const sizes = new Float32Array(count);
 
-        let i = 0;
-        for (let x = 0; x < cols; x++) {
-            for (let y = 0; y < rows; y++) {
-                // Center the grid
-                const u = (x / cols) * 20 - 10;
-                const v = (y / rows) * 20 - 10;
+        for (let i = 0; i < count; i++) {
+            // Spread across a wider 2D-ish plane with slight depth
+            positions[i * 3] = (Math.random() - 0.5) * 40;     // x
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 40; // y
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 5;  // z
 
-                positions[i * 3] = u;
-                positions[i * 3 + 1] = v;
-                positions[i * 3 + 2] = 0;
-
-                randoms[i] = Math.random();
-                i++;
-            }
+            randoms[i] = Math.random();
+            sizes[i] = Math.random() * 2.0 + 1.0;
         }
 
-        return { positions, randoms };
+        return { positions, randoms, sizes };
     }, []);
 
-    // Shader Material
+    // Highly interactive Shader Material
     const shaderMaterial = useMemo(() => new THREE.ShaderMaterial({
         uniforms: {
             uTime: { value: 0 },
             uMouse: { value: new THREE.Vector3(0, 0, 0) },
-            uColor: { value: new THREE.Color("#f0dbee") },
             uPixelRatio: { value: typeof window !== 'undefined' ? window.devicePixelRatio : 1 }
         },
         vertexShader: `
             uniform float uTime;
             uniform vec3 uMouse;
             uniform float uPixelRatio;
+            
             attribute float aRandom;
+            attribute float aSize;
             
             varying float vAlpha;
+            varying vec3 vColor;
             
             void main() {
                 vec3 pos = position;
+                vec3 originalPos = position;
                 
-                // Subtle breathing movement
-                pos.z += sin(uTime * 0.5 + pos.x * 0.5 + pos.y * 0.5) * 0.2;
+                // Ambient slow float
+                pos.x += sin(uTime * 0.3 + aRandom * 20.0) * 0.5;
+                pos.y += cos(uTime * 0.4 + aRandom * 20.0) * 0.5;
                 
-                // Mouse Interaction (Spotlight)
-                vec3 mousePos = vec3(uMouse.x * 10.0, uMouse.y * 10.0, 0.0); // Scale to world space
-                float dist = distance(pos.xy, mousePos.xy);
+                // Calculate distance to mouse
+                float dist = distance(pos.xy, uMouse.xy);
                 
-                // Spotlight radius
-                float radius = 3.0;
-                float influence = smoothstep(radius, 0.0, dist);
+                // Highly interactive vortex/repulsion effect
+                float maxDist = 8.0;
+                float influence = 1.0 - smoothstep(0.0, maxDist, dist);
                 
-                // Scale up dots near mouse
-                float size = 2.0 + influence * 4.0;
-
+                if(influence > 0.0) {
+                    // Repel outwards from mouse
+                    vec2 dir = normalize(pos.xy - uMouse.xy);
+                    // Add a swirling vortex effect
+                    vec2 swirl = vec2(-dir.y, dir.x);
+                    
+                    float strength = pow(influence, 2.0) * 3.0; // Explosion strength
+                    
+                    pos.xy += dir * strength;
+                    pos.xy += swirl * (strength * 1.5);
+                    pos.z += influence * 4.0; // Lift towards camera
+                }
+                
                 vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
                 gl_Position = projectionMatrix * mvPosition;
                 
-                gl_PointSize = size * uPixelRatio;
-                gl_PointSize *= (10.0 / -mvPosition.z);
+                // Dynamic sizing based on mouse proximity and depth
+                float sizeBoost = influence * 8.0;
+                gl_PointSize = (aSize + sizeBoost) * uPixelRatio * (20.0 / -mvPosition.z);
                 
-                // Calculate alpha: very faint base + strong highlight
-                vAlpha = 0.05 + influence * 0.4;
+                // Dynamic alpha based on influence
+                vAlpha = 0.15 + (influence * 0.85);
+                
+                // Color transition from slate-blue to bright cyan near the mouse
+                vec3 baseColor = mix(vec3(0.1, 0.15, 0.3), vec3(0.545, 0.604, 0.937), aRandom); // Dark to Slate Blue
+                vec3 activeColor = vec3(0.275, 0.627, 0.976); // Bright Cyan
+                
+                vColor = mix(baseColor, activeColor, influence * 1.5);
             }
         `,
         fragmentShader: `
-            uniform vec3 uColor;
             varying float vAlpha;
+            varying vec3 vColor;
             
             void main() {
-                // Circular particle
+                // Soft glowing circle
                 vec2 cxy = 2.0 * gl_PointCoord - 1.0;
                 float r = dot(cxy, cxy);
                 if (r > 1.0) discard;
                 
-                gl_FragColor = vec4(uColor, vAlpha);
+                float strength = 1.0 - r;
+                strength = pow(strength, 2.0);
+                
+                gl_FragColor = vec4(vColor, vAlpha * strength);
             }
         `,
         transparent: true,
@@ -97,11 +112,33 @@ const MinimalGrid = () => {
         blending: THREE.AdditiveBlending
     }), []);
 
-    useFrame(({ clock, mouse }) => {
+    // Target mouse position for smooth interpolation
+    const targetMouse = useRef(new THREE.Vector2(0, 0));
+
+    useEffect(() => {
+        const handleMouseMove = (event: MouseEvent) => {
+            // Convert to normalized device coordinates (-1 to +1)
+            const x = (event.clientX / window.innerWidth) * 2 - 1;
+            const y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            // Map to world coordinates based on viewport size
+            targetMouse.current.set(
+                (x * viewport.width) / 2,
+                (y * viewport.height) / 2
+            );
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, [viewport]);
+
+    useFrame(({ clock }) => {
         if (pointsRef.current) {
             shaderMaterial.uniforms.uTime.value = clock.getElapsedTime();
-            // Smoothly interpolate mouse - slower lerp for "water-like" flow
-            shaderMaterial.uniforms.uMouse.value.lerp(new THREE.Vector3(mouse.x, mouse.y, 0), 0.02);
+            
+            // Fast lerp for snappy but smooth mouse interaction
+            shaderMaterial.uniforms.uMouse.value.x += (targetMouse.current.x - shaderMaterial.uniforms.uMouse.value.x) * 0.15;
+            shaderMaterial.uniforms.uMouse.value.y += (targetMouse.current.y - shaderMaterial.uniforms.uMouse.value.y) * 0.15;
         }
     });
 
@@ -122,6 +159,13 @@ const MinimalGrid = () => {
                     array={particles.randoms}
                     itemSize={1}
                 />
+                {/* @ts-expect-error - BufferAttribute types are tricky in R3F */}
+                <bufferAttribute
+                    attach="attributes-aSize"
+                    count={particles.sizes.length}
+                    array={particles.sizes}
+                    itemSize={1}
+                />
             </bufferGeometry>
         </points>
     );
@@ -129,13 +173,13 @@ const MinimalGrid = () => {
 
 const PreloaderShader = () => {
     return (
-        <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 z-0 pointer-events-auto bg-[#070A1E]">
             <Canvas
-                camera={{ position: [0, 0, 5], fov: 75 }}
+                camera={{ position: [0, 0, 15], fov: 60 }}
                 gl={{ antialias: true, alpha: true }}
                 dpr={[1, 2]}
             >
-                <MinimalGrid />
+                <InteractiveSwarm />
             </Canvas>
         </div>
     );

@@ -327,7 +327,7 @@ function GPUTrailManager({ backgroundTexture }: { backgroundTexture: THREE.Textu
 function GPUTrailContainer() {
     const loader = useMemo(() => new THREE.TextureLoader(), []);
     const backgroundTexture = useMemo(() => {
-        const tex = loader.load('/background.jpg');
+        const tex = loader.load('/background.png');
         tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
         return tex;
     }, [loader]);

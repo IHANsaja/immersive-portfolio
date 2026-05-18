@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "prebuild": "node scripts/fetch-github-stats.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -16,8 +17,8 @@
     "@react-three/postprocessing": "^3.0.4",
     "@splinetool/loader": "^1.10.26",
     "@splinetool/r3f-spline": "^1.0.2",
-    "@splinetool/react-spline": "^4.0.0",
-    "@splinetool/runtime": "^1.10.35",
+    "@splinetool/react-spline": "^4.1.0",
+    "@splinetool/runtime": "^1.12.94",
     "animejs": "^4.1.2",
     "emailjs-com": "^3.2.0",
     "framer-motion": "^12.23.6",

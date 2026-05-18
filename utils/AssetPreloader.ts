@@ -25,7 +25,8 @@ export class AssetPreloader {
     private initializeAssets() {
         // Critical images for hero section (load first)
         const criticalImages = [
-            '/background.jpg',
+            '/background.png',
+            '/hero_section_backgroun_mobile.png',
             '/logo.png',
             '/backgrounds/clouds.png',
             '/svg/clickToEnter.svg',
@@ -40,10 +41,6 @@ export class AssetPreloader {
             '/images/ecovibe.jpg',
             '/images/fome.jpg',
             '/images/zenofy.jpg',
-            '/backgrounds/bigTree.png',
-            '/backgrounds/mountain.png',
-            '/backgrounds/sideTree.png',
-            '/textures/matcaps/blue_teal.png',
             '/svg/border.svg',
             '/svg/card.svg',
             '/svg/cloud.svg',
@@ -118,8 +115,6 @@ export class AssetPreloader {
         // 3D Models
         const models = [
             '/models/ihan.glb',
-            '/hdr/sunset.hdr',
-            '/hdr/venice_sunset.hdr',
         ];
 
         // Spline scenes
@@ -171,7 +166,6 @@ export class AssetPreloader {
     }
 
     public async preloadAssets(): Promise<void> {
-        // Load critical assets first for immediate hero display
         const criticalAssets = this.assets.filter(asset => asset.priority === 'critical');
         const normalAssets = this.assets.filter(asset => asset.priority === 'normal');
         const lowPriorityAssets = this.assets.filter(asset => asset.priority === 'low');
@@ -179,118 +173,61 @@ export class AssetPreloader {
         let totalLoaded = 0;
         const totalAssets = this.assets.length;
 
-        // Load critical assets first
-        for (const asset of criticalAssets) {
-            try {
-                await this.loadAsset(asset);
-                totalLoaded++;
+        const updateProgress = (asset: AssetItem) => {
+            totalLoaded++;
+            let stage: LoadingProgress['stage'] = 'images';
+            if (asset.type === 'video') stage = 'videos';
+            else if (asset.type === 'audio') stage = 'audio';
+            else if (asset.type === 'model') stage = 'models';
+            else if (asset.type === 'spline') stage = 'spline';
 
-                const progress: LoadingProgress = {
-                    loaded: totalLoaded,
-                    total: totalAssets,
-                    percentage: Math.round((totalLoaded / totalAssets) * 100),
-                    currentAsset: asset.name,
-                    stage: 'images',
-                };
+            this.onProgress?.({
+                loaded: totalLoaded,
+                total: totalAssets,
+                percentage: Math.min(Math.round((totalLoaded / totalAssets) * 100), 99), // Keep at 99 until truly done
+                currentAsset: asset.name,
+                stage: stage,
+            });
+        };
 
-                this.onProgress?.(progress);
-            } catch (error) {
-                console.warn(`Failed to load critical asset ${asset.url}:`, error);
-                totalLoaded++;
+        // Helper to load a batch of assets concurrently, but limited by batchSize
+        const processBatch = async (assetBatch: AssetItem[], batchSize: number) => {
+            for (let i = 0; i < assetBatch.length; i += batchSize) {
+                const chunk = assetBatch.slice(i, i + batchSize);
+                
+                await Promise.all(chunk.map(async (asset) => {
+                    try {
+                        await this.loadAsset(asset);
+                    } catch (error) {
+                        console.warn(`Failed to load asset ${asset.url}:`, error);
+                    } finally {
+                        updateProgress(asset);
+                    }
+                }));
 
-                const progress: LoadingProgress = {
-                    loaded: totalLoaded,
-                    total: totalAssets,
-                    percentage: Math.round((totalLoaded / totalAssets) * 100),
-                    currentAsset: asset.name,
-                    stage: 'images',
-                };
-
-                this.onProgress?.(progress);
+                // Yield to the main thread to allow React and GSAP to render
+                await new Promise(resolve => setTimeout(resolve, 15));
             }
-        }
+        };
 
-        // Load normal priority assets
-        for (const asset of normalAssets) {
-            try {
-                await this.loadAsset(asset);
-                totalLoaded++;
+        // Load critical assets first (smaller batch size for critical initial boot)
+        await processBatch(criticalAssets, 3);
+        
+        // Load normal assets (larger batch size)
+        await processBatch(normalAssets, 5);
 
-                const progress: LoadingProgress = {
-                    loaded: totalLoaded,
-                    total: totalAssets,
-                    percentage: Math.round((totalLoaded / totalAssets) * 100),
-                    currentAsset: asset.name,
-                    stage: 'images',
-                };
-
-                this.onProgress?.(progress);
-            } catch (error) {
-                console.warn(`Failed to load ${asset.url}:`, error);
-                totalLoaded++;
-
-                const progress: LoadingProgress = {
-                    loaded: totalLoaded,
-                    total: totalAssets,
-                    percentage: Math.round((totalLoaded / totalAssets) * 100),
-                    currentAsset: asset.name,
-                    stage: 'images',
-                };
-
-                this.onProgress?.(progress);
-            }
-        }
-
-        // Load low priority assets in background
-        const lowPriorityPromises = lowPriorityAssets.map(async (asset) => {
-            try {
-                await this.loadAsset(asset);
-                totalLoaded++;
-
-                const progress: LoadingProgress = {
-                    loaded: totalLoaded,
-                    total: totalAssets,
-                    percentage: Math.round((totalLoaded / totalAssets) * 100),
-                    currentAsset: asset.name,
-                    stage: asset.type === 'video' ? 'videos' :
-                        asset.type === 'audio' ? 'audio' :
-                            asset.type === 'model' ? 'models' :
-                                asset.type === 'spline' ? 'spline' : 'images',
-                };
-
-                this.onProgress?.(progress);
-            } catch (error) {
-                console.warn(`Failed to load ${asset.url}:`, error);
-                totalLoaded++;
-
-                const progress: LoadingProgress = {
-                    loaded: totalLoaded,
-                    total: totalAssets,
-                    percentage: Math.round((totalLoaded / totalAssets) * 100),
-                    currentAsset: asset.name,
-                    stage: asset.type === 'video' ? 'videos' :
-                        asset.type === 'audio' ? 'audio' :
-                            asset.type === 'model' ? 'models' :
-                                asset.type === 'spline' ? 'spline' : 'images',
-                };
-
-                this.onProgress?.(progress);
-            }
-        });
-
-        // Wait for all low priority assets to complete
-        await Promise.all(lowPriorityPromises);
+        // Load low priority assets (largest batch size)
+        await processBatch(lowPriorityAssets, 8);
 
         // Mark as complete
-        const finalProgress: LoadingProgress = {
+        this.onProgress?.({
             loaded: totalAssets,
             total: totalAssets,
             percentage: 100,
             currentAsset: 'Complete',
             stage: 'complete',
-        };
+        });
 
-        this.onProgress?.(finalProgress);
         this.onComplete?.();
     }
 

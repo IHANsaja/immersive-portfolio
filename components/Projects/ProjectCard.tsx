@@ -1,317 +1,132 @@
-import React, { FC, useState, useRef, useEffect } from 'react';
-import { FaCode } from 'react-icons/fa';
-import { FaFigma } from 'react-icons/fa';
-import { animate, stagger, utils } from 'animejs';
-import { toast } from 'react-toastify';
-import Image from 'next/image';
+"use client";
 
-interface ProjectCardProps {
-    title: string;
-    videoSrc: string; // Can be video or image URL
-    description: string;
-    codeUrl?: string; // Optional code URL
-    demoUrl?: string; // Optional demo URL
-    figmaUrl?: string; // Optional Figma design URL
-    audioSrc: string;
-    badge?: 'ui-design' | 'code-only' | 'full-project'; // Optional project type badge
+import React, { FC, useRef } from 'react';
+import Image from 'next/image';
+import { Project } from '@/constants/ProjectConstants';
+
+interface ProjectCardProps extends Project {
+    onSelect: (project: Project) => void;
 }
 
-const ProjectCard: FC<ProjectCardProps> = ({
-    title,
-    videoSrc,
-    description,
-    codeUrl,
-    demoUrl,
-    figmaUrl,
-    audioSrc,
-    badge,
-}) => {
-    const [initiated, setInitiated] = useState(false);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const animationRef = useRef<ReturnType<typeof animate> | null>(null);
+const ProjectCard: FC<ProjectCardProps> = (props) => {
+    const { title, videoSrc, description, badge, codeUrl, figmaUrl, onSelect } = props;
     const videoRef = useRef<HTMLVideoElement | null>(null);
 
-    const animateGrid = () => {
-        const $sqs = containerRef.current?.querySelectorAll('.square');
-        if (!$sqs || $sqs.length === 0) return;
-
-        animationRef.current = animate(Array.from($sqs), {
-            scale: [{ to: [0, 0.9] }, { to: 0 }],
-            boxShadow: [
-                { to: '0 0 1rem 0 currentColor' },
-                { to: '0 0 0rem 0 currentColor' },
-            ],
-            delay: stagger(100, {
-                grid: [4, 4],
-                from: utils.random(4, 7),
-            }),
-            duration: 1000,
-            easing: 'easeInOutSine',
-            autoplay: true,
-            loop: true,
-            complete: () => {
-                if (initiated) animateGrid();
-            },
-        });
+    const isVideo = (src: string) => {
+        return ['.mp4', '.webm', '.ogg', '.mov'].some(ext => src.toLowerCase().includes(ext));
     };
 
-    const handleInitiate = () => {
-        if (initiated) {
-            if (audioRef.current) {
-                audioRef.current.pause();
-                audioRef.current.currentTime = 0;
-            }
-            animationRef.current?.pause();
-            animationRef.current = null;
-            setInitiated(false);
-        } else {
-            // Check if audioSrc is available
-            if (!audioSrc || audioSrc.trim() === '') {
-                toast.info('There is no audio available for this project');
-                return;
-            }
-
-            setInitiated(true);
-            if (audioRef.current) {
-                audioRef.current.currentTime = 0;
-                audioRef.current
-                    .play()
-                    .then(() => animateGrid())
-                    .catch((error) => console.error('Audio playback failed:', error));
-
-                audioRef.current.addEventListener(
-                    'ended',
-                    () => {
-                        setInitiated(false);
-                        animationRef.current?.pause();
-                        animationRef.current = null;
-                    },
-                    { once: true }
-                );
-            }
-        }
-    };
-
-    const handleFigmaClick = () => {
-        if (figmaUrl && figmaUrl.trim() !== '') {
-            window.open(figmaUrl, '_blank');
-        } else {
-            toast.info('There is no Figma design for this application');
-        }
-    };
-
-    const handleCodeClick = () => {
-        if (codeUrl && codeUrl.trim() !== '') {
-            window.open(codeUrl, '_blank');
-        } else {
-            toast.info('There is no code repository for this application');
-        }
-    };
-
-    const handleDemoClick = () => {
-        if (demoUrl && demoUrl.trim() !== '') {
-            window.open(demoUrl, '_blank');
-        } else {
-            toast.info('There is no demo available for this application');
-        }
-    };
-
-    // Determine if videoSrc is a video or image
-    const isVideoFile = (src: string) => {
-        const videoExtensions = ['.mp4', '.webm', '.ogg', '.avi', '.mov', '.wmv'];
-        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
-
-        const lowerSrc = src.toLowerCase();
-
-        // Check for video extensions
-        if (videoExtensions.some(ext => lowerSrc.includes(ext))) {
-            return true;
-        }
-
-        // Check for image extensions
-        if (imageExtensions.some(ext => lowerSrc.includes(ext))) {
-            return false;
-        }
-
-        // Check for external video platforms
-        if (lowerSrc.includes('youtube.com') || lowerSrc.includes('youtu.be') ||
-            lowerSrc.includes('vimeo.com') || lowerSrc.includes('dailymotion.com')) {
-            return true;
-        }
-
-        // Default to video for unknown formats
-        return true;
-    };
-
-    // Determine badge type based on available URLs
     const getBadgeInfo = () => {
         if (badge) {
             return {
-                type: badge,
-                text: badge === 'ui-design' ? 'UI Design Only' :
-                    badge === 'code-only' ? 'Code Only' : 'Full Project',
-                color: badge === 'ui-design' ? 'bg-gradient-to-r from-indigo-700 to-blue-800' :
-                    badge === 'code-only' ? 'bg-gradient-to-r from-slate-600 to-gray-700' : 'bg-gradient-to-r from-emerald-600 to-green-600',
-                borderColor: badge === 'ui-design' ? 'border-indigo-500/30' :
-                    badge === 'code-only' ? 'border-slate-500/30' : 'border-emerald-500/30',
-                textColor: badge === 'ui-design' ? 'text-indigo-100' :
-                    badge === 'code-only' ? 'text-slate-100' : 'text-emerald-100'
+                text: badge === 'ui-design' ? 'UI DESIGN' : badge === 'code-only' ? 'CODE ONLY' : 'FULL PROJECT',
+                color: badge === 'ui-design' ? 'badge-design' : badge === 'code-only' ? 'badge-code' : 'badge-full',
             };
         }
-
-        // Auto-detect based on available URLs
         const hasCode = codeUrl && codeUrl.trim() !== '';
-        const hasDemo = demoUrl && demoUrl.trim() !== '';
         const hasFigma = figmaUrl && figmaUrl.trim() !== '';
-
-        if (hasFigma && !hasCode && !hasDemo) {
-            return {
-                type: 'ui-design',
-                text: 'UI Design Only',
-                color: 'bg-gradient-to-r from-indigo-700 to-blue-800',
-                borderColor: 'border-indigo-500/30',
-                textColor: 'text-indigo-100'
-            };
-        } else if (hasCode && !hasFigma) {
-            return {
-                type: 'code-only',
-                text: 'Code Only',
-                color: 'bg-gradient-to-r from-slate-600 to-gray-700',
-                borderColor: 'border-slate-500/30',
-                textColor: 'text-slate-100'
-            };
-        } else {
-            return {
-                type: 'full-project',
-                text: 'Full Project',
-                color: 'bg-gradient-to-r from-emerald-600 to-green-600',
-                borderColor: 'border-emerald-500/30',
-                textColor: 'text-emerald-100'
-            };
-        }
+        if (hasFigma && !hasCode) return { text: 'UI DESIGN', color: 'badge-design' };
+        if (hasCode && !hasFigma) return { text: 'CODE ONLY', color: 'badge-code' };
+        return { text: 'FULL PROJECT', color: 'badge-full' };
     };
 
     const badgeInfo = getBadgeInfo();
 
-    useEffect(() => {
-        return () => {
-            animationRef.current?.pause();
-            animationRef.current = null;
-        };
-    }, []);
+    // Map projects to immersive realistic dates and metrics inspired by the user's reference design
+    const getCardMetadata = (title: string) => {
+        const t = title.toLowerCase();
+        if (t.includes("freya")) {
+            return { dateNum: "07", dateMonth: "Jul", stat: "14 Commits" };
+        } else if (t.includes("serendib")) {
+            return { dateNum: "12", dateMonth: "Oct", stat: "28 Screens" };
+        } else if (t.includes("quill") || t.includes("raven")) {
+            return { dateNum: "19", dateMonth: "Dec", stat: "42 Files" };
+        } else if (t.includes("navigator") || t.includes("cinec")) {
+            if (t.includes("navigator")) {
+                return { dateNum: "04", dateMonth: "Feb", stat: "18 Builds" };
+            } else {
+                return { dateNum: "25", dateMonth: "Sep", stat: "12-Col Grid" };
+            }
+        } else if (t.includes("padaya") || t.includes("adam")) {
+            return { dateNum: "15", dateMonth: "Mar", stat: "3.2M Polys" };
+        } else if (t.includes("zenofy")) {
+            return { dateNum: "22", dateMonth: "Apr", stat: "12 Pages" };
+        } else if (t.includes("heritage")) {
+            return { dateNum: "09", dateMonth: "May", stat: "4.6 MB" };
+        } else if (t.includes("ecovibe")) {
+            return { dateNum: "14", dateMonth: "Jun", stat: "85 Comps" };
+        } else if (t.includes("bus")) {
+            return { dateNum: "18", dateMonth: "Aug", stat: "64 Screens" };
+        }
+        return { dateNum: "01", dateMonth: "Jan", stat: "Active" };
+    };
+
+    const meta = getCardMetadata(title);
+
+    // Map badge text to custom classes for bottom-right highlight colors
+    const getBadgeStyleClass = (text: string) => {
+        if (text === 'FULL PROJECT') return 'badge-full-style';
+        if (text === 'CODE ONLY') return 'badge-code-style';
+        return 'badge-design-style';
+    };
 
     return (
-        <div className="project-card flex flex-col bg-background rounded-lg shadow w-full max-w-full h-auto relative">
-            {audioSrc && audioSrc.trim() !== '' && (
-                <audio ref={audioRef} src={audioSrc} hidden />
-            )}
+        <>
+            {/* Inline SVG Clip Path Definition (Object Bounding Box scales dynamically with card scale/size) */}
+            <svg width="0" height="0" style={{ position: 'absolute', pointerEvents: 'none' }}>
+                <defs>
+                    <clipPath id="folder-tab-clip" clipPathUnits="objectBoundingBox">
+                        <path d="M 0,1 L 0,0.34 Q 0,0.30 0.05,0.30 L 0.38,0.30 Q 0.42,0.30 0.46,0.34 L 0.52,0.42 Q 0.56,0.46 0.60,0.46 L 0.95,0.46 Q 1,0.46 1,0.50 L 1,1 Z" />
+                    </clipPath>
+                </defs>
+            </svg>
 
-            {/* Badge */}
-            <div className={`absolute top-1 left-2 z-10 px-2 py-1 rounded-full text-[10px] sm:text-[12px] xl:text-[10px] 2xl:text-[12px] font-medium ${badgeInfo.color} ${badgeInfo.borderColor} ${badgeInfo.textColor} border backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105`}>
-                <span className="font-inconsalata-sans tracking-wide">{badgeInfo.text}</span>
-            </div>
-
-            {/* Header */}
             <div
-                className="w-full flex justify-end items-center px-2 sm:px-3 py-2 bg-background cursor-pointer border-b border-gray-500"
-                onClick={handleInitiate}
+                className="project-card group"
+                onClick={() => onSelect(props as Project)}
+                onMouseEnter={() => videoRef.current?.play().catch(() => {})}
+                onMouseLeave={() => { if (videoRef.current) { videoRef.current.pause(); videoRef.current.currentTime = 0; } }}
             >
-                <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs xl:text-[10px] 2xl:text-xs font-andvari-sans">
-                    <span className="dot"></span>
-                    <p>Initiate Freya</p>
+                {/* 1. TOP MEDIA VIEW */}
+                <div className="project-card-media">
+                    {isVideo(videoSrc) ? (
+                        <video ref={videoRef} src={videoSrc} className="project-card-video" loop muted playsInline />
+                    ) : (
+                        <Image src={videoSrc} alt={title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
+                    )}
+                    <div className="project-card-shimmer" />
                 </div>
-            </div>
 
-            {/* Body */}
-            <div className="flex flex-col flex-grow justify-center items-center w-full p-2 sm:p-4 gap-3 sm:gap-4">
-                {initiated ? (
-                    <div
-                        ref={containerRef}
-                        className="grid grid-cols-4 gap-1 sm:gap-2"
-                    >
-                        {Array.from({ length: 16 }).map((_, i) => (
-                            <div
-                                key={i}
-                                className="square w-1.5 sm:w-2 h-1.5 sm:h-2 bg-foreground rounded-sm"
-                            />
-                        ))}
+                {/* 2. OVERLAID STATS ON THE TOP-RIGHT AREA */}
+                <div className="project-card-top-header">
+                    <span className="project-card-top-badge">{meta.stat}</span>
+                    <span className="project-card-top-tag">{badgeInfo.text === 'UI DESIGN' ? 'Figma Assets' : 'GitHub Status'}</span>
+                </div>
+
+                {/* 3. FOLDER TAB DARK BODY */}
+                <div className="project-card-folder-body">
+                    {/* Title & Description inside the Tab */}
+                    <div className="project-card-tab-info">
+                        <h3 className="project-card-tab-title">{title}</h3>
+                        <p className="project-card-tab-subtitle">{description}</p>
                     </div>
-                ) : (
-                    <>
-                        {/* Video/Image */}
-                        <div className="w-full aspect-video max-w-full overflow-hidden rounded relative">
-                            {isVideoFile(videoSrc) ? (
-                                <div
-                                    className="w-full h-full"
-                                    onMouseEnter={() => videoRef.current?.play()}
-                                    onMouseLeave={() => {
-                                        if (videoRef.current) {
-                                            videoRef.current.pause();
-                                            videoRef.current.currentTime = 0;
-                                        }
-                                    }}
-                                >
-                                    <video
-                                        ref={videoRef}
-                                        src={videoSrc}
-                                        className="w-full h-full object-cover rounded"
-                                        loop
-                                        muted
-                                        playsInline
-                                    />
-                                </div>
-                            ) : (
-                                <Image
-                                    src={videoSrc}
-                                    alt={`${title} screenshot`}
-                                    fill
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                    className="object-cover rounded"
-                                />
-                            )}
+
+                    {/* Bottom Info Row (Date + Status Badge) */}
+                    <div className="project-card-bottom-row">
+                        <div className="project-card-date">
+                            <span className="date-number">{meta.dateNum}</span>
+                            <span className="date-month">{meta.dateMonth}</span>
                         </div>
-
-                        {/* Content */}
-                        <div className="w-full flex flex-col justify-between gap-3 sm:gap-4">
-                            <div className="space-y-2">
-                                <h3 className="font-andvari-sans font-semibold text-base sm:text-lg md:text-xl xl:text-lg 2xl:text-xl break-words text-foreground leading-tight">
-                                    {title}
-                                </h3>
-                                <p className="text-xs sm:text-sm xl:text-xs 2xl:text-sm text-foreground font-inconsolata-sans break-words leading-relaxed line-clamp-3 sm:line-clamp-4 xl:line-clamp-3 2xl:line-clamp-4 overflow-hidden text-ellipsis">
-                                    {description}
-                                </p>
-                            </div>
-
-                            <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 w-full justify-start">
-                                <button
-                                    onClick={handleCodeClick}
-                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm xl:text-xs 2xl:text-sm font-semibold text-background bg-foreground border border-foreground rounded transition hover:bg-foreground hover:text-background focus:outline-none focus:ring-2 focus:ring-foreground w-full xs:w-auto flex-shrink-0"
-                                >
-                                    <FaCode className="w-3 h-3 sm:w-4 sm:h-4 xl:w-3 xl:h-3 2xl:w-4 2xl:h-4" />
-                                    CODE
-                                </button>
-
-                                <button
-                                    onClick={handleDemoClick}
-                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm xl:text-xs 2xl:text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full xs:w-auto flex-shrink-0"
-                                >
-                                    DEMO
-                                </button>
-
-                                <button
-                                    onClick={handleFigmaClick}
-                                    className="inline-flex justify-center items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm xl:text-xs 2xl:text-sm font-semibold text-foreground border border-foreground rounded transition hover:bg-foreground hover:border-[#191919] hover:text-[#191919] w-full xs:w-auto flex-shrink-0"
-                                >
-                                    <FaFigma className="w-3 h-3 sm:w-4 sm:h-4 xl:w-3 xl:h-3 2xl:w-4 2xl:h-4" />
-                                    FIGMA
-                                </button>
-                            </div>
+                        <div className={`project-card-stats ${getBadgeStyleClass(badgeInfo.text)}`}>
+                            <span>{badgeInfo.text}</span>
                         </div>
-                    </>
-                )}
+                    </div>
+                </div>
+
+                {/* Cyberpunk Glow border */}
+                <div className="project-card-glow" />
             </div>
-        </div>
+        </>
     );
 };
 

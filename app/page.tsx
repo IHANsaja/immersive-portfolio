@@ -8,7 +8,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 
-import ModelWrapper from '@/components/About/ModelWrapper';
+import dynamic from 'next/dynamic';
+
+const ModelWrapper = dynamic(() => import('@/components/About/ModelWrapper'), {
+    ssr: false,
+});
 import Menu from "@/components/Hero/Menu";
 import MusicButton from "@/components/Ui/MusicButton";
 
@@ -29,11 +33,15 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         // This effect should only run on the client
-        const smoother = ScrollSmoother.create({
-            smooth: 1,
-            effects: true,
-            smoothTouch: 0, // Disable smooth scrolling on touch devices
-        });
+        const isMobileScreen = window.innerWidth < 800;
+        let smoother: any = null;
+
+        if (!isMobileScreen) {
+            smoother = ScrollSmoother.create({
+                smooth: 1,
+                effects: true,
+            });
+        }
 
         const sections = ["#hero-section", "#about-section", "#projects-section", "#skill-section", "#contact-section"];
 
@@ -93,7 +101,7 @@ const Home: React.FC = () => {
         // Cleanup on unmount
         return () => {
             ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-            smoother.kill();
+            if (smoother) smoother.kill();
         };
     }, []); // Empty dependency array ensures this runs only once
 

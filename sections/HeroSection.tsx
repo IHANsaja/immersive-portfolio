@@ -46,6 +46,17 @@ const HeroSection = () => {
     const [showSpline, setShowSpline] = useState(false);
     const [showGPUCanvas, setShowGPUCanvas] = useState(false);
     const [showButtons, setShowButtons] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    // Hydration-safe mobile detection
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
 
     // Initialize hero section
     useGSAP(() => {
@@ -85,19 +96,11 @@ const HeroSection = () => {
         };
 
         // Check if preloader is already done (e.g. on navigation back to home)
-        // Since we don't have a global state for preloader here, we can listen for the event.
-        // However, if the component mounts AFTER preloader is done, we might miss the event.
-        // But HeroSection is mounted immediately now.
-
         const handlePreloaderComplete = () => {
             startAnimation();
         };
 
         window.addEventListener('preloaderComplete', handlePreloaderComplete);
-
-        // Fallback: if preloader is not present (e.g. dev mode or disabled), start after a delay
-        // or check a global flag if available. For now, we assume preloader is always there on first load.
-        // But if we navigate away and back? PreloaderWrapper handles that.
 
         return () => {
             window.removeEventListener('preloaderComplete', handlePreloaderComplete);
@@ -119,8 +122,8 @@ const HeroSection = () => {
 
     return (
         <section id="hero-section" className="relative w-screen h-screen z-1">
-            {/* Load GPU Canvas after delay to prevent blocking */}
-            {showGPUCanvas && (
+            {/* Load GPU Canvas after delay to prevent blocking - Disabled on Mobile */}
+            {showGPUCanvas && !isMobile && (
                 <Suspense fallback={null}>
                     <GPUFluidCanvas />
                 </Suspense>
@@ -131,7 +134,7 @@ const HeroSection = () => {
                 className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
             >
                 <Image
-                    src="/background.jpg"
+                    src={isMobile ? "/hero_section_backgroun_mobile.png" : "/background.png"}
                     alt="sci-fi background"
                     fill
                     style={{ objectFit: "cover" }}
@@ -147,9 +150,9 @@ const HeroSection = () => {
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.5%22%20cy=%220.5%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay pointer-events-none" />
             </div>
 
-            {/* Load Spline scene after delay to prevent blocking */}
+            {/* Load Spline scene after delay to prevent blocking - Disabled on Mobile */}
             <div id="scene" className="absolute inset-0 z-[9998]">
-                {showSpline ? (
+                {showSpline && !isMobile ? (
                     <Suspense fallback={
                         <div className="w-full h-full bg-gradient-to-br from-blue-900/20 to-purple-900/20 animate-pulse" />
                     }>
@@ -159,7 +162,7 @@ const HeroSection = () => {
                         />
                     </Suspense>
                 ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-blue-900/20 to-purple-900/20 animate-pulse" />
+                    <div className="w-full h-full bg-transparent" />
                 )}
             </div>
 

@@ -4,11 +4,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import InteractiveDotMatrix from "@/components/Ui/InteractiveDotMatrix";
 
 const ContactSection: React.FC = () => {
     useGSAP(() => {
-        gsap.set(".sideTree", { opacity: 0 });
-
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".contact-form",
@@ -18,9 +17,6 @@ const ContactSection: React.FC = () => {
                 },
                 onEnterBack: () => {
                     tl.restart();
-                },
-                onLeaveBack: () => {
-                    gsap.set(".sideTree", { opacity: 0 });
                 },
             }
         });
@@ -43,27 +39,22 @@ const ContactSection: React.FC = () => {
                 duration: 0.2,
                 ease: "power1.inOut"
             })
-            .to(".sideTree", {
-                opacity: 1,
-                duration: 1.5,
-                delay: 0.5,
-                ease: "power2.out"
-            })
     })
     return (
         <section id="contact-section" className="relative w-screen h-screen z-0">
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
+                <InteractiveDotMatrix opacity={0.35} spacing={20} dotRadius={0.8} influenceRadius={160} />
             </div>
 
             <h1 className="contact-title hidden md:block absolute top-20 md:top-24 lg:top-30 left-1/2 -translate-x-1/2 mt-4 font-neotriad-sans z-10 text-2xl md:text-4xl lg:text-6xl text-center whitespace-nowrap">Contact Me.</h1>
 
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[80%] md:w-[70%] lg:w-[60%] aspect-[2/1] z-10 max-h-[80vh]">
+            <div className="absolute top-[48%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[80%] md:w-[70%] lg:w-[60%] h-[70vh] md:h-auto md:aspect-[2/1] z-10 max-h-[80vh]">
                 <ContactForm />
             </div>
 
-            <div className="absolute bottom-5 right-1/2 translate-x-1/2 md:right-10 lg:right-20 md:translate-x-0 md:bottom-8 lg:bottom-10 flex flex-row gap-4 md:gap-6 z-15 mb-50 md:mb-0 md:pr-4">
+            <div className="absolute bottom-24 right-1/2 translate-x-1/2 md:right-10 lg:right-20 md:translate-x-0 md:bottom-8 lg:bottom-10 flex flex-row gap-4 md:gap-6 z-20 md:pr-4">
                 {[
                     { href: 'mailto:ihanhansaja5@gmail.com', src: '/svg/gmail.svg', alt: 'gmail' },
                     { href: 'https://wa.me/94718995192', src: '/svg/whatsapp.svg', alt: 'whatsapp' },
@@ -84,10 +75,6 @@ const ContactSection: React.FC = () => {
                         </div>
                     </Link>
                 ))}
-            </div>
-
-            <div className="sideTree absolute bottom-[-50px] right-0 w-1/2 z-5 mix-blend-multiply -scale-x-100">
-                <Image src="/backgrounds/sideTree.png" alt="mountain background" height={1000} width={1000} loading="lazy" />
             </div>
         </section>
     );

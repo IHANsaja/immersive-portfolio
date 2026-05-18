@@ -10,6 +10,7 @@ import ScrollTrigger from "gsap/ScrollTrigger"; // <-- Import ScrollTrigger
 gsap.registerPlugin(ScrollTrigger); // <-- Register the plugin
 
 import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
+import InteractiveDotMatrix from "@/components/Ui/InteractiveDotMatrix";
 
 const allSkills: Skill[] = SkillLogos.flat();
 
@@ -35,7 +36,6 @@ export default function SkillSection() {
     useGSAP(() => {
         // Corrected logic: Combine all GSAP setup into a single hook
         // Set initial states for all elements
-        gsap.set(".bigTree", { opacity: 0 });
         gsap.set(".skills", { y: 100, opacity: 0 });
         gsap.set(".skills-title", { opacity: 0, y: -20 });
 
@@ -59,12 +59,10 @@ export default function SkillSection() {
                 onEnter: () => tl.restart(),
                 onEnterBack: () => tl.restart(),
                 onLeaveBack: () => {
-                    gsap.set(".bigTree", { opacity: 0 });
                     gsap.set(".skills", { y: 100, opacity: 0 });
                     gsap.set(".skills-title", { opacity: 0, y: -20 });
                 },
                 onLeave: () => {
-                    gsap.set(".bigTree", { opacity: 0 });
                     gsap.set(".skills", { y: 100, opacity: 0 });
                     gsap.set(".skills-title", { opacity: 0, y: -20 });
                 }
@@ -108,12 +106,6 @@ export default function SkillSection() {
                 duration: 0.2,
                 ease: "power1.inOut"
             })
-            .to(".bigTree", {
-                opacity: 1,
-                duration: 1.5,
-                delay: 0.5,
-                ease: "power2.out"
-            }, "<")
             .to(".skills", {
                 y: 0,
                 opacity: 1,
@@ -132,14 +124,11 @@ export default function SkillSection() {
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
+                <InteractiveDotMatrix opacity={0.35} spacing={20} dotRadius={0.8} influenceRadius={160} />
             </div>
 
             <div className="skills-title absolute top-16 left-1/2 -translate-x-1/2 md:top-30 md:right-30 md:left-auto md:translate-x-0 z-10 font-neotriad-sans w-full text-center md:text-right">
                 <h2 className="text-foreground text-3xl sm:text-4xl md:text-5xl">MY SKILLS</h2>
-            </div>
-
-            <div className="bigTree absolute bottom-[-50px] left-0 w-1/2 z-0 mix-blend-soft-light">
-                <Image src="/backgrounds/bigTree.png" alt="big tree background" height={1000} width={1000} loading="lazy" />
             </div>
 
             <div

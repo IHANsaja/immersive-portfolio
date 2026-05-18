@@ -11,6 +11,8 @@ import Image from "next/image";
 import { useMediaQuery } from "usehooks-ts";
 import ScrambledTextBlock from "@/components/About/EducationCard";
 import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
+import InteractiveDotMatrix from "@/components/Ui/InteractiveDotMatrix";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const AboutSection = () => {
     const { isPlaying } = useMusic(); // Get global sound state
@@ -188,6 +190,7 @@ const AboutSection = () => {
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
+                <InteractiveDotMatrix opacity={0.35} spacing={20} dotRadius={0.8} influenceRadius={160} />
             </div>
 
             {isMobile && (
@@ -199,7 +202,7 @@ const AboutSection = () => {
 
             {/* LEFT SIDE: BASIC INFO & SKILLS */}
             <div className="w-full md:h-full md:w-1/2 flex flex-col text-left text-[var(--foreground)] leading-5 tracking-wider order-2 md:order-1 px-6 md:px-0">
-                <div className="md:h-1/2 md:mt-20 md:ml-10 pt-10 md:pt-40 flex flex-row justify-between md:justify-start items-start gap-4 md:gap-10 w-full">
+                <div className="md:h-1/2 md:mt-20 md:ml-24 pt-10 md:pt-40 flex flex-row justify-between md:justify-start items-start gap-4 md:gap-10 w-full">
                     {/* Basic Info */}
                     <div>
                         <PoliceLights rectHeight={30} rectWidth={70} />
@@ -301,7 +304,23 @@ const AboutSection = () => {
                         boundaries.
                     </p>
                     <div className="buttonGsap block md:block">
-                        <AnimatedHoverButton bgColor={"#3F51B5"} text="PROJECTS" />
+                        <AnimatedHoverButton
+                            bgColor={"#3F51B5"}
+                            text="PROJECTS"
+                            onClick={() => {
+                                // Instantly transition the 3D model to its projects section layout
+                                window.dispatchEvent(new CustomEvent("sectionPinned", { detail: { sectionId: "projects-section" } }));
+
+                                gsap.to(window, {
+                                    duration: 1.5,
+                                    scrollTo: "#projects-section",
+                                    ease: "power2.inOut",
+                                    onUpdate: () => {
+                                        ScrollTrigger.update();
+                                    }
+                                });
+                            }}
+                        />
                     </div>
                 </div>
                 <div className="w-full md:h-2/5 flex flex-col items-center md:items-end gap-6 md:gap-10 text-2xl font-inconsolata-sans z-10 mt-10 md:mt-0">
