@@ -91,7 +91,7 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
         <>
             <ambientLight intensity={0.5} />
             <directionalLight position={[5, 5, 5]} intensity={0.5} />
-            <Environment files="/hdr/sunset.hdr" />
+            <Environment preset="sunset" />
 
             <group ref={modelRef}>
                 <Suspense fallback={
@@ -117,21 +117,10 @@ const ModelWrapper = memo(({
     modelPosition = DEFAULT_MODEL_POS,
 }: ModelWrapperProps) => {
     const sceneRef = useRef<HTMLDivElement>(null);
-    // Lazy-mount: only create Canvas after leaving the hero section
-    const [shouldMount, setShouldMount] = useState(false);
+    // Render Canvas unconditionally to prevent event listener race conditions
+    // and because we've already optimized the total number of WebGL contexts.
 
-    useEffect(() => {
-        const handleSectionPinned = (event: Event) => {
-            const { sectionId } = (event as CustomEvent<{ sectionId: string }>).detail;
-            // Mount the Canvas when we first leave the hero section
-            if (sectionId !== 'hero-section') {
-                setShouldMount(true);
-            }
-        };
-
-        window.addEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
-        return () => window.removeEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
-    }, []);
+    const [isContextLost, setIsContextLost] = useState(false);
 
     // Handle WebGL context lost/restored events for resilience
     const handleCanvasCreated = useCallback(({ gl }: { gl: THREE.WebGLRenderer }) => {
@@ -140,10 +129,12 @@ const ModelWrapper = memo(({
         const handleContextLost = (event: Event) => {
             event.preventDefault(); // Prevent permanent context loss
             console.warn('[ModelWrapper] WebGL context lost — preventing default.');
+            setIsContextLost(true);
         };
 
         const handleContextRestored = () => {
             console.info('[ModelWrapper] WebGL context restored.');
+            setIsContextLost(false);
         };
 
         canvas.addEventListener('webglcontextlost', handleContextLost);
@@ -153,27 +144,24 @@ const ModelWrapper = memo(({
     return (
         <div
             ref={sceneRef}
-            className="fixed top-0 left-0 z-0 w-screen h-screen hidden md:block pointer-events-none"
+            className={`fixed top-0 left-0 z-0 w-screen h-screen hidden md:block pointer-events-none ${isContextLost ? 'opacity-0 !hidden' : ''}`}
             style={{ opacity: 0 }}
         >
-            {shouldMount && (
-                <Canvas
-                    camera={{ fov: 35 }}
-                    style={{ pointerEvents: 'none' }}
-                    onCreated={handleCanvasCreated}
-                    gl={{
-                        powerPreference: 'high-performance',
-                        antialias: true,
-                        alpha: true,
-                    }}
-                >
-                    <SceneContent
-                        initialCameraPos={cameraPosition}
-                        initialModelPos={modelPosition}
-                        sceneRef={sceneRef}
-                    />
-                </Canvas>
-            )}
+            <Canvas
+                camera={{ fov: 35 }}
+                style={{ pointerEvents: 'none' }}
+                onCreated={handleCanvasCreated}
+                gl={{
+                    antialias: true,
+                    alpha: true,
+                }}
+            >
+                <SceneContent
+                    initialCameraPos={cameraPosition}
+                    initialModelPos={modelPosition}
+                    sceneRef={sceneRef}
+                />
+            </Canvas>
         </div>
     );
 });

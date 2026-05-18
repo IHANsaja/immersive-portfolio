@@ -122,12 +122,13 @@ const HeroSection = () => {
 
     return (
         <section id="hero-section" className="relative w-screen h-screen z-1">
-            {/* Load GPU Canvas after delay to prevent blocking - Disabled on Mobile */}
+            {/* Load GPU Canvas after delay to prevent blocking - Disabled on Mobile
             {showGPUCanvas && !isMobile && (
                 <Suspense fallback={null}>
                     <GPUFluidCanvas />
                 </Suspense>
             )}
+            */}
 
             <div
                 id="background-container"

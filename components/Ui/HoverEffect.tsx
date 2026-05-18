@@ -342,7 +342,7 @@ export default function GPUTrailCanvas() {
         <Canvas
             orthographic
             camera={{ zoom: 1, position: [0, 0, 1] }}
-            gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+            gl={{ antialias: true, alpha: true }}
             onCreated={({ gl }) => {
                 const canvas = gl.domElement;
                 canvas.addEventListener('webglcontextlost', (e) => {
