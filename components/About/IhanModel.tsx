@@ -93,14 +93,15 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         if (!groupRef.current) return;
 
         const handleSectionPinned = (event: Event) => {
+            if (!groupRef.current) return;
             const customEvent = event as CustomEvent;
             const { sectionId } = customEvent.detail;
 
             // Find the bones
-            const neck = groupRef.current!.getObjectByName('Neck');
-            const leftArm = groupRef.current!.getObjectByName('LeftArm');
-            const rightArm = groupRef.current!.getObjectByName('RightArm');
-            const leftForeArm = groupRef.current!.getObjectByName('LeftForeArm');
+            const neck = groupRef.current.getObjectByName('Neck');
+            const leftArm = groupRef.current.getObjectByName('LeftArm');
+            const rightArm = groupRef.current.getObjectByName('RightArm');
+            const leftForeArm = groupRef.current.getObjectByName('LeftForeArm');
 
             // Get the gesture values for this section
             const neckGesture = gesturesRef.current.neck[sectionId];

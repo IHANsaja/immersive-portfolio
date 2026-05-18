@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useLayoutEffect, useEffect, Suspense, memo } from "react";
+import React, { useRef, useLayoutEffect, useEffect, useState, Suspense, memo, useCallback } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Model } from "@/components/About/IhanModel";
 import { Environment, Html } from "@react-three/drei";
@@ -117,6 +117,38 @@ const ModelWrapper = memo(({
     modelPosition = DEFAULT_MODEL_POS,
 }: ModelWrapperProps) => {
     const sceneRef = useRef<HTMLDivElement>(null);
+    // Lazy-mount: only create Canvas after leaving the hero section
+    const [shouldMount, setShouldMount] = useState(false);
+
+    useEffect(() => {
+        const handleSectionPinned = (event: Event) => {
+            const { sectionId } = (event as CustomEvent<{ sectionId: string }>).detail;
+            // Mount the Canvas when we first leave the hero section
+            if (sectionId !== 'hero-section') {
+                setShouldMount(true);
+            }
+        };
+
+        window.addEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
+        return () => window.removeEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
+    }, []);
+
+    // Handle WebGL context lost/restored events for resilience
+    const handleCanvasCreated = useCallback(({ gl }: { gl: THREE.WebGLRenderer }) => {
+        const canvas = gl.domElement;
+
+        const handleContextLost = (event: Event) => {
+            event.preventDefault(); // Prevent permanent context loss
+            console.warn('[ModelWrapper] WebGL context lost — preventing default.');
+        };
+
+        const handleContextRestored = () => {
+            console.info('[ModelWrapper] WebGL context restored.');
+        };
+
+        canvas.addEventListener('webglcontextlost', handleContextLost);
+        canvas.addEventListener('webglcontextrestored', handleContextRestored);
+    }, []);
 
     return (
         <div
@@ -124,13 +156,24 @@ const ModelWrapper = memo(({
             className="fixed top-0 left-0 z-0 w-screen h-screen hidden md:block pointer-events-none"
             style={{ opacity: 0 }}
         >
-            <Canvas camera={{ fov: 35 }} style={{ pointerEvents: 'none' }}>
-                <SceneContent
-                    initialCameraPos={cameraPosition}
-                    initialModelPos={modelPosition}
-                    sceneRef={sceneRef}
-                />
-            </Canvas>
+            {shouldMount && (
+                <Canvas
+                    camera={{ fov: 35 }}
+                    style={{ pointerEvents: 'none' }}
+                    onCreated={handleCanvasCreated}
+                    gl={{
+                        powerPreference: 'high-performance',
+                        antialias: true,
+                        alpha: true,
+                    }}
+                >
+                    <SceneContent
+                        initialCameraPos={cameraPosition}
+                        initialModelPos={modelPosition}
+                        sceneRef={sceneRef}
+                    />
+                </Canvas>
+            )}
         </div>
     );
 });

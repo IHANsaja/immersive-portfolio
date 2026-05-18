@@ -418,6 +418,16 @@ const AIGlobe: React.FC<AIGlobeProps> = ({ audioRef, isActive }) => {
       <Canvas
         camera={{ position: [0, 0, 3.8], fov: 42 }}
         gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+        onCreated={({ gl }) => {
+          const canvas = gl.domElement;
+          canvas.addEventListener('webglcontextlost', (e) => {
+            e.preventDefault();
+            console.warn('[AIGlobe] WebGL context lost — preventing default.');
+          });
+          canvas.addEventListener('webglcontextrestored', () => {
+            console.info('[AIGlobe] WebGL context restored.');
+          });
+        }}
         style={{ background: 'transparent' }}
         dpr={[1, 2]}
       >

@@ -342,7 +342,17 @@ export default function GPUTrailCanvas() {
         <Canvas
             orthographic
             camera={{ zoom: 1, position: [0, 0, 1] }}
-            gl={{ antialias: true, alpha: true }}
+            gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+            onCreated={({ gl }) => {
+                const canvas = gl.domElement;
+                canvas.addEventListener('webglcontextlost', (e) => {
+                    e.preventDefault();
+                    console.warn('[GPUTrailCanvas] WebGL context lost — preventing default.');
+                });
+                canvas.addEventListener('webglcontextrestored', () => {
+                    console.info('[GPUTrailCanvas] WebGL context restored.');
+                });
+            }}
             style={{
                 position: 'absolute',
                 top: 0,

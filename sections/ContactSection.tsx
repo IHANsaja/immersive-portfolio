@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import InteractiveDotMatrix from "@/components/Ui/InteractiveDotMatrix";
+
 
 const ContactSection: React.FC = () => {
     useGSAP(() => {
@@ -45,7 +45,6 @@ const ContactSection: React.FC = () => {
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
-                <InteractiveDotMatrix opacity={0.35} spacing={20} dotRadius={0.8} influenceRadius={160} />
             </div>
 
             <h1 className="contact-title hidden md:block absolute top-20 md:top-24 lg:top-30 left-1/2 -translate-x-1/2 mt-4 font-neotriad-sans z-10 text-2xl md:text-4xl lg:text-6xl text-center whitespace-nowrap">Contact Me.</h1>

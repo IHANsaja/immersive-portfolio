@@ -13,6 +13,9 @@ import dynamic from 'next/dynamic';
 const ModelWrapper = dynamic(() => import('@/components/About/ModelWrapper'), {
     ssr: false,
 });
+const DotMatrixBackground = dynamic(() => import('@/components/Ui/DotMatrixBackground'), {
+    ssr: false,
+});
 import Menu from "@/components/Hero/Menu";
 import MusicButton from "@/components/Ui/MusicButton";
 
@@ -126,6 +129,7 @@ const Home: React.FC = () => {
                 </div>
             </div>
 
+            <DotMatrixBackground />
             <ModelWrapper />
 
             <div className="fixed bottom-10 md:bottom-20 left-1/2 transform -translate-x-1/2 z-[10000]">

@@ -112,6 +112,13 @@ const InteractiveSwarm = () => {
         blending: THREE.AdditiveBlending
     }), []);
 
+    // Dispose shader material on unmount to free GPU resources
+    useEffect(() => {
+        return () => {
+            shaderMaterial.dispose();
+        };
+    }, [shaderMaterial]);
+
     // Target mouse position for smooth interpolation
     const targetMouse = useRef(new THREE.Vector2(0, 0));
 
@@ -176,8 +183,12 @@ const PreloaderShader = () => {
         <div className="absolute inset-0 z-0 pointer-events-auto bg-[#070A1E]">
             <Canvas
                 camera={{ position: [0, 0, 15], fov: 60 }}
-                gl={{ antialias: true, alpha: true }}
-                dpr={[1, 2]}
+                gl={{
+                    antialias: true,
+                    alpha: true,
+                    powerPreference: 'default',  // Don't hog GPU for a preloader
+                }}
+                dpr={[1, 1.5]}  // Slightly reduced DPR for the preloader to ease GPU load
             >
                 <InteractiveSwarm />
             </Canvas>

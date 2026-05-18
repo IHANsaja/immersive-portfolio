@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useMusic } from "@/components/Ui/MusicProvider";
-import InteractiveDotMatrix from "@/components/Ui/InteractiveDotMatrix";
+
 
 const ProjectsSection = () => {
     const { isPlaying } = useMusic();
@@ -89,7 +89,6 @@ const ProjectsSection = () => {
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
-                <InteractiveDotMatrix opacity={0.35} spacing={20} dotRadius={0.8} influenceRadius={160} />
             </div>
 
             <div className="projects-title absolute top-16 left-1/2 -translate-x-1/2 md:top-30 md:left-30 md:-translate-x-0 xl:top-24 xl:left-24 z-10 font-neotriad-sans w-full text-center md:text-left">
