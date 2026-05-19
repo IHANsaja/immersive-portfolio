@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://ihanhansaja.dev' // Your custom domain
+  const baseUrl = 'https://www.ihanhansaja.dev' // Your custom domain
   
   return {
     rules: {

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Live Website](https://img.shields.io/badge/Live_Website-🚀-blueviolet?style=for-the-badge&logo=vercel)](https://ihanhansaja.dev/)
+[![Live Website](https://img.shields.io/badge/Live_Website-🚀-blueviolet?style=for-the-badge&logo=vercel)](https://www.ihanhansaja.dev/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-0.178-orange?style=for-the-badge&logo=three.js)](https://threejs.org/)
 [![GSAP](https://img.shields.io/badge/GSAP-3.13-green?style=for-the-badge&logo=greensock)](https://greensock.com/gsap/)

@@ -1,4 +1,4 @@
-const SITE_URL = 'https://ihanhansaja.dev';
+const SITE_URL = 'https://www.ihanhansaja.dev';
 const SITEMAP_URL = `${SITE_URL}/sitemap.xml`;
 const INDEXNOW_KEY = '4c7500eda38e4f7580da3d6235182161';
 const INDEXNOW_KEY_LOCATION = `${SITE_URL}/${INDEXNOW_KEY}.txt`;
@@ -26,7 +26,7 @@ async function submitToSearchEngines() {
         'Content-Type': 'application/json; charset=utf-8',
       },
       body: JSON.stringify({
-        host: 'ihanhansaja.dev',
+        host: 'www.ihanhansaja.dev',
         key: INDEXNOW_KEY,
         keyLocation: INDEXNOW_KEY_LOCATION,
         urlList: [
@@ -41,7 +41,7 @@ async function submitToSearchEngines() {
     
     console.log(`IndexNow Response: ${indexNowResponse.status} ${indexNowResponse.statusText}`);
     
-    if (indexNowResponse.status === 200) {
+    if (indexNowResponse.status === 200 || indexNowResponse.status === 202) {
       console.log('✅ IndexNow submission successful!');
     } else {
       console.log('⚠️ IndexNow submission might have issues (Ensure your site is deployed and the key file is accessible).');

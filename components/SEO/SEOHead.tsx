@@ -24,7 +24,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     "Portfolio"
   ],
   image = "/logo.png",
-  url = "https://ihanhansaja.dev",
+  url = "https://www.ihanhansaja.dev",
   type = "website"
 }) => {
   return (

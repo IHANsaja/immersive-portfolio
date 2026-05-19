@@ -92,14 +92,14 @@ export const metadata: Metadata = {
         address: false,
         telephone: false,
     },
-    metadataBase: new URL('https://ihanhansaja.dev'), // Your custom domain
+    metadataBase: new URL('https://www.ihanhansaja.dev'), // Your custom domain
     alternates: {
         canonical: '/',
     },
     openGraph: {
         title: "Ihan Hansaja - Full Stack Developer & AI Engineer",
         description: "Software Engineering undergraduate specializing in Full-Stack Development, AI Engineering, and Machine Learning. Explore innovative projects and cutting-edge web applications.",
-        url: 'https://ihanhansaja.dev', // Your custom domain
+        url: 'https://www.ihanhansaja.dev', // Your custom domain
         siteName: 'Ihan Hansaja Portfolio',
         images: [
             {
@@ -147,12 +147,12 @@ export default function RootLayout({
         "@graph": [
             {
                 "@type": "Person",
-                "@id": "https://ihanhansaja.dev/#person",
+                "@id": "https://www.ihanhansaja.dev/#person",
                 "name": "Ihan Hansaja",
                 "jobTitle": "Full Stack Developer & AI Engineer",
                 "description": "Software Engineering undergraduate specializing in Full-Stack Development, AI Engineering, and Machine Learning.",
-                "url": "https://ihanhansaja.dev",
-                "image": "https://ihanhansaja.dev/og-image.jpg",
+                "url": "https://www.ihanhansaja.dev",
+                "image": "https://www.ihanhansaja.dev/og-image.jpg",
                 "sameAs": [
                     "https://github.com/IHANsaja",
                     "https://linkedin.com/in/ihanhansaja",
@@ -195,12 +195,12 @@ export default function RootLayout({
             },
             {
                 "@type": "WebSite",
-                "@id": "https://ihanhansaja.dev/#website",
-                "url": "https://ihanhansaja.dev",
+                "@id": "https://www.ihanhansaja.dev/#website",
+                "url": "https://www.ihanhansaja.dev",
                 "name": "Ihan Hansaja - Portfolio",
                 "description": "The personal portfolio of Ihan Hansaja, Full Stack Developer and AI Engineer.",
                 "publisher": {
-                    "@id": "https://ihanhansaja.dev/#person"
+                    "@id": "https://www.ihanhansaja.dev/#person"
                 },
                 "inLanguage": "en-US"
             }
