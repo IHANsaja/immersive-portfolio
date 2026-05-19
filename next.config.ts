@@ -14,12 +14,7 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  // Turbopack config to force a single Three.js instance (for dev server)
-  turbopack: {
-    resolveAlias: {
-      three: 'three',
-    },
-  },
+
 
   // Image optimization
   images: {

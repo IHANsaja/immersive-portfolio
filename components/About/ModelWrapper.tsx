@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useLayoutEffect, useEffect, useState, Suspense, memo, useCallback } from "react";
+import React, { useRef, useLayoutEffect, useEffect, Suspense, memo } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Model } from "@/components/About/IhanModel";
 import { Environment, Html } from "@react-three/drei";
@@ -29,7 +29,6 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
 
     // Set initial positions with useLayoutEffect for synchronous update before paint
     useLayoutEffect(() => {
-        if (!modelRef.current || !sceneRef.current) return;
         gsap.set(camera.position, { ...camera.position, z: initialCameraPos[2] });
         gsap.set(modelRef.current.position, { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] });
         gsap.set(sceneRef.current, { opacity: 0, x: 0 });
@@ -42,11 +41,11 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
         const animations = {
             // Scene visibility and position
             scene: {
-                'hero-section': { xPercent: 0, opacity: 0 },
-                'about-section': { xPercent: 0, opacity: 1 },
-                'projects-section': { xPercent: -50, opacity: 1 },
-                'skill-section': { xPercent: 25, opacity: 1 },
-                'contact-section': { xPercent: -35, opacity: 1 }
+                'hero-section': { x: 0, opacity: 0 },
+                'about-section': { x: 0, opacity: 1 },
+                'projects-section': { x: -1000, opacity: 1 },
+                'skill-section': { x: 500, opacity: 1 },
+                'contact-section': { x: -700, opacity: 1 }
             },
             // Camera zoom level
             camera: {
@@ -76,10 +75,9 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
             // This check ensures the sectionId is valid before running animations.
             if (sectionId in animations.scene) {
                 const ease = "circ.inOut";
-                // Ensure x is reset to 0 when using xPercent to avoid conflicts if x was previously set
-                if (sceneRef.current) gsap.to(sceneRef.current, { ...animations.scene[sectionId], x: 0, duration: 1, ease });
+                gsap.to(sceneRef.current, { ...animations.scene[sectionId], duration: 1, ease });
                 gsap.to(camera.position, { ...animations.camera[sectionId], duration: 1.5, ease });
-                if (modelRef.current) gsap.to(modelRef.current.position, { ...animations.model[sectionId], duration: 1.3, ease });
+                gsap.to(modelRef.current.position, { ...animations.model[sectionId], duration: 1.3, ease });
             }
         };
 
@@ -91,7 +89,7 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
         <>
             <ambientLight intensity={0.5} />
             <directionalLight position={[5, 5, 5]} intensity={0.5} />
-            <Environment preset="sunset" />
+            <Environment files="/hdr/sunset.hdr" />
 
             <group ref={modelRef}>
                 <Suspense fallback={
@@ -113,49 +111,18 @@ const DEFAULT_MODEL_POS: [number, number, number] = [0, -1.5, 0];
 
 // --- Memoized ModelWrapper Component ---
 const ModelWrapper = memo(({
-    cameraPosition = DEFAULT_CAMERA_POS,
-    modelPosition = DEFAULT_MODEL_POS,
-}: ModelWrapperProps) => {
+                               cameraPosition = DEFAULT_CAMERA_POS,
+                               modelPosition = DEFAULT_MODEL_POS,
+                           }: ModelWrapperProps) => {
     const sceneRef = useRef<HTMLDivElement>(null);
-    // Render Canvas unconditionally to prevent event listener race conditions
-    // and because we've already optimized the total number of WebGL contexts.
-
-    const [isContextLost, setIsContextLost] = useState(false);
-
-    // Handle WebGL context lost/restored events for resilience
-    const handleCanvasCreated = useCallback(({ gl }: { gl: THREE.WebGLRenderer }) => {
-        const canvas = gl.domElement;
-
-        const handleContextLost = (event: Event) => {
-            event.preventDefault(); // Prevent permanent context loss
-            console.warn('[ModelWrapper] WebGL context lost — preventing default.');
-            setIsContextLost(true);
-        };
-
-        const handleContextRestored = () => {
-            console.info('[ModelWrapper] WebGL context restored.');
-            setIsContextLost(false);
-        };
-
-        canvas.addEventListener('webglcontextlost', handleContextLost);
-        canvas.addEventListener('webglcontextrestored', handleContextRestored);
-    }, []);
 
     return (
         <div
             ref={sceneRef}
-            className={`fixed top-0 left-0 z-0 w-screen h-screen hidden md:block pointer-events-none ${isContextLost ? 'opacity-0 !hidden' : ''}`}
+            className="fixed top-0 left-0 z-0 w-screen h-screen hidden md:block pointer-events-none"
             style={{ opacity: 0 }}
         >
-            <Canvas
-                camera={{ fov: 35 }}
-                style={{ pointerEvents: 'none' }}
-                onCreated={handleCanvasCreated}
-                gl={{
-                    antialias: true,
-                    alpha: true,
-                }}
-            >
+            <Canvas camera={{ fov: 35 }} style={{ pointerEvents: 'none' }}>
                 <SceneContent
                     initialCameraPos={cameraPosition}
                     initialModelPos={modelPosition}

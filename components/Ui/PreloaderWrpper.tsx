@@ -30,12 +30,11 @@ const PreloaderWrapper = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <>
-            {showPreloader && (
+            {showPreloader ? (
                 <Preloader onLoadingComplete={handleLoadingComplete} />
+            ) : (
+                children
             )}
-            <div className={showPreloader ? "opacity-0 pointer-events-none fixed inset-0 -z-10" : "opacity-100 transition-opacity duration-500"}>
-                {children}
-            </div>
         </>
     );
 };
