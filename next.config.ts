@@ -5,13 +5,23 @@ const nextConfig: NextConfig = {
   // Transpile Three.js packages to prevent multiple instance issues in Next.js production builds
   transpilePackages: ['three', '@react-three/fiber', '@react-three/drei', 'three-stdlib'],
 
-  // Webpack config to force a single Three.js instance (for production)
+  // Webpack config to force a single Three.js instance (prevents "Multiple instances" warning)
   webpack: (config) => {
+    const threePackagePath = path.resolve(process.cwd(), 'node_modules/three');
     config.resolve.alias = {
       ...config.resolve.alias,
-      three: path.resolve(__dirname, 'node_modules/three'),
+      three: threePackagePath,
+      'three/examples': path.resolve(threePackagePath, 'examples'),
     };
     return config;
+  },
+  
+  // Turbopack config for Next.js 16+
+  turbopack: {
+    resolveAlias: {
+      'three': 'three',
+      'three/examples': 'three/examples',
+    },
   },
 
 
@@ -23,15 +33,15 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
   },
-  
+
   // Compiler options for performance
   compiler: {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
   },
-  
+
   // Compression
   compress: true,
-  
+
   // Headers for better SEO and security
   async headers() {
     return [
@@ -67,7 +77,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  
+
   // Redirects for SEO
   async redirects() {
     return [

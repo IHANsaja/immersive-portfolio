@@ -107,7 +107,7 @@ const HeroSection = () => {
                 className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
             >
                 <Image
-                    src="/background.jpg"
+                    src="/background.png"
                     alt="sci-fi background"
                     fill
                     style={{ objectFit: "cover" }}
