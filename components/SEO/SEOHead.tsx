@@ -24,7 +24,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     "Portfolio"
   ],
   image = "/logo.png",
-  url = "https://immersive-portfolio.vercel.app",
+  url = "https://ihanhansaja.dev",
   type = "website"
 }) => {
   return (

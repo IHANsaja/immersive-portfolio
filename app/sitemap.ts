@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://immersive-portfolio.vercel.app' // Your Vercel deployment URL
+  const baseUrl = 'https://ihanhansaja.dev' // Your custom domain
   
   return [
     {
