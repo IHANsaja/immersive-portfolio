@@ -1447,3 +1447,170 @@ spline-viewer::part(logo) {
 .stat-card:hover .stat-card-glow-bg-orange {
   opacity: 1;
 }
+
+/* ═══════════════════════════════════════════════════════
+   EXPERIENCE SECTION — Futuristic Timeline
+═══════════════════════════════════════════════════════ */
+
+/* Timeline center line with animated gradient */
+.exp-timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 5%;
+  bottom: 5%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(63, 81, 181, 0.3) 10%,
+    rgba(139, 154, 239, 0.6) 50%,
+    rgba(63, 81, 181, 0.3) 90%,
+    transparent 100%
+  );
+  box-shadow: 0 0 8px rgba(63, 81, 181, 0.3), 0 0 20px rgba(139, 154, 239, 0.1);
+  z-index: 1;
+}
+
+/* Timeline node dots */
+.exp-timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #3F51B5;
+  border: 2px solid rgba(139, 154, 239, 0.6);
+  box-shadow: 0 0 12px rgba(63, 81, 181, 0.5), 0 0 30px rgba(63, 81, 181, 0.2);
+  z-index: 2;
+}
+
+/* Outer pulse ring on dots */
+.exp-timeline-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 154, 239, 0.25);
+  animation: expDotPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes expDotPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Experience card */
+.exp-card {
+  position: relative;
+  background: rgba(17, 23, 45, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  padding: 24px;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.35s ease;
+}
+
+.exp-card:hover {
+  border-color: rgba(139, 154, 239, 0.5);
+  box-shadow: 0 0 20px rgba(63, 81, 181, 0.2), 0 0 40px rgba(139, 154, 239, 0.08);
+}
+
+/* Card accent square (matching skill cards) */
+.exp-card-accent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 6px;
+  background: #3F51B5;
+  transition: all 0.3s ease;
+  z-index: 5;
+}
+
+/* Tech stack badge */
+.exp-tech-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-family: var(--font-inconsolata-sans), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: rgba(63, 81, 181, 0.12);
+  color: #8B9AEF;
+  border: 1px solid rgba(63, 81, 181, 0.25);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.exp-tech-badge:hover {
+  background: rgba(63, 81, 181, 0.25);
+  border-color: rgba(139, 154, 239, 0.5);
+  box-shadow: 0 0 10px rgba(63, 81, 181, 0.3);
+}
+
+/* Type indicator badges */
+.exp-type-indicator {
+  font-family: var(--font-andvari-sans), sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+.exp-type-work {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.exp-type-freelance {
+  background: rgba(99, 102, 241, 0.12);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.exp-type-academic {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Connector line from dot to card */
+.exp-connector {
+  height: 1px;
+  flex-shrink: 0;
+}
+
+/* Mobile timeline — left-aligned */
+@media (max-width: 767px) {
+  .exp-timeline-line {
+    left: 20px;
+  }
+  .exp-timeline-dot {
+    left: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .exp-timeline-line {
+    left: calc(50% - 90px);
+  }
+}
+
+/* Custom sci-fi scrollbar for experience section container */
+.exp-scroll-container::-webkit-scrollbar {
+  width: 4px;
+}
+.exp-scroll-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 2px;
+}
+.exp-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(63, 81, 181, 0.4);
+  border-radius: 2px;
+}
+.exp-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 154, 239, 0.8);
+}

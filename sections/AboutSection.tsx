@@ -302,25 +302,7 @@ const AboutSection = () => {
                         collaborative environments that push my technical and creative
                         boundaries.
                     </p>
-                    <div className="buttonGsap block md:block">
-                        <AnimatedHoverButton
-                            bgColor={"#3F51B5"}
-                            text="PROJECTS"
-                            onClick={() => {
-                                // Instantly transition the 3D model to its projects section layout
-                                window.dispatchEvent(new CustomEvent("sectionPinned", { detail: { sectionId: "projects-section" } }));
 
-                                gsap.to(window, {
-                                    duration: 1.5,
-                                    scrollTo: "#projects-section",
-                                    ease: "power2.inOut",
-                                    onUpdate: () => {
-                                        ScrollTrigger.update();
-                                    }
-                                });
-                            }}
-                        />
-                    </div>
                 </div>
                 <div className="w-full md:h-2/5 flex flex-col items-center md:items-end gap-6 md:gap-10 text-2xl font-inconsolata-sans z-10 mt-10 md:mt-0">
                     <h3 className="scramble font-neotriad-sans text-2xl md:text-4xl">Education</h3>

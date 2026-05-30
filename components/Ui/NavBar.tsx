@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, User, Files, BrainCog, Phone, X, Github } from 'lucide-react';
+import { Home, User, Files, BrainCog, Briefcase, Phone, X, Github } from 'lucide-react';
 import Image from "next/image";
 import gsap from 'gsap';
 
@@ -33,14 +33,15 @@ interface SpaceshipNavProps {
     onClose: () => void;
 }
 
-const SLICE_DEGREE = 60;
+const SLICE_DEGREE = 360 / 7;
 const navItems: NavItem[] = [
-    { id: 'hero-section', label: 'Home', icon: Home, angle: 30 },
-    { id: 'about-section', label: 'About Me', icon: User, angle: 90 },
-    { id: 'projects-section', label: 'My Projects', icon: Files, angle: 150 },
-    { id: 'skill-section', label: 'My Skills', icon: BrainCog, angle: 210 },
-    { id: 'contact-section', label: 'Cantact Me', icon: Phone, angle: 270 },
-    { id: 'github', label: 'Github', icon: Github, angle: 330 },
+    { id: 'hero-section', label: 'Home', icon: Home, angle: 0.5 * SLICE_DEGREE },
+    { id: 'about-section', label: 'About Me', icon: User, angle: 1.5 * SLICE_DEGREE },
+    { id: 'projects-section', label: 'My Projects', icon: Files, angle: 2.5 * SLICE_DEGREE },
+    { id: 'skill-section', label: 'My Skills', icon: BrainCog, angle: 3.5 * SLICE_DEGREE },
+    { id: 'experience-section', label: 'Experience', icon: Briefcase, angle: 4.5 * SLICE_DEGREE },
+    { id: 'contact-section', label: 'Contact Me', icon: Phone, angle: 5.5 * SLICE_DEGREE },
+    { id: 'github', label: 'Github', icon: Github, angle: 6.5 * SLICE_DEGREE },
 ];
 
 import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic

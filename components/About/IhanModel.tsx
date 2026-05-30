@@ -57,12 +57,15 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         leftArm: Record<string, { x: number, y: number, z: number }>;
         rightArm: Record<string, { x: number, y: number, z: number }>;
         leftForeArm: Record<string, { x: number, y: number, z: number }>;
+        spine: Record<string, { x: number, y: number, z: number }>;
+        rightForeArm: Record<string, { x: number, y: number, z: number }>;
     }>({
         neck: {
             'hero-section': { x: 0.6, y: 0, z: 0 },
             'about-section': { x: 0.6, y: 0, z: 0 },
             'projects-section': { x: 0.6, y: 0.5, z: 0 },
             'skill-section': { x: 0.6, y: -0.5, z: 0 },
+            'experience-section': { x: 0.2, y: -0.25, z: -0.05 },
             'contact-section': { x: 0, y: 0.5, z: 0 }
         },
         leftArm: {
@@ -70,6 +73,7 @@ export function Model(props: JSX.IntrinsicElements['group']) {
             'about-section': { x: 1.3, y: 0, z: 0 },
             'projects-section': { x: 1.3, y: 0, z: 0 },
             'skill-section': { x: 1.3, y: 0, z: 0 },
+            'experience-section': { x: 0.9, y: 0.4, z: 0.35 },
             'contact-section': { x: 0.7, y: -0.2, z: 0.7 }
         },
         rightArm: {
@@ -77,6 +81,7 @@ export function Model(props: JSX.IntrinsicElements['group']) {
             'about-section': { x: 1.3, y: 0, z: 0 },
             'projects-section': { x: 1.3, y: 0, z: 0 },
             'skill-section': { x: 1.3, y: 0, z: 0 },
+            'experience-section': { x: 0.9, y: -0.4, z: -0.35 },
             'contact-section': { x: 1.3, y: 0, z: 0 }
         },
         leftForeArm: {
@@ -84,7 +89,24 @@ export function Model(props: JSX.IntrinsicElements['group']) {
             'about-section': { x: -0.1, y: 0, z: 0.4 },
             'projects-section': { x: 1, y: -1, z: 2 },
             'skill-section': { x: 0, y: 0, z: 0 },
+            'experience-section': { x: -1.3, y: -0.5, z: 0.8 },
             'contact-section': { x: -1, y: -0.4, z: 1 }
+        },
+        spine: {
+            'hero-section': { x: 0, y: 0, z: 0 },
+            'about-section': { x: 0, y: 0, z: 0 },
+            'projects-section': { x: 0, y: 0, z: 0 },
+            'skill-section': { x: 0, y: 0, z: 0 },
+            'experience-section': { x: -0.05, y: -0.05, z: 0 },
+            'contact-section': { x: 0, y: 0, z: 0 }
+        },
+        rightForeArm: {
+            'hero-section': { x: 0, y: 0, z: 0 },
+            'about-section': { x: 0, y: 0, z: 0 },
+            'projects-section': { x: 0, y: 0, z: 0 },
+            'skill-section': { x: 0, y: 0, z: 0 },
+            'experience-section': { x: -1.3, y: 0.5, z: -0.8 },
+            'contact-section': { x: 0, y: 0, z: 0 }
         }
     });
 
@@ -102,12 +124,16 @@ export function Model(props: JSX.IntrinsicElements['group']) {
             const leftArm = groupRef.current.getObjectByName('LeftArm');
             const rightArm = groupRef.current.getObjectByName('RightArm');
             const leftForeArm = groupRef.current.getObjectByName('LeftForeArm');
+            const spine = groupRef.current.getObjectByName('Spine');
+            const rightForeArm = groupRef.current.getObjectByName('RightForeArm');
 
             // Get the gesture values for this section
             const neckGesture = gesturesRef.current.neck[sectionId];
             const leftArmGesture = gesturesRef.current.leftArm[sectionId];
             const rightArmGesture = gesturesRef.current.rightArm[sectionId];
             const leftForeArmGesture = gesturesRef.current.leftForeArm[sectionId];
+            const spineGesture = gesturesRef.current.spine[sectionId];
+            const rightForeArmGesture = gesturesRef.current.rightForeArm[sectionId];
 
             // Apply the gestures
             if (neck && neckGesture) {
@@ -149,6 +175,26 @@ export function Model(props: JSX.IntrinsicElements['group']) {
                     ease: 'power2.inOut' 
                 });
             }
+
+            if (spine && spineGesture) {
+                gsap.to(spine.rotation, { 
+                    x: spineGesture.x, 
+                    y: spineGesture.y, 
+                    z: spineGesture.z, 
+                    duration: 1.4, 
+                    ease: 'power2.inOut' 
+                });
+            }
+
+            if (rightForeArm && rightForeArmGesture) {
+                gsap.to(rightForeArm.rotation, { 
+                    x: rightForeArmGesture.x, 
+                    y: rightForeArmGesture.y, 
+                    z: rightForeArmGesture.z, 
+                    duration: 1.2, 
+                    ease: 'power2.inOut' 
+                });
+            }
         };
 
         // Add event listener
@@ -176,6 +222,8 @@ export function Model(props: JSX.IntrinsicElements['group']) {
             const leftArm = groupRef.current.getObjectByName('LeftArm');
             const rightArm = groupRef.current.getObjectByName('RightArm');
             const leftForeArm = groupRef.current.getObjectByName('LeftForeArm');
+            const spine = groupRef.current.getObjectByName('Spine');
+            const rightForeArm = groupRef.current.getObjectByName('RightForeArm');
 
             // Set initial states for all bones
             if (neck) {
@@ -192,6 +240,16 @@ export function Model(props: JSX.IntrinsicElements['group']) {
             if (leftForeArm) {
                 // Set initial state for forearm
                 gsap.set(leftForeArm.rotation, { x: 0, y: 0, z: 0 });
+            }
+
+            if (spine) {
+                // Set initial state for spine
+                gsap.set(spine.rotation, { x: 0, y: 0, z: 0 });
+            }
+
+            if (rightForeArm) {
+                // Set initial state for right forearm
+                gsap.set(rightForeArm.rotation, { x: 0, y: 0, z: 0 });
             }
 
             // Model gestures are now handled by the section pinning event listener

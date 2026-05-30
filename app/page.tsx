@@ -23,6 +23,7 @@ const HeroSection = lazy(() => import('@/sections/HeroSection'));
 const AboutSection = lazy(() => import('@/sections/AboutSection'));
 const ProjectsSection = lazy(() => import('@/sections/ProjectsSection'));
 const SkillSection = lazy(() => import('@/sections/SkillSection'));
+const ExperienceSection = lazy(() => import('@/sections/ExperienceSection'));
 const ContactSection = lazy(() => import('@/sections/ContactSection'));
 
 const Home: React.FC = () => {
@@ -35,7 +36,7 @@ const Home: React.FC = () => {
             effects: true,
         });
 
-        const sections = ["#hero-section", "#about-section", "#projects-section", "#skill-section", "#contact-section"];
+        const sections = ["#hero-section", "#about-section", "#projects-section", "#skill-section", "#experience-section", "#contact-section"];
 
         sections.forEach((section, index) => {
             ScrollTrigger.create({
@@ -85,6 +86,7 @@ const Home: React.FC = () => {
                     <AboutSection />
                     <ProjectsSection />
                     <SkillSection />
+                    <ExperienceSection />
                     <ContactSection />
                 </div>
             </div>

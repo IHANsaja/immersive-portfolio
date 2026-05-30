@@ -45,6 +45,7 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
                 'about-section': { x: 0, opacity: 1 },
                 'projects-section': { x: -1000, opacity: 1 },
                 'skill-section': { x: 500, opacity: 1 },
+                'experience-section': { x: 450, opacity: 1 },
                 'contact-section': { x: -700, opacity: 1 }
             },
             // Camera zoom level
@@ -53,6 +54,7 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
                 'about-section': { z: initialCameraPos[2] },
                 'projects-section': { z: 4 },
                 'skill-section': { z: 2 },
+                'experience-section': { z: 3 },
                 'contact-section': { z: 4 }
             },
             // Model position and orientation
@@ -61,6 +63,7 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
                 'about-section': { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] },
                 'projects-section': { x: 1, y: -1, z: -1.5 },
                 'skill-section': { x: 0, y: -1.5, z: 0 },
+                'experience-section': { x: 0.8, y: -1.2, z: -0.5 },
                 'contact-section': { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] }
             }
         };
