@@ -529,13 +529,7 @@ html, body {
 
 @media (max-width: 799px) {
   html, body {
-    scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
-  }
-
-  section {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
 }
 

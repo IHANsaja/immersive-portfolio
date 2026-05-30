@@ -3,11 +3,11 @@ import Image from "next/image";
 import Spline from "@splinetool/react-spline";
 import GrButtons from "@/components/Hero/GrButtons";
 import Welcome from "@/components/Hero/Welcome";
-import React, {useRef, useState, useEffect, Suspense} from "react";
+import React, { useRef, useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
-import {useGSAP} from "@gsap/react";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import {SplitText} from "gsap/SplitText";
+import { SplitText } from "gsap/SplitText";
 
 const HeroSection = () => {
     const headlineRef = useRef(null);
@@ -24,7 +24,7 @@ const HeroSection = () => {
 
         // Start animation immediately, don't wait for fonts
         gsap.set(headline, { opacity: 0 });
-        
+
         // Use requestAnimationFrame to ensure DOM is ready
         requestAnimationFrame(() => {
             const split = new SplitText(headline, { type: "words" });
@@ -45,11 +45,11 @@ const HeroSection = () => {
                     stagger: 0.3,
                     onComplete: () => split.revert(),
                 })
-                .from(headline, {
-                    y: -300,
-                    duration: 2,
-                    ease: "power2.inOut",
-                }, "+=0.2")
+                .fromTo(headline,
+                    { y: -300 },
+                    { y: 0, duration: 2, ease: "power2.inOut" },
+                    "+=0.2"
+                )
                 .call(() => {
                     setIsReady(true);
                     setHasAnimated(true);
@@ -62,7 +62,7 @@ const HeroSection = () => {
     useEffect(() => {
         const timer1 = setTimeout(() => setShowGPUCanvas(true), 1000);
         const timer2 = setTimeout(() => setShowSpline(true), 2000);
-        
+
         return () => {
             clearTimeout(timer1);
             clearTimeout(timer2);
@@ -78,7 +78,7 @@ const HeroSection = () => {
 
         // Listen for preloader completion
         window.addEventListener('preloaderComplete', handlePreloaderComplete);
-        
+
         // Also check if we're already past the preloader
         const checkIfReady = () => {
             const preloader = document.querySelector('[data-preloader]');
@@ -86,11 +86,11 @@ const HeroSection = () => {
                 setShowSpline(true);
             }
         };
-        
+
         // Check immediately and after a delay
         checkIfReady();
         const checkTimer = setTimeout(checkIfReady, 1000);
-        
+
         return () => {
             window.removeEventListener('preloaderComplete', handlePreloaderComplete);
             clearTimeout(checkTimer);
@@ -106,17 +106,24 @@ const HeroSection = () => {
                 id="background-container"
                 className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
             >
-                <Image
-                    src="/background.png"
-                    alt="sci-fi background"
-                    fill
-                    style={{ objectFit: "cover" }}
-                    className="pointer-events-none mix-blend-plus-darker md:mix-blend-normal"
-                    id="background-image"
-                    priority
-                    placeholder="blur"
-                    blurDataURL="data:image/webp;base64,..."
-                />
+                <picture>
+                    <source
+                        media="(max-width: 799px)"
+                        srcSet="/hero_section_backgroun_mobile.png"
+                    />
+                    <source
+                        media="(min-width: 800px)"
+                        srcSet="/background.png"
+                    />
+                    <img
+                        src="/background.png"
+                        alt="sci-fi background"
+                        id="background-image"
+                        loading="eager"
+                        fetchPriority="high"
+                        className="pointer-events-none w-full h-full object-cover mix-blend-plus-darker md:mix-blend-normal"
+                    />
+                </picture>
             </div>
 
             <div className="absolute inset-0 z-0 pointer-events-none">
@@ -139,7 +146,7 @@ const HeroSection = () => {
                 )}
             </div>
 
-            <div className="absolute top-0 left-0 w-screen flex justify-end gap-8 items-center z-[10000]">
+            <div className="absolute top-0 left-0 w-screen flex justify-center md:justify-end items-center z-[10000] px-4 py-3 md:px-8 md:py-4">
                 <GrButtons />
             </div>
 

@@ -30,42 +30,73 @@ const Home: React.FC = () => {
     const progressRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // This effect should only run on the client
-        const smoother = ScrollSmoother.create({
-            smooth: 1,
-            effects: true,
-        });
-
+        const mm = gsap.matchMedia();
         const sections = ["#hero-section", "#about-section", "#projects-section", "#skill-section", "#experience-section", "#contact-section"];
 
-        sections.forEach((section, index) => {
-            ScrollTrigger.create({
-                trigger: section,
-                start: "top top",
-                pin: true,
-                pinSpacing: true,
-                anticipatePin: 1,
-                onUpdate: (self) => {
-                    if (progressRef.current) {
-                        const width = (index + self.progress) / sections.length * 100;
-                        progressRef.current.style.width = `${width}%`;
+        // Desktop: Full ScrollSmoother + pinned sections (unchanged behavior)
+        mm.add("(min-width: 800px)", () => {
+            const smoother = ScrollSmoother.create({
+                smooth: 1,
+                effects: true,
+            });
+
+            sections.forEach((section, index) => {
+                ScrollTrigger.create({
+                    trigger: section,
+                    start: "top top",
+                    pin: true,
+                    pinSpacing: true,
+                    anticipatePin: 1,
+                    onUpdate: (self) => {
+                        if (progressRef.current) {
+                            const width = (index + self.progress) / sections.length * 100;
+                            progressRef.current.style.width = `${width}%`;
+                        }
+                    },
+                    onEnter: () => {
+                        const sectionId = section.replace('#', '');
+                        window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
+                    },
+                    onEnterBack: () => {
+                        const sectionId = section.replace('#', '');
+                        window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
                     }
-                },
-                onEnter: () => {
-                    const sectionId = section.replace('#', '');
-                    window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
-                },
-                onEnterBack: () => {
-                    const sectionId = section.replace('#', '');
-                    window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
-                }
+                });
+            });
+
+            return () => {
+                smoother.kill();
+            };
+        });
+
+        // Mobile: No ScrollSmoother, no pinning — just progress tracking
+        mm.add("(max-width: 799px)", () => {
+            sections.forEach((section, index) => {
+                ScrollTrigger.create({
+                    trigger: section,
+                    start: "top center",
+                    end: "bottom center",
+                    onUpdate: (self) => {
+                        if (progressRef.current) {
+                            const width = (index + self.progress) / sections.length * 100;
+                            progressRef.current.style.width = `${width}%`;
+                        }
+                    },
+                    onEnter: () => {
+                        const sectionId = section.replace('#', '');
+                        window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
+                    },
+                    onEnterBack: () => {
+                        const sectionId = section.replace('#', '');
+                        window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
+                    }
+                });
             });
         });
 
         // Cleanup on unmount
         return () => {
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-            smoother.kill();
+            mm.revert();
         };
     }, []); // Empty dependency array ensures this runs only once
 
