@@ -13,7 +13,7 @@ export interface Project {
 export const projects: Project[] = [
     {
         title: "Freya 3.0 - AI Voice Assistant",
-        videoSrc: "/videos/Freya.mp4",
+        videoSrc: "/images/freya.jpeg",
         description: "AI voice assistant designed to simplify your daily tasks and engage in casual conversations.",
         detailDescription: "Freya is an AI-powered voice assistant built to simplify daily tasks and engage in natural, casual conversations. Leveraging advanced natural language processing and speech recognition, Freya understands context, responds intelligently, and learns your preferences over time. From setting reminders to answering complex questions, Freya is your personal AI companion that makes life easier through the power of voice.",
         codeUrl: "https://github.com/IHANsaja/freyav3",
@@ -65,7 +65,7 @@ export const projects: Project[] = [
     },
     {
         title: "AI-driven Serendib WMS",
-        videoSrc: "/images/Serendib.jpg",
+        videoSrc: "/images/serendib.jpg",
         description: "Serendib WMS helps businesses manage their warehouses efficiently in real-time.",
         detailDescription: "Serendib WMS is an AI-driven Warehouse Management System designed to help businesses manage their inventory and warehouse operations with unprecedented efficiency. Featuring real-time stock tracking, intelligent order routing, predictive restocking alerts, and comprehensive analytics dashboards, the system transforms chaotic warehouses into streamlined, data-driven operations. Built with modern web technologies and backed by machine learning algorithms for demand forecasting.",
         codeUrl: "https://github.com/IHANsaja/Serendib-Warehouse-Management-System",
