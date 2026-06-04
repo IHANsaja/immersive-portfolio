@@ -12,11 +12,11 @@ export interface Project {
 
 export const projects: Project[] = [
     {
-        title: "Freya - AI Voice Assistant",
+        title: "Freya 3.0 - AI Voice Assistant",
         videoSrc: "/videos/Freya.mp4", // Local video file
         description: "AI voice assistant designed to simplify your daily tasks and engage in casual conversations.",
         detailDescription: "Freya is an AI-powered voice assistant built to simplify daily tasks and engage in natural, casual conversations. Leveraging advanced natural language processing and speech recognition, Freya understands context, responds intelligently, and learns your preferences over time. From setting reminders to answering complex questions, Freya is your personal AI companion that makes life easier through the power of voice.",
-        codeUrl: "https://github.com/IHANsaja/Freya-TheVoiceAssistant",
+        codeUrl: "https://github.com/IHANsaja/freyav3",
         demoUrl: "",
         figmaUrl: "", // Replace with actual Figma URL
         audioSrc: "/voices/ProjectFreya.mp3", // ✨ Path to your custom audio file
@@ -96,18 +96,7 @@ export const projects: Project[] = [
         badge: "ui-design"
     },
     {
-        title: "Online Bus Ticket Booking System",
-        videoSrc: "/images/bus.jpg", // External image URL
-        description: "Modern bus ticket booking system designed to help users book tickets for buses in sri lanka.",
-        detailDescription: "A comprehensive online bus ticket booking system designed specifically for the Sri Lankan transport network. Users can search routes, compare schedules, select seats with an interactive seat map, and complete bookings with multiple payment options. The system features real-time bus tracking, booking history, e-ticket generation, and automated notifications. The modern UI makes the traditionally tedious process of booking bus tickets quick and hassle-free.",
-        codeUrl: "",
-        demoUrl: "",
-        figmaUrl: "https://www.figma.com/design/Pl0HVYIZ5wZheUtih464nU/Online-Bus-System?node-id=0-1&t=czTezxQu1Zmhsap9-1", // Replace with actual Figma URL
-        audioSrc: "", // ✨ Path to your custom audio file
-        badge: "ui-design"
-    },
-    {
-        title: "CINEC ME Website",
+        title: "CINEC Website",
         videoSrc: "/images/fome.jpg", // External image URL
         description: "Marine Engineering Faculty website designed to help users learn about the faculty and its programs.",
         detailDescription: "The CINEC Marine Engineering Faculty website is a comprehensive digital presence designed to inform prospective students, current enrollees, and industry partners about the faculty's programs, research initiatives, and maritime engineering expertise. The website features program overviews, faculty profiles, research publications, event calendars, and student testimonials, all presented through a modern, professionally designed interface that reflects the prestige of the institution.",

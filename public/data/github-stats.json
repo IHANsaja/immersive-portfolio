@@ -1,18 +1,33 @@
 {
-  "IHANsaja/Freya-TheVoiceAssistant": {
-    "title": "Freya-TheVoiceAssistant",
-    "stars": 0,
-    "forks": 1,
-    "watchers": 0,
+  "IHANsaja/freyav3": {
+    "title": "freyav3",
+    "stars": 1,
+    "forks": 0,
+    "watchers": 1,
     "openIssues": 0,
-    "size": 486,
-    "pushedAt": "2024-07-27T15:29:28Z",
+    "size": 140,
+    "pushedAt": "2026-06-04T11:18:54Z",
     "commitsCount": 17,
     "languages": [
       {
         "name": "Python",
-        "bytes": 18932,
-        "percentage": 100
+        "bytes": 50687,
+        "percentage": 57.5
+      },
+      {
+        "name": "TypeScript",
+        "bytes": 34719,
+        "percentage": 39.4
+      },
+      {
+        "name": "CSS",
+        "bytes": 2177,
+        "percentage": 2.5
+      },
+      {
+        "name": "JavaScript",
+        "bytes": 559,
+        "percentage": 0.6
       }
     ],
     "success": true

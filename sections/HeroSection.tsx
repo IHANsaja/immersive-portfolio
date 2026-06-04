@@ -115,11 +115,6 @@ const HeroSection = () => {
 
     return (
         <section id="hero-section" className="relative w-screen h-screen z-1">
-            {/* Load GPU Canvas wrapper to control its transition */}
-            <div ref={gpuCanvasRef} className="absolute inset-0 z-0 pointer-events-none">
-                {showGPUCanvas && <GPUFluidCanvas />}
-            </div>
-
             <div
                 ref={bgContainerRef}
                 id="background-container"
@@ -143,6 +138,11 @@ const HeroSection = () => {
                         className="pointer-events-none w-full h-full object-cover mix-blend-plus-darker md:mix-blend-normal"
                     />
                 </picture>
+            </div>
+
+            {/* Load GPU Canvas wrapper directly on top of the background image */}
+            <div ref={gpuCanvasRef} className="absolute inset-0 z-[1] pointer-events-none">
+                {showGPUCanvas && <GPUFluidCanvas />}
             </div>
 
             <div className="absolute inset-0 z-0 pointer-events-none">

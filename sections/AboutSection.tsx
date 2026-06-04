@@ -75,38 +75,36 @@ const AboutSection = () => {
 
             // animate your split lines once fonts are ready
             gsap.from(split.lines, {
-                y: 50,
+                y: 30,
                 opacity: 0,
-                duration: 1,
+                duration: 0.8,
                 ease: "power3.out",
-                stagger: 0.1,
+                stagger: 0.08,
                 scrollTrigger: {
                     trigger: paragraphRef.current,
-                    start: "top 60%",
+                    start: "top 75%",
                     toggleActions: "restart none restart none",
                 },
-                delay: 5,
+                delay: 0.2,
             });
-        }); // ← properly close the .then callback here
+        });
 
-        // SCRAMBLE TEXT ANIMATION
+        // SCRAMBLE TEXT ANIMATION FOR HEADINGS (Education, Hey I am IHAN HANSAJA)
         gsap.from(".scramble", {
-            duration: 5,
+            duration: 2.5,
             ease: "circ.inOut",
-            stagger: 0.02,
             scrambleText: {
-                text: "IHAN HANSAJA",
-                chars: "////////  /////// ////////",
-                speed: 0.2,
-                revealDelay: 0.2,
+                text: "{original}",
+                chars: "01010101010101",
+                speed: 0.3,
             },
             scrollTrigger: {
                 trigger: "#about-section",
-                start: "top 60%",
+                start: "top 75%",
                 toggleActions: "restart none restart none",
                 onEnter: () => {
                     const audio = audioRef.current;
-                    if (audio && isPlayingRef.current) { // Check ref instead of state
+                    if (audio && isPlayingRef.current) {
                         audio.currentTime = 0;
                         audio.play().catch((err) => {
                             console.warn("Audio playback failed:", err);
@@ -114,64 +112,63 @@ const AboutSection = () => {
                         setTimeout(() => {
                             audio.pause();
                             audio.currentTime = 0;
-                        }, 6000);
+                        }, 3000);
                     }
                 },
             },
+            stagger: 0.15,
         });
 
-        gsap.utils.toArray(".scrambleBI").forEach((el) => {
-            const element = el as HTMLElement;
-            gsap.from(element, {
-                duration: 5,
-                ease: "circ.inOut",
-                scrambleText: {
-                    text: element.innerText,
-                    chars: "////////  /////// ////////",
-                    speed: 0.3,
-                },
-                scrollTrigger: {
-                    trigger: "#about-section",
-                    start: "top 60%",
-                    toggleActions: "restart none restart none",
-                },
-                stagger: 0.5,
-            });
+        // SCRAMBLE TEXT ANIMATION FOR BASIC INFO / SKILLS
+        gsap.from(".scrambleBI", {
+            duration: 3,
+            ease: "circ.inOut",
+            scrambleText: {
+                text: "{original}",
+                chars: "////////  /////// ////////",
+                speed: 0.3,
+            },
+            scrollTrigger: {
+                trigger: "#about-section",
+                start: "top 75%",
+                toggleActions: "restart none restart none",
+            },
+            stagger: 0.08,
         });
 
         gsap.from('.eduCard', {
             opacity: 0,
-            duration: 1,
-            delay: 4,
-            y: 100,
+            duration: 0.8,
+            delay: 0.3,
+            y: 50,
             scrollTrigger: {
-                trigger: "#about-section",
-                start: "top 60%",
+                trigger: ".eduCard",
+                start: "top 85%",
                 toggleActions: "restart none restart none",
             },
-            stagger: 0.5,
+            stagger: 0.2,
         });
 
         gsap.from('.svgGsap', {
-            duration: 4,
+            duration: 2,
             opacity: 0,
-            scale: 0.2,
-            delay: 2,
+            scale: 0.5,
+            delay: 0.1,
             scrollTrigger: {
-                trigger: "#about-section",
-                start: "top 60%",
+                trigger: ".svgGsap",
+                start: "top 85%",
                 toggleActions: "restart none restart none",
             }
         });
 
         gsap.from('.buttonGsap', {
-            delay: 4,
-            duration: 1,
+            delay: 0.4,
+            duration: 0.8,
             scaleX: 0,
-            ease: "power2.in",
+            ease: "power2.out",
             scrollTrigger: {
-                trigger: "#about-section",
-                start: "top 60%",
+                trigger: ".buttonGsap",
+                start: "top 85%",
                 toggleActions: "restart none restart none",
             }
         });
@@ -281,9 +278,9 @@ const AboutSection = () => {
             </div>
 
             {/* RIGHT SIDE: INTRO & PARAGRAPH */}
-            <div className="w-full md:h-full md:w-1/2 flex flex-col px-6 md:px-8 md:mr-20 text-[var(--foreground)] leading-5 tracking-wider order-1 md:order-2">
+            <div className="w-full md:h-full md:w-1/2 flex flex-col px-6 md:px-8 md:mr-20 text-[var(--foreground)] leading-5 tracking-wider order-1 md:order-2 md:gap-20">
 
-                <div className="w-full md:h-3/5 text-center md:text-right flex flex-col justify-start items-center md:items-end gap-6 md:gap-10">
+                <div className="w-full md:h-2/5 text-center md:text-right flex flex-col justify-start items-center md:items-end gap-6 md:gap-10">
                     <div className="w-full md:ml-20 md:mt-20 flex justify-center md:justify-start items-start text-xl md:text-2xl font-inconsolata-sans">
                         + + + +
                     </div>
@@ -304,7 +301,7 @@ const AboutSection = () => {
                     </p>
 
                 </div>
-                <div className="w-full md:h-2/5 flex flex-col items-center md:items-end gap-6 md:gap-10 text-2xl font-inconsolata-sans z-10 mt-10 md:mt-0">
+                <div className="w-full md:h-2/5 flex flex-col items-center md:items-end gap-6 md:gap-10 text-2xl font-inconsolata-sans z-10 md:mt-0">
                     <h3 className="scramble font-neotriad-sans text-2xl md:text-4xl">Education</h3>
                     <div className="flex flex-col md:flex-row justify-center md:justify-start items-center gap-6 md:gap-10 w-full md:w-auto">
                         <div className="h-full hidden md:flex justify-center items-start mr-10">
