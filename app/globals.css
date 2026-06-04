@@ -20,10 +20,11 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Inconsolata', monospace , Arial, sans-serif;
+  font-family: 'Inconsolata', monospace, Arial, sans-serif;
 }
 
-html, body {
+html,
+body {
   overscroll-behavior: auto;
 }
 
@@ -32,17 +33,19 @@ html, body {
 }
 
 @layer utilities {
+
   /* 🌟 Core loader styles */
   .loader {
     @apply relative overflow-hidden rounded-full;
     width: 30px;
     height: 30px;
-    border: 3px solid #191919; /* Slightly thinner to maintain proportion */
+    border: 3px solid #191919;
+    /* Slightly thinner to maintain proportion */
     box-shadow:
-            -2px -2px 2px rgba(255,255,255,0.1),
-            4px 4px 4px rgba(0,0,0,0.4),
-            inset -2px -2px 2px rgba(255,255,255,0.2),
-            inset 4px 4px 4px rgba(0,0,0,0.4);
+      -2px -2px 2px rgba(255, 255, 255, 0.1),
+      4px 4px 4px rgba(0, 0, 0, 0.4),
+      inset -2px -2px 2px rgba(255, 255, 255, 0.2),
+      inset 4px 4px 4px rgba(0, 0, 0, 0.4);
   }
 
   .loader::before {
@@ -55,36 +58,35 @@ html, body {
     bottom: 4px;
     left: 4px;
     box-shadow:
-            inset 2px 2px 2px rgba(0,0,0,0.5);
+      inset 2px 2px 2px rgba(0, 0, 0, 0.5);
   }
 
-  .loader > span {
+  .loader>span {
     @apply absolute inset-0 rounded-full;
-    background-image: linear-gradient(
-            -225deg,
-            #8B9AEF 0%,
-            #3F51B5 50%,
-            #303F9F 100%
-    );
-    filter: blur(8px); /* Reduced blur for visibility at small size */
+    background-image: linear-gradient(-225deg,
+        #8B9AEF 0%,
+        #3F51B5 50%,
+        #303F9F 100%);
+    filter: blur(8px);
+    /* Reduced blur for visibility at small size */
     z-index: -1;
     animation: loader-spin 0.7s linear infinite;
   }
 
   @keyframes loader-spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 }
 
 .clip-shape {
-  clip-path: polygon(
-          var(--clip-cut-size) 0,
-          100% 0,
-          100% calc(100% - var(--clip-cut-size)),
-          calc(100% - var(--clip-cut-size)) 100%,
-          0 100%,
-          0 var(--clip-cut-size)
-  );
+  clip-path: polygon(var(--clip-cut-size) 0,
+      100% 0,
+      100% calc(100% - var(--clip-cut-size)),
+      calc(100% - var(--clip-cut-size)) 100%,
+      0 100%,
+      0 var(--clip-cut-size));
 }
 
 
@@ -120,7 +122,7 @@ html, body {
   text-align: center;
   width: 100%;
   height: 100%;
-  text-shadow: 0 0 3px rgba(0,0,0,0.4);
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
 }
 
 .hover-button:after {
@@ -179,11 +181,13 @@ html, body {
   .card {
     @apply relative h-[110px] w-[110px] rounded-sm p-2 flex items-center justify-center bg-foreground;
   }
+
   .project-card {
     @apply relative w-full max-w-xl cursor-pointer overflow-hidden rounded-lg;
     aspect-ratio: 1 / 1;
     transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.35s ease;
   }
+
   .project-card:hover {
     transform: scale(1.03);
     box-shadow: 0 0 20px rgba(63, 81, 181, 0.35), 0 0 60px rgba(63, 81, 181, 0.1);
@@ -237,12 +241,14 @@ html, body {
 
   /* Creates the top part of the hexagon */
   .honeycomb-cell::after {
-    @apply -top-1.5 border-b-[6px] border-b-gray-100; /* Use your desired color */
+    @apply -top-1.5 border-b-[6px] border-b-gray-100;
+    /* Use your desired color */
   }
 
   /* Creates the bottom part of the hexagon */
   .honeycomb-cell::before {
-    @apply -bottom-1.5 border-t-[6px] border-t-gray-100; /* Use your desired color */
+    @apply -bottom-1.5 border-t-[6px] border-t-gray-100;
+    /* Use your desired color */
   }
 
   .dot {
@@ -262,7 +268,8 @@ html, body {
     left: 0;
     height: 100%;
     width: 100%;
-    border-radius: 100%; /* rounded-full */
+    border-radius: 100%;
+    /* rounded-full */
     background-color: var(--uib-color);
     animation: pulse7132 var(--uib-speed) linear infinite;
     transform: scale(0);
@@ -278,6 +285,7 @@ html, body {
       transform: scale(0);
       opacity: 1;
     }
+
     100% {
       transform: scale(1);
       opacity: 0;
@@ -328,7 +336,7 @@ html, body {
   text-align: center;
   width: 100%;
   height: 100%;
-  text-shadow: 0 0 3px rgba(0,0,0,0.4);
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
 }
 
 .hover-button:after {
@@ -380,20 +388,24 @@ html, body {
   .card {
     @apply relative h-[110px] w-[110px] rounded-sm p-2 flex items-center justify-center bg-foreground;
   }
+
   .project-card {
     position: relative;
     width: 100%;
     max-width: 500px;
     cursor: pointer;
     overflow: hidden;
-    border: 10px solid #070A1E; /* Cohesive deep space slate-blue frame */
+    border: 10px solid #070A1E;
+    /* Cohesive deep space slate-blue frame */
     border-radius: 40px;
     aspect-ratio: 1 / 1;
     transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
     background: #070A1E;
   }
+
   .project-card:hover {
-    border-color: #0F132E; /* Metallic frame glow on hover */
+    border-color: #0F132E;
+    /* Metallic frame glow on hover */
     transform: translateY(-4px) scale(1.015);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(139, 154, 239, 0.12);
   }
@@ -446,12 +458,14 @@ html, body {
 
   /* Creates the top part of the hexagon */
   .honeycomb-cell::after {
-    @apply -top-1.5 border-b-[6px] border-b-gray-100; /* Use your desired color */
+    @apply -top-1.5 border-b-[6px] border-b-gray-100;
+    /* Use your desired color */
   }
 
   /* Creates the bottom part of the hexagon */
   .honeycomb-cell::before {
-    @apply -bottom-1.5 border-t-[6px] border-t-gray-100; /* Use your desired color */
+    @apply -bottom-1.5 border-t-[6px] border-t-gray-100;
+    /* Use your desired color */
   }
 
   .dot {
@@ -471,7 +485,8 @@ html, body {
     left: 0;
     height: 100%;
     width: 100%;
-    border-radius: 100%; /* rounded-full */
+    border-radius: 100%;
+    /* rounded-full */
     background-color: var(--uib-color);
     animation: pulse7132 var(--uib-speed) linear infinite;
     transform: scale(0);
@@ -487,6 +502,7 @@ html, body {
       transform: scale(0);
       opacity: 1;
     }
+
     100% {
       transform: scale(1);
       opacity: 0;
@@ -528,7 +544,9 @@ html, body {
 }
 
 @media (max-width: 799px) {
-  html, body {
+
+  html,
+  body {
     scroll-behavior: smooth;
   }
 }
@@ -564,14 +582,12 @@ html, body {
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: linear-gradient(
-    105deg,
-    transparent 40%,
-    rgba(139, 154, 239, 0.08) 45%,
-    rgba(139, 154, 239, 0.15) 50%,
-    rgba(139, 154, 239, 0.08) 55%,
-    transparent 60%
-  );
+  background: linear-gradient(105deg,
+      transparent 40%,
+      rgba(139, 154, 239, 0.08) 45%,
+      rgba(139, 154, 239, 0.15) 50%,
+      rgba(139, 154, 239, 0.08) 55%,
+      transparent 60%);
   background-size: 200% 100%;
   background-position: 200% 0;
   transition: none;
@@ -583,8 +599,13 @@ html, body {
 }
 
 @keyframes shimmerSweep {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Top-Right Header Texts Overlaying the Media */
@@ -623,7 +644,8 @@ html, body {
 /* Folder tab dark overlay container */
 .project-card-folder-body {
   position: absolute;
-  inset: -1px; /* Overlap borders slightly to avoid subpixel lines */
+  inset: -1px;
+  /* Overlap borders slightly to avoid subpixel lines */
   z-index: 3;
   background: #18191D;
   clip-path: url(#folder-tab-clip);
@@ -632,7 +654,8 @@ html, body {
   flex-direction: column;
   justify-content: space-between;
   padding: 16px 20px 20px 20px;
-  padding-top: 48%; /* Keep the top 48% clear for the folder tab slope */
+  padding-top: 48%;
+  /* Keep the top 48% clear for the folder tab slope */
   box-sizing: border-box;
 }
 
@@ -650,7 +673,8 @@ html, body {
 }
 
 .project-card:hover .project-card-tab-info {
-  transform: translateY(-5px); /* Smooth parallax lift greeting the hover */
+  transform: translateY(-5px);
+  /* Smooth parallax lift greeting the hover */
 }
 
 .project-card-tab-title {
@@ -697,7 +721,8 @@ html, body {
 }
 
 .project-card:hover .date-number {
-  color: #818cf8; /* Beautiful transition accent coloring on hover */
+  color: #818cf8;
+  /* Beautiful transition accent coloring on hover */
   transform: translateY(-2px);
 }
 
@@ -728,6 +753,7 @@ html, body {
   color: #34d399;
   border-color: rgba(16, 185, 129, 0.3);
 }
+
 .badge-full-style:hover,
 .project-card:hover .badge-full-style {
   background: rgba(16, 185, 129, 0.18);
@@ -741,6 +767,7 @@ html, body {
   color: #cbd5e1;
   border-color: rgba(148, 163, 184, 0.3);
 }
+
 .badge-code-style:hover,
 .project-card:hover .badge-code-style {
   background: rgba(148, 163, 184, 0.18);
@@ -754,6 +781,7 @@ html, body {
   color: #818cf8;
   border-color: rgba(99, 102, 241, 0.3);
 }
+
 .badge-design-style:hover,
 .project-card:hover .badge-design-style {
   background: rgba(99, 102, 241, 0.18);
@@ -767,7 +795,8 @@ html, body {
   position: absolute;
   inset: 0;
   z-index: 4;
-  border-radius: 30px; /* Inside border radius */
+  border-radius: 30px;
+  /* Inside border radius */
   border: 1px solid rgba(139, 154, 239, 0.08);
   transition: border-color 0.4s ease, box-shadow 0.4s ease;
   pointer-events: none;
@@ -789,10 +818,13 @@ html, body {
   inset: 0;
   z-index: 9999;
   display: flex;
-  justify-content: flex-end; /* Align sidebar to the right edge */
+  justify-content: flex-end;
+  /* Align sidebar to the right edge */
   align-items: stretch;
-  padding: 32px 48px 32px 24px; /* Margins to move away from frame.tsx overlay on top, bottom, and right */
-  pointer-events: none; /* Allow clicks to pass through when closed */
+  padding: 32px 48px 32px 24px;
+  /* Margins to move away from frame.tsx overlay on top, bottom, and right */
+  pointer-events: none;
+  /* Allow clicks to pass through when closed */
 }
 
 .drawer-backdrop {
@@ -809,15 +841,17 @@ html, body {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 420px; /* Non-overlapping sidebar width */
-  height: 100%; /* Stretch to fill padded container */
-  border-radius: 20px; /* Rounded floating card corners */
-  border: 1px solid rgba(139, 154, 239, 0.2); /* All-around premium border */
-  background: linear-gradient(
-    165deg,
-    rgba(10, 15, 30, 0.98),
-    rgba(15, 20, 40, 0.96)
-  );
+  max-width: 420px;
+  /* Non-overlapping sidebar width */
+  height: 100%;
+  /* Stretch to fill padded container */
+  border-radius: 20px;
+  /* Rounded floating card corners */
+  border: 1px solid rgba(139, 154, 239, 0.2);
+  /* All-around premium border */
+  background: linear-gradient(165deg,
+      rgba(10, 15, 30, 0.98),
+      rgba(15, 20, 40, 0.96));
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   display: flex;
@@ -830,7 +864,7 @@ html, body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 4px 4px;
   opacity: 0.3;
   pointer-events: none;
@@ -884,7 +918,8 @@ html, body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* NO SCROLLBARS! */
+  overflow: hidden;
+  /* NO SCROLLBARS! */
 }
 
 /* BODY */
@@ -892,7 +927,8 @@ html, body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Space elements vertically to perfectly fill height */
+  justify-content: space-between;
+  /* Space elements vertically to perfectly fill height */
   padding: 24px;
   gap: 16px;
   height: calc(100% - 64px);
@@ -933,7 +969,8 @@ html, body {
   color: rgba(240, 219, 238, 0.65);
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3; /* Limit strictly to 3 lines to fit dashboard aspect ratio */
+  -webkit-line-clamp: 3;
+  /* Limit strictly to 3 lines to fit dashboard aspect ratio */
   overflow: hidden;
 }
 
@@ -942,7 +979,8 @@ html, body {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  max-height: 180px; /* Highly optimized heights to fit perfectly */
+  max-height: 180px;
+  /* Highly optimized heights to fit perfectly */
   overflow: hidden;
   border-radius: 16px;
   background: rgba(0, 0, 0, 0.2);
@@ -1038,8 +1076,17 @@ html, body {
 }
 
 @keyframes telemetryPulse {
-  0%, 100% { opacity: 0.4; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1.1); }
+
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
 }
 
 /* STATS GRID (Redesigned as 4 inline columns to save vertical space!) */
@@ -1175,7 +1222,8 @@ html, body {
 .drawer-globe-wrap {
   position: relative;
   width: 100%;
-  height: 160px; /* Reduced visual footprint */
+  height: 160px;
+  /* Reduced visual footprint */
   overflow: hidden;
 }
 
@@ -1251,27 +1299,29 @@ html, body {
 /* RESPONSIVE LAYOUT (Highly optimized for both mobile and tablet viewports) */
 @media (max-width: 1024px) {
   .drawer-root {
-    padding: 12px 12px 72px 12px !important; /* comfortable floating margins, keeping clear of frame/cogs */
+    padding: 12px 12px 72px 12px !important;
+    /* comfortable floating margins, keeping clear of frame/cogs */
   }
-  
+
   .drawer-panel {
     max-width: 100% !important;
     width: 100% !important;
     height: 100% !important;
     border-radius: 16px !important;
   }
-  
+
   .drawer-scroll {
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   .drawer-body {
     height: auto !important;
     overflow: visible !important;
     padding: 16px !important;
     gap: 16px !important;
-    padding-bottom: 80px !important; /* gives generous scrolling space to reach the Initiate Freya button */
+    padding-bottom: 80px !important;
+    /* gives generous scrolling space to reach the Initiate Freya button */
     justify-content: flex-start !important;
   }
 
@@ -1307,7 +1357,7 @@ html, body {
     font-size: 13px !important;
   }
 
-  .legend-name, 
+  .legend-name,
   .legend-percentage {
     font-size: 7.5px !important;
   }
@@ -1330,11 +1380,11 @@ html, body {
   .drawer-preview {
     max-height: 130px;
   }
-  
+
   .drawer-globe-wrap {
     height: 120px;
   }
-  
+
   .drawer-description {
     -webkit-line-clamp: 2;
   }
@@ -1345,8 +1395,8 @@ html, body {
 .spline-watermark,
 a[href*="spline.design"],
 a[href*="spline.com"],
-#scene > div > a,
-#scene > div > div,
+#scene>div>a,
+#scene>div>div,
 #scene a,
 #scene img {
   display: none !important;
@@ -1383,8 +1433,15 @@ spline-viewer::part(logo) {
 }
 
 @keyframes textPulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.9; }
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
 }
 
 .stats-offline-hud {
@@ -1410,8 +1467,15 @@ spline-viewer::part(logo) {
 }
 
 @keyframes statsFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Stats Card Glow BG on Hover */
@@ -1454,14 +1518,12 @@ spline-viewer::part(logo) {
   bottom: 5%;
   width: 2px;
   transform: translateX(-50%);
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(63, 81, 181, 0.3) 10%,
-    rgba(139, 154, 239, 0.6) 50%,
-    rgba(63, 81, 181, 0.3) 90%,
-    transparent 100%
-  );
+  background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(63, 81, 181, 0.3) 10%,
+      rgba(139, 154, 239, 0.6) 50%,
+      rgba(63, 81, 181, 0.3) 90%,
+      transparent 100%);
   box-shadow: 0 0 8px rgba(63, 81, 181, 0.3), 0 0 20px rgba(139, 154, 239, 0.1);
   z-index: 1;
 }
@@ -1488,8 +1550,17 @@ spline-viewer::part(logo) {
 }
 
 @keyframes expDotPulse {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.6); opacity: 0; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
 }
 
 /* Experience card */
@@ -1582,6 +1653,7 @@ spline-viewer::part(logo) {
   .exp-timeline-line {
     left: 20px;
   }
+
   .exp-timeline-dot {
     left: 20px;
   }
@@ -1597,14 +1669,17 @@ spline-viewer::part(logo) {
 .exp-scroll-container::-webkit-scrollbar {
   width: 4px;
 }
+
 .exp-scroll-container::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 2px;
 }
+
 .exp-scroll-container::-webkit-scrollbar-thumb {
   background: rgba(63, 81, 181, 0.4);
   border-radius: 2px;
 }
+
 .exp-scroll-container::-webkit-scrollbar-thumb:hover {
   background: rgba(139, 154, 239, 0.8);
 }

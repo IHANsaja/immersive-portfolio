@@ -84,7 +84,7 @@ const ProjectCard: FC<ProjectCardProps> = (props) => {
             <div
                 className="project-card group"
                 onClick={() => onSelect(props as Project)}
-                onMouseEnter={() => videoRef.current?.play().catch(() => {})}
+                onMouseEnter={() => videoRef.current?.play().catch(() => { })}
                 onMouseLeave={() => { if (videoRef.current) { videoRef.current.pause(); videoRef.current.currentTime = 0; } }}
             >
                 {/* 1. TOP MEDIA VIEW */}

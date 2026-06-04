@@ -183,21 +183,21 @@ const ProjectDrawer: FC<ProjectDrawerProps> = ({ project, onClose }) => {
                         <div className="drawer-preview">
                             {project.videoSrc && project.videoSrc.trim() !== '' ? (
                                 isVideo(project.videoSrc) ? (
-                                    <video 
-                                        src={project.videoSrc} 
-                                        autoPlay 
-                                        loop 
-                                        muted 
-                                        playsInline 
+                                    <video
+                                        src={project.videoSrc}
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
                                         className="w-full h-full object-cover rounded-md"
                                     />
                                 ) : (
-                                    <Image 
-                                        src={project.videoSrc} 
-                                        alt={project.title} 
-                                        fill 
-                                        sizes="(max-width: 1024px) 100vw, 50vw" 
-                                        className="object-cover rounded-md" 
+                                    <Image
+                                        src={project.videoSrc}
+                                        alt={project.title}
+                                        fill
+                                        sizes="(max-width: 1024px) 100vw, 50vw"
+                                        className="object-cover rounded-md"
                                     />
                                 )
                             ) : (
@@ -235,7 +235,7 @@ const ProjectDrawer: FC<ProjectDrawerProps> = ({ project, onClose }) => {
                                     <span className="blink-dot"></span>
                                     <span>SYSTEM TELEMETRY // GITHUB METRICS</span>
                                 </h3>
-                                
+
                                 {loadingStats ? (
                                     <div className="stats-loader">
                                         <span className="loader"><span></span></span>
@@ -263,8 +263,8 @@ const ProjectDrawer: FC<ProjectDrawerProps> = ({ project, onClose }) => {
                                             <div className="stat-card">
                                                 <span className="stat-label">SIZE</span>
                                                 <span className="stat-value text-emerald-400 font-andvari-sans text-[11px] tracking-tight">
-                                                    {gitStats.size >= 1024 
-                                                        ? `${(gitStats.size / 1024).toFixed(1)}MB` 
+                                                    {gitStats.size >= 1024
+                                                        ? `${(gitStats.size / 1024).toFixed(1)}MB`
                                                         : `${gitStats.size}KB`}
                                                 </span>
                                                 <div className="stat-card-glow-bg"></div>
@@ -278,7 +278,7 @@ const ProjectDrawer: FC<ProjectDrawerProps> = ({ project, onClose }) => {
                                                     <span className="tech-label">PROJECT COMPOSITION</span>
                                                     <span className="tech-status">ANALYSED</span>
                                                 </div>
-                                                
+
                                                 {/* Stacked Bar Chart */}
                                                 <div className="stacked-bar">
                                                     {gitStats.languages.map((lang: any, idx: number) => {
@@ -313,7 +313,7 @@ const ProjectDrawer: FC<ProjectDrawerProps> = ({ project, onClose }) => {
                                                 </div>
                                             </div>
                                         )}
-                                        
+
                                         <div className="telemetry-footer font-inconsolata-sans">
                                             <span>METRIC STATUS: ENCRYPTED // SECURE</span>
                                             <span>PUSHED: {new Date(gitStats.pushedAt).toLocaleDateString()}</span>
@@ -332,7 +332,7 @@ const ProjectDrawer: FC<ProjectDrawerProps> = ({ project, onClose }) => {
                                     <span className="blink-dot-orange"></span>
                                     <span>INTERFACE LOGS // DESIGN METRICS</span>
                                 </h3>
-                                
+
                                 <div className="stats-wrapper animate-fade-in">
                                     {/* Figma Design Grid */}
                                     <div className="stats-grid">
@@ -372,7 +372,7 @@ const ProjectDrawer: FC<ProjectDrawerProps> = ({ project, onClose }) => {
                                             <span className="tech-label">DESIGN COMPOSITION</span>
                                             <span className="tech-status-orange">COMPILED</span>
                                         </div>
-                                        
+
                                         {/* Stacked Bar */}
                                         <div className="stacked-bar">
                                             <div className="bar-segment" style={{ width: project.title.includes('EcoVibe') ? '85%' : project.title.includes('Bus') ? '90%' : '95%', backgroundColor: '#F24E1E' }} />
@@ -393,7 +393,7 @@ const ProjectDrawer: FC<ProjectDrawerProps> = ({ project, onClose }) => {
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div className="telemetry-footer font-inconsolata-sans">
                                         <span>SPECIFICATION STANDARDS: VERIFIED</span>
                                         <span>WORKSPACE: ONLINE</span>

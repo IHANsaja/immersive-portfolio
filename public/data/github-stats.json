@@ -32,6 +32,85 @@
     ],
     "success": true
   },
+  "IHANsaja/outbreak": {
+    "title": "outbreak",
+    "stars": 0,
+    "forks": 0,
+    "watchers": 0,
+    "openIssues": 0,
+    "size": 4333,
+    "pushedAt": "2026-06-01T19:02:47Z",
+    "commitsCount": 22,
+    "languages": [
+      {
+        "name": "TypeScript",
+        "bytes": 547587,
+        "percentage": 79.8
+      },
+      {
+        "name": "C++",
+        "bytes": 71413,
+        "percentage": 10.4
+      },
+      {
+        "name": "Python",
+        "bytes": 39394,
+        "percentage": 5.7
+      },
+      {
+        "name": "HTML",
+        "bytes": 25796,
+        "percentage": 3.8
+      },
+      {
+        "name": "CSS",
+        "bytes": 1464,
+        "percentage": 0.2
+      },
+      {
+        "name": "JavaScript",
+        "bytes": 559,
+        "percentage": 0.1
+      }
+    ],
+    "success": true
+  },
+  "IHANsaja/isabelleugc-website": {
+    "title": "isabelleugc-website",
+    "stars": 0,
+    "forks": 0,
+    "watchers": 0,
+    "openIssues": 0,
+    "size": 344878,
+    "pushedAt": "2026-03-24T11:34:31Z",
+    "commitsCount": 101,
+    "languages": [
+      {
+        "name": "TypeScript",
+        "bytes": 282805,
+        "percentage": 99
+      },
+      {
+        "name": "CSS",
+        "bytes": 2441,
+        "percentage": 0.9
+      },
+      {
+        "name": "JavaScript",
+        "bytes": 559,
+        "percentage": 0.2
+      }
+    ],
+    "success": true
+  },
+  "IHANsaja/battlezik": {
+    "success": false,
+    "error": "Request to https://api.github.com/repos/IHANsaja/battlezik failed with status 404: {\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/repos/repos#get-a-repository\",\"status\":\"404\"}"
+  },
+  "IHANsaja/ns-website": {
+    "success": false,
+    "error": "Request to https://api.github.com/repos/IHANsaja/ns-website failed with status 404: {\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/repos/repos#get-a-repository\",\"status\":\"404\"}"
+  },
   "IHANsaja/Serendib-Warehouse-Management-System": {
     "title": "Serendib-Warehouse-Management-System",
     "stars": 2,
@@ -61,74 +140,6 @@
         "name": "HTML",
         "bytes": 366,
         "percentage": 0.1
-      }
-    ],
-    "success": true
-  },
-  "IHANsaja/Ravensquill-Bookstore": {
-    "title": "Ravensquill-Bookstore",
-    "stars": 0,
-    "forks": 0,
-    "watchers": 0,
-    "openIssues": 0,
-    "size": 10315,
-    "pushedAt": "2025-05-07T08:58:59Z",
-    "commitsCount": 3,
-    "languages": [
-      {
-        "name": "JavaScript",
-        "bytes": 95065,
-        "percentage": 97.8
-      },
-      {
-        "name": "CSS",
-        "bytes": 1822,
-        "percentage": 1.9
-      },
-      {
-        "name": "HTML",
-        "bytes": 348,
-        "percentage": 0.4
-      }
-    ],
-    "success": true
-  },
-  "IHANsaja/CINEC-Campus-Navigator": {
-    "title": "CINEC-Campus-Navigator",
-    "stars": 0,
-    "forks": 0,
-    "watchers": 0,
-    "openIssues": 0,
-    "size": 10828,
-    "pushedAt": "2025-06-09T12:48:12Z",
-    "commitsCount": 2,
-    "languages": [],
-    "success": true
-  },
-  "IHANsaja/sri-padaya-website": {
-    "title": "sri-padaya-website",
-    "stars": 0,
-    "forks": 0,
-    "watchers": 0,
-    "openIssues": 0,
-    "size": 37621,
-    "pushedAt": "2025-03-20T09:34:39Z",
-    "commitsCount": 27,
-    "languages": [
-      {
-        "name": "JavaScript",
-        "bytes": 57557,
-        "percentage": 96.1
-      },
-      {
-        "name": "CSS",
-        "bytes": 1747,
-        "percentage": 2.9
-      },
-      {
-        "name": "HTML",
-        "bytes": 563,
-        "percentage": 0.9
       }
     ],
     "success": true
