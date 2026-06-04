@@ -1,16 +1,35 @@
 "use client";
-import React from 'react';
+import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from "@gsap/react";
 
 const SvgFrame = () => {
+    const desktopFrameRef = useRef<HTMLDivElement>(null);
+    const upTextRef = useRef<HTMLDivElement>(null);
+    const botTextRef = useRef<HTMLDivElement>(null);
+    const leftLoaderRef = useRef<HTMLDivElement>(null);
+    const rightLoaderRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
-        const tl = gsap.timeline({ repeat: -1, repeatDelay: 8 });
+        const desktopFrame = desktopFrameRef.current;
+        const upText = upTextRef.current;
+        const botText = botTextRef.current;
+        const leftLoader = leftLoaderRef.current;
+        const rightLoader = rightLoaderRef.current;
+
+        if (!desktopFrame || !upText || !botText || !leftLoader || !rightLoader) return;
+
+        // Set initial invisible/scaled states for the frame elements
+        gsap.set(desktopFrame, { opacity: 0, scale: 1.03 });
+        gsap.set([upText, botText], { opacity: 0, y: (i) => i === 0 ? -10 : 10 });
+        gsap.set([leftLoader, rightLoader], { opacity: 0 });
+
+        // Scramble loop timeline
+        const loopTl = gsap.timeline({ repeat: -1, repeatDelay: 8, paused: true });
 
         // Phase 1: INIT message
-        tl.to('#uptext, #bottext', {
-            duration: 3,
+        loopTl.to([upText, botText], {
+            duration: 2.5,
             ease: 'power1.in',
             scrambleText: {
                 text: "INITIATING UI...",
@@ -20,19 +39,19 @@ const SvgFrame = () => {
         });
 
         // Phase 2: Dev Name
-        tl.to('#uptext', {
-            duration: 2,
+        loopTl.to(upText, {
+            duration: 1.5,
             scrambleText: {
                 text: "[ DEV.NAME :: IHAN_HANSAJA ]",
                 chars: "//////////////",
                 speed: 0.2,
             },
-            delay: 1,
+            delay: 0.8,
         });
 
         // Phase 3: System Log
-        tl.to('#bottext', {
-            duration: 2,
+        loopTl.to(botText, {
+            duration: 1.5,
             scrambleText: {
                 text: "[ SYSTEM.LOG :: 2025 // ROLE::DEVELOPER ]",
                 chars: "//////////////",
@@ -42,14 +61,55 @@ const SvgFrame = () => {
         });
 
         // Optional small idle time before loop
-        tl.to({}, { duration: 2 });
+        loopTl.to({}, { duration: 2 });
+
+        // Entrance timeline triggered on preloader complete
+        const entranceTl = gsap.timeline({ paused: true });
+
+        entranceTl.to(desktopFrame, {
+            opacity: 1,
+            scale: 1,
+            duration: 1.5,
+            ease: "power3.out"
+        })
+        .to([upText, botText], {
+            opacity: 1,
+            y: 0,
+            duration: 1.0,
+            ease: "power2.out"
+        }, "-=1.0")
+        .to([leftLoader, rightLoader], {
+            opacity: 1,
+            duration: 1.0,
+            ease: "power2.out",
+            onComplete: () => {
+                // Start the text scramble loop once the frame entrance completes
+                loopTl.play();
+            }
+        }, "-=0.8");
+
+        const startEntrance = () => {
+            entranceTl.play();
+        };
+
+        window.addEventListener('preloaderComplete', startEntrance);
+
+        // Fallback: If preloader is already gone when mounting
+        if (!document.querySelector('[data-preloader]')) {
+            entranceTl.play();
+        }
+
+        return () => {
+            window.removeEventListener('preloaderComplete', startEntrance);
+            entranceTl.kill();
+            loopTl.kill();
+        };
     }, []);
 
     return (
         <>
             {/* Full-screen fixed wrapper */}
             <div className="fixed inset-0 w-screen h-screen pointer-events-none z-[10000]">
-                {/* Mobile Frame: visible on small screens */}
                 {/* Mobile Frame: visible on small screens */}
                 <div className="relative w-full h-full md:hidden pointer-events-none">
                     {/* Main Border */}
@@ -81,7 +141,7 @@ const SvgFrame = () => {
                 </div>
 
                 {/* Desktop Frame: visible on md and up */}
-                <div className="relative hidden md:block w-full h-full">
+                <div ref={desktopFrameRef} className="relative hidden md:block w-full h-full" style={{ transformOrigin: 'center center' }}>
                     <svg
                         className="w-full h-full"
                         viewBox="0 0 1920 1080"
@@ -94,28 +154,28 @@ const SvgFrame = () => {
                         />
                     </svg>
                     {/* HoneycombLoader dots on the left middle - responsive */}
-                    <div className="fixed top-1/2 left-[0.5%] -translate-y-1/2 hidden md:flex flex-col items-center justify-center gap-[11vh] pointer-events-none z-[10000]">
+                    <div ref={leftLoaderRef} className="fixed top-1/2 left-[0.5%] -translate-y-1/2 hidden md:flex flex-col items-center justify-center gap-[11vh] pointer-events-none z-[10000]">
                         <div className="loader"><span></span></div>
                         <div className="loader"><span></span></div>
                         <div className="loader"><span></span></div>
                     </div>
 
                     {/* HoneycombLoader dots on the right middle - responsive */}
-                    <div className="fixed top-1/2 right-[0.5%] -translate-y-1/2 hidden md:flex flex-col items-center justify-center gap-[11vh] pointer-events-none z-[10000]">
+                    <div ref={rightLoaderRef} className="fixed top-1/2 right-[0.5%] -translate-y-1/2 hidden md:flex flex-col items-center justify-center gap-[11vh] pointer-events-none z-[10000]">
                         <div className="loader"><span></span></div>
                         <div className="loader"><span></span></div>
                         <div className="loader"><span></span></div>
                     </div>
 
                     {/* Bottom Text */}
-                    <div className="absolute bottom-4 w-screen hidden md:flex items-center justify-center z-[10000]">
+                    <div ref={botTextRef} className="absolute bottom-4 w-screen hidden md:flex items-center justify-center z-[10000]">
                         <p id="bottext" className="text-[#B5B5B5] text-base font-inconsolata-sans">
                             [ SYSTEM.LOG :: 2025 // ROLE::DEVELOPER ]
                         </p>
                     </div>
 
                     {/* Top Text */}
-                    <div className="absolute top-3 w-screen hidden md:flex items-center justify-center z-[10000]">
+                    <div ref={upTextRef} className="absolute top-3 w-screen hidden md:flex items-center justify-center z-[10000]">
                         <p id="uptext" className="text-[#B5B5B5] text-base font-inconsolata-sans">
                             [ DEV.NAME :: IHAN_HANSAJA ]
                         </p>

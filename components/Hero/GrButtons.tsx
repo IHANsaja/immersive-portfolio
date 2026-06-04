@@ -10,26 +10,11 @@ const GrButtons = () => {
     const [showResume, setShowResume] = useState(true); // Start as visible
     const [hasAnimated, setHasAnimated] = useState(false);
 
-    // Animate buttons like menu button with same delay
+    // Initial states: let them be driven by parent timeline or visible by default
     const { contextSafe } = useGSAP(() => {
-        // Set initial state - make them visible immediately
-        gsap.set('#github-button', { y: 0, opacity: 1 });
-        gsap.set('#resume-button', { y: 0, opacity: 1 });
-
-        // Set states immediately for visibility
         setShowGithub(true);
         setShowResume(true);
         setHasAnimated(true);
-
-        // Optional: Add a subtle entrance animation with stagger
-        gsap.from('#github-button, #resume-button', {
-            duration: 1.5,
-            y: -80,
-            opacity: 0,
-            ease: 'power2.out',
-            delay: 5,
-            stagger: 0.8
-        });
     }, []);
 
     // Re-animate when returning to hero section

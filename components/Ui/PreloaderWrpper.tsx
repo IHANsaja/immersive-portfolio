@@ -23,18 +23,26 @@ const PreloaderWrapper = ({ children }: { children: React.ReactNode }) => {
         }, 300);
     };
 
-    // Don't render anything until client-side and fonts are loaded
-    if (!isClient || !fontsLoaded) {
+    // Don't render anything on SSR/server side
+    if (!isClient) {
         return null;
     }
 
     return (
         <>
-            {showPreloader ? (
+            {showPreloader && (
                 <Preloader onLoadingComplete={handleLoadingComplete} />
-            ) : (
-                children
             )}
+            <div
+                style={{
+                    opacity: showPreloader ? 0 : 1,
+                    visibility: showPreloader ? 'hidden' : 'visible',
+                    pointerEvents: showPreloader ? 'none' : 'auto',
+                    transition: 'opacity 0.5s ease-in-out'
+                }}
+            >
+                {children}
+            </div>
         </>
     );
 };

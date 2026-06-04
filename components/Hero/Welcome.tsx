@@ -1,7 +1,7 @@
 "use client";
 
 interface WelcomeProps {
-    headlineRef?: React.RefObject<null>
+    headlineRef?: React.RefObject<HTMLHeadingElement | null>;
 }
 
 const Welcome = ({headlineRef}: WelcomeProps) => {
