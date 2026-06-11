@@ -178,7 +178,36 @@
     "success": true
   },
   "IHANsaja/HeritageLink": {
-    "success": false,
-    "error": "Request to https://api.github.com/repos/IHANsaja/HeritageLink/languages failed with status 403: {\"message\":\"API rate limit exceeded for 20.119.103.1. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
+    "title": "HeritageLink",
+    "stars": 0,
+    "forks": 0,
+    "watchers": 0,
+    "openIssues": 0,
+    "size": 40370,
+    "pushedAt": "2024-09-23T14:47:56Z",
+    "commitsCount": 70,
+    "languages": [
+      {
+        "name": "PHP",
+        "bytes": 96920,
+        "percentage": 66.9
+      },
+      {
+        "name": "CSS",
+        "bytes": 40390,
+        "percentage": 27.9
+      },
+      {
+        "name": "JavaScript",
+        "bytes": 3938,
+        "percentage": 2.7
+      },
+      {
+        "name": "HTML",
+        "bytes": 3594,
+        "percentage": 2.5
+      }
+    ],
+    "success": true
   }
 }
