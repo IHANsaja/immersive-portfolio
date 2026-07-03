@@ -5,29 +5,29 @@
     "forks": 0,
     "watchers": 1,
     "openIssues": 0,
-    "size": 34160,
-    "pushedAt": "2026-06-28T19:07:11Z",
-    "commitsCount": 26,
+    "size": 77229,
+    "pushedAt": "2026-07-02T13:58:38Z",
+    "commitsCount": 27,
     "languages": [
       {
         "name": "Python",
-        "bytes": 248061,
-        "percentage": 80.1
+        "bytes": 341229,
+        "percentage": 74.5
       },
       {
         "name": "TypeScript",
-        "bytes": 57286,
-        "percentage": 18.5
+        "bytes": 112863,
+        "percentage": 24.6
       },
       {
         "name": "CSS",
         "bytes": 3600,
-        "percentage": 1.2
+        "percentage": 0.8
       },
       {
         "name": "JavaScript",
         "bytes": 559,
-        "percentage": 0.2
+        "percentage": 0.1
       }
     ],
     "success": true
@@ -112,102 +112,15 @@
     "error": "Request to https://api.github.com/repos/IHANsaja/ns-website failed with status 404: {\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/repos/repos#get-a-repository\",\"status\":\"404\"}"
   },
   "IHANsaja/Serendib-Warehouse-Management-System": {
-    "title": "Serendib-Warehouse-Management-System",
-    "stars": 2,
-    "forks": 0,
-    "watchers": 2,
-    "openIssues": 0,
-    "size": 23235,
-    "pushedAt": "2025-09-17T18:51:09Z",
-    "commitsCount": 119,
-    "languages": [
-      {
-        "name": "JavaScript",
-        "bytes": 328164,
-        "percentage": 97.1
-      },
-      {
-        "name": "CSS",
-        "bytes": 4875,
-        "percentage": 1.4
-      },
-      {
-        "name": "Python",
-        "bytes": 4619,
-        "percentage": 1.4
-      },
-      {
-        "name": "HTML",
-        "bytes": 366,
-        "percentage": 0.1
-      }
-    ],
-    "success": true
+    "success": false,
+    "error": "Request to https://api.github.com/repos/IHANsaja/Serendib-Warehouse-Management-System/languages failed with status 403: {\"message\":\"API rate limit exceeded for 74.249.78.160. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
   },
   "IHANsaja/zenofy-website": {
-    "title": "zenofy-website",
-    "stars": 1,
-    "forks": 1,
-    "watchers": 1,
-    "openIssues": 0,
-    "size": 6976,
-    "pushedAt": "2026-02-26T07:32:13Z",
-    "commitsCount": 105,
-    "languages": [
-      {
-        "name": "JavaScript",
-        "bytes": 444207,
-        "percentage": 66.4
-      },
-      {
-        "name": "TypeScript",
-        "bytes": 133522,
-        "percentage": 20
-      },
-      {
-        "name": "CSS",
-        "bytes": 90873,
-        "percentage": 13.6
-      },
-      {
-        "name": "HTML",
-        "bytes": 367,
-        "percentage": 0.1
-      }
-    ],
-    "success": true
+    "success": false,
+    "error": "Request to https://api.github.com/repos/IHANsaja/zenofy-website failed with status 403: {\"message\":\"API rate limit exceeded for 74.249.78.160. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
   },
   "IHANsaja/HeritageLink": {
-    "title": "HeritageLink",
-    "stars": 0,
-    "forks": 0,
-    "watchers": 0,
-    "openIssues": 0,
-    "size": 40370,
-    "pushedAt": "2024-09-23T14:47:56Z",
-    "commitsCount": 70,
-    "languages": [
-      {
-        "name": "PHP",
-        "bytes": 96920,
-        "percentage": 66.9
-      },
-      {
-        "name": "CSS",
-        "bytes": 40390,
-        "percentage": 27.9
-      },
-      {
-        "name": "JavaScript",
-        "bytes": 3938,
-        "percentage": 2.7
-      },
-      {
-        "name": "HTML",
-        "bytes": 3594,
-        "percentage": 2.5
-      }
-    ],
-    "success": true
+    "success": false,
+    "error": "Request to https://api.github.com/repos/IHANsaja/HeritageLink failed with status 403: {\"message\":\"API rate limit exceeded for 74.249.78.160. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
   }
 }
