@@ -1,218 +1,34 @@
 {
   "IHANsaja/freyav3": {
-    "title": "freyav3",
-    "stars": 1,
-    "forks": 0,
-    "watchers": 1,
-    "openIssues": 0,
-    "size": 77395,
-    "pushedAt": "2026-07-03T10:39:29Z",
-    "commitsCount": 29,
-    "languages": [
-      {
-        "name": "Python",
-        "bytes": 347377,
-        "percentage": 60
-      },
-      {
-        "name": "TypeScript",
-        "bytes": 218532,
-        "percentage": 37.7
-      },
-      {
-        "name": "CSS",
-        "bytes": 12531,
-        "percentage": 2.2
-      },
-      {
-        "name": "JavaScript",
-        "bytes": 559,
-        "percentage": 0.1
-      }
-    ],
-    "success": true
+    "success": false,
+    "error": "Request to https://api.github.com/repos/IHANsaja/freyav3 failed with status 403: {\"message\":\"API rate limit exceeded for 172.185.46.210. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
   },
   "IHANsaja/outbreak": {
-    "title": "outbreak",
-    "stars": 0,
-    "forks": 0,
-    "watchers": 0,
-    "openIssues": 0,
-    "size": 5797,
-    "pushedAt": "2026-07-08T09:03:53Z",
-    "commitsCount": 24,
-    "languages": [
-      {
-        "name": "TypeScript",
-        "bytes": 560827,
-        "percentage": 76.4
-      },
-      {
-        "name": "C++",
-        "bytes": 87935,
-        "percentage": 12
-      },
-      {
-        "name": "Python",
-        "bytes": 56651,
-        "percentage": 7.7
-      },
-      {
-        "name": "HTML",
-        "bytes": 25592,
-        "percentage": 3.5
-      },
-      {
-        "name": "CSS",
-        "bytes": 1464,
-        "percentage": 0.2
-      },
-      {
-        "name": "PLpgSQL",
-        "bytes": 1055,
-        "percentage": 0.1
-      },
-      {
-        "name": "JavaScript",
-        "bytes": 559,
-        "percentage": 0.1
-      }
-    ],
-    "success": true
+    "success": false,
+    "error": "Request to https://api.github.com/repos/IHANsaja/outbreak failed with status 403: {\"message\":\"API rate limit exceeded for 172.185.46.210. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
   },
   "IHANsaja/isabelleugc-website": {
-    "title": "isabelleugc-website",
-    "stars": 0,
-    "forks": 0,
-    "watchers": 0,
-    "openIssues": 0,
-    "size": 344878,
-    "pushedAt": "2026-03-24T11:34:31Z",
-    "commitsCount": 101,
-    "languages": [
-      {
-        "name": "TypeScript",
-        "bytes": 282805,
-        "percentage": 99
-      },
-      {
-        "name": "CSS",
-        "bytes": 2441,
-        "percentage": 0.9
-      },
-      {
-        "name": "JavaScript",
-        "bytes": 559,
-        "percentage": 0.2
-      }
-    ],
-    "success": true
+    "success": false,
+    "error": "Request to https://api.github.com/repos/IHANsaja/isabelleugc-website failed with status 403: {\"message\":\"API rate limit exceeded for 172.185.46.210. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
   },
   "IHANsaja/battlezik": {
     "success": false,
-    "error": "Request to https://api.github.com/repos/IHANsaja/battlezik failed with status 404: {\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/repos/repos#get-a-repository\",\"status\":\"404\"}"
+    "error": "Request to https://api.github.com/repos/IHANsaja/battlezik failed with status 403: {\"message\":\"API rate limit exceeded for 172.185.46.210. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
   },
   "IHANsaja/ns-website": {
     "success": false,
-    "error": "Request to https://api.github.com/repos/IHANsaja/ns-website failed with status 404: {\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/repos/repos#get-a-repository\",\"status\":\"404\"}"
+    "error": "Request to https://api.github.com/repos/IHANsaja/ns-website failed with status 403: {\"message\":\"API rate limit exceeded for 172.185.46.210. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
   },
   "IHANsaja/Serendib-Warehouse-Management-System": {
-    "title": "Serendib-Warehouse-Management-System",
-    "stars": 2,
-    "forks": 0,
-    "watchers": 2,
-    "openIssues": 0,
-    "size": 23235,
-    "pushedAt": "2025-09-17T18:51:09Z",
-    "commitsCount": 119,
-    "languages": [
-      {
-        "name": "JavaScript",
-        "bytes": 328164,
-        "percentage": 97.1
-      },
-      {
-        "name": "CSS",
-        "bytes": 4875,
-        "percentage": 1.4
-      },
-      {
-        "name": "Python",
-        "bytes": 4619,
-        "percentage": 1.4
-      },
-      {
-        "name": "HTML",
-        "bytes": 366,
-        "percentage": 0.1
-      }
-    ],
-    "success": true
+    "success": false,
+    "error": "Request to https://api.github.com/repos/IHANsaja/Serendib-Warehouse-Management-System failed with status 403: {\"message\":\"API rate limit exceeded for 172.185.46.210. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
   },
   "IHANsaja/zenofy-website": {
-    "title": "zenofy-website",
-    "stars": 1,
-    "forks": 1,
-    "watchers": 1,
-    "openIssues": 0,
-    "size": 6976,
-    "pushedAt": "2026-02-26T07:32:13Z",
-    "commitsCount": 105,
-    "languages": [
-      {
-        "name": "JavaScript",
-        "bytes": 444207,
-        "percentage": 66.4
-      },
-      {
-        "name": "TypeScript",
-        "bytes": 133522,
-        "percentage": 20
-      },
-      {
-        "name": "CSS",
-        "bytes": 90873,
-        "percentage": 13.6
-      },
-      {
-        "name": "HTML",
-        "bytes": 367,
-        "percentage": 0.1
-      }
-    ],
-    "success": true
+    "success": false,
+    "error": "Request to https://api.github.com/repos/IHANsaja/zenofy-website failed with status 403: {\"message\":\"API rate limit exceeded for 172.185.46.210. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
   },
   "IHANsaja/HeritageLink": {
-    "title": "HeritageLink",
-    "stars": 0,
-    "forks": 0,
-    "watchers": 0,
-    "openIssues": 0,
-    "size": 40370,
-    "pushedAt": "2024-09-23T14:47:56Z",
-    "commitsCount": 70,
-    "languages": [
-      {
-        "name": "PHP",
-        "bytes": 96920,
-        "percentage": 66.9
-      },
-      {
-        "name": "CSS",
-        "bytes": 40390,
-        "percentage": 27.9
-      },
-      {
-        "name": "JavaScript",
-        "bytes": 3938,
-        "percentage": 2.7
-      },
-      {
-        "name": "HTML",
-        "bytes": 3594,
-        "percentage": 2.5
-      }
-    ],
-    "success": true
+    "success": false,
+    "error": "Request to https://api.github.com/repos/IHANsaja/HeritageLink failed with status 403: {\"message\":\"API rate limit exceeded for 172.185.46.210. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\"}\n"
   }
 }
