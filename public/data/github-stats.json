@@ -43,39 +43,39 @@
     "forks": 0,
     "watchers": 0,
     "openIssues": 0,
-    "size": 15532,
-    "pushedAt": "2026-08-14T02:32:16Z",
-    "commitsCount": 28,
+    "size": 42536,
+    "pushedAt": "2026-08-18T14:10:13Z",
+    "commitsCount": 31,
     "languages": [
       {
+        "name": "HTML",
+        "bytes": 1267990,
+        "percentage": 53.9
+      },
+      {
         "name": "TypeScript",
-        "bytes": 764915,
-        "percentage": 68.3
+        "bytes": 769472,
+        "percentage": 32.7
       },
       {
         "name": "Python",
-        "bytes": 191954,
-        "percentage": 17.1
+        "bytes": 203021,
+        "percentage": 8.6
       },
       {
         "name": "C++",
-        "bytes": 100189,
-        "percentage": 8.9
-      },
-      {
-        "name": "HTML",
-        "bytes": 60024,
-        "percentage": 5.4
+        "bytes": 106808,
+        "percentage": 4.5
       },
       {
         "name": "CSS",
-        "bytes": 1464,
+        "bytes": 1574,
         "percentage": 0.1
       },
       {
         "name": "PLpgSQL",
         "bytes": 1055,
-        "percentage": 0.1
+        "percentage": 0
       },
       {
         "name": "JavaScript",
