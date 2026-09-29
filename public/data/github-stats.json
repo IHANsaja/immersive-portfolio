@@ -1,38 +1,38 @@
 {
   "IHANsaja/freyav3": {
     "title": "freyav3",
-    "stars": 2,
+    "stars": 3,
     "forks": 0,
-    "watchers": 2,
+    "watchers": 3,
     "openIssues": 1,
-    "size": 89903,
-    "pushedAt": "2026-09-28T05:04:43Z",
-    "commitsCount": 62,
+    "size": 90135,
+    "pushedAt": "2026-09-29T05:17:21Z",
+    "commitsCount": 88,
     "languages": [
       {
         "name": "Python",
-        "bytes": 1037274,
-        "percentage": 65.6
+        "bytes": 1135317,
+        "percentage": 63.7
       },
       {
         "name": "TypeScript",
-        "bytes": 453209,
-        "percentage": 28.6
+        "bytes": 534239,
+        "percentage": 30
       },
       {
         "name": "CSS",
-        "bytes": 43617,
-        "percentage": 2.8
+        "bytes": 55670,
+        "percentage": 3.1
       },
       {
         "name": "GLSL",
         "bytes": 32581,
-        "percentage": 2.1
+        "percentage": 1.8
       },
       {
         "name": "PowerShell",
-        "bytes": 12316,
-        "percentage": 0.8
+        "bytes": 21410,
+        "percentage": 1.2
       },
       {
         "name": "JavaScript",
