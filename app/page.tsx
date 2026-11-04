@@ -12,11 +12,14 @@ import ModelWrapper from '@/components/About/ModelWrapper';
 import Menu from "@/components/Hero/Menu";
 import MusicButton from "@/components/Ui/MusicButton";
 
+import { emitSection } from '@/utils/sectionEvents';
+
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin);
 
-// Custom event for section pinning
-const SECTION_PINNED_EVENT = 'sectionPinned';
+// Must match the breakpoint ModelWrapper uses to show the canvas
+const DESKTOP_QUERY = "(min-width: 800px)";
+const MOBILE_QUERY = "(max-width: 799px)";
 
 // --- Lazy-load your page sections ---
 const HeroSection = lazy(() => import('@/sections/HeroSection'));
@@ -34,7 +37,7 @@ const Home: React.FC = () => {
         const sections = ["#hero-section", "#about-section", "#projects-section", "#skill-section", "#experience-section", "#contact-section"];
 
         // Desktop: Full ScrollSmoother + pinned sections (unchanged behavior)
-        mm.add("(min-width: 800px)", () => {
+        mm.add(DESKTOP_QUERY, () => {
             const smoother = ScrollSmoother.create({
                 smooth: 1,
                 effects: true,
@@ -53,14 +56,8 @@ const Home: React.FC = () => {
                             progressRef.current.style.width = `${width}%`;
                         }
                     },
-                    onEnter: () => {
-                        const sectionId = section.replace('#', '');
-                        window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
-                    },
-                    onEnterBack: () => {
-                        const sectionId = section.replace('#', '');
-                        window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
-                    }
+                    onEnter: () => emitSection(section.replace('#', '')),
+                    onEnterBack: () => emitSection(section.replace('#', ''))
                 });
             });
 
@@ -70,7 +67,7 @@ const Home: React.FC = () => {
         });
 
         // Mobile: No ScrollSmoother, no pinning — just progress tracking
-        mm.add("(max-width: 799px)", () => {
+        mm.add(MOBILE_QUERY, () => {
             sections.forEach((section, index) => {
                 ScrollTrigger.create({
                     trigger: section,
@@ -82,14 +79,8 @@ const Home: React.FC = () => {
                             progressRef.current.style.width = `${width}%`;
                         }
                     },
-                    onEnter: () => {
-                        const sectionId = section.replace('#', '');
-                        window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
-                    },
-                    onEnterBack: () => {
-                        const sectionId = section.replace('#', '');
-                        window.dispatchEvent(new CustomEvent(SECTION_PINNED_EVENT, { detail: { sectionId } }));
-                    }
+                    onEnter: () => emitSection(section.replace('#', '')),
+                    onEnterBack: () => emitSection(section.replace('#', ''))
                 });
             });
         });

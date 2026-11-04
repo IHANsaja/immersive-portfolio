@@ -13,11 +13,9 @@ import {
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from "@gsap/react";
+import { SECTION_PINNED_EVENT, getCurrentSection } from '@/utils/sectionEvents';
 
 gsap.registerPlugin(ScrollTrigger);
-
-// Custom event for section pinning
-const SECTION_PINNED_EVENT = 'sectionPinned';
 
 type GLTFResult = {
     nodes: {
@@ -114,88 +112,40 @@ export function Model(props: JSX.IntrinsicElements['group']) {
     useEffect(() => {
         if (!groupRef.current) return;
 
-        const handleSectionPinned = (event: Event) => {
+        // Bone name -> gesture table key, with per-bone tween duration
+        const bones = [
+            { name: 'Neck', key: 'neck', duration: 1 },
+            { name: 'LeftArm', key: 'leftArm', duration: 1.2 },
+            { name: 'RightArm', key: 'rightArm', duration: 1.2 },
+            { name: 'LeftForeArm', key: 'leftForeArm', duration: 1.2 },
+            { name: 'Spine', key: 'spine', duration: 1.4 },
+            { name: 'RightForeArm', key: 'rightForeArm', duration: 1.2 },
+        ] as const;
+
+        const applyGesture = (sectionId: string, immediate = false) => {
             if (!groupRef.current) return;
-            const customEvent = event as CustomEvent;
-            const { sectionId } = customEvent.detail;
-
-            // Find the bones
-            const neck = groupRef.current.getObjectByName('Neck');
-            const leftArm = groupRef.current.getObjectByName('LeftArm');
-            const rightArm = groupRef.current.getObjectByName('RightArm');
-            const leftForeArm = groupRef.current.getObjectByName('LeftForeArm');
-            const spine = groupRef.current.getObjectByName('Spine');
-            const rightForeArm = groupRef.current.getObjectByName('RightForeArm');
-
-            // Get the gesture values for this section
-            const neckGesture = gesturesRef.current.neck[sectionId];
-            const leftArmGesture = gesturesRef.current.leftArm[sectionId];
-            const rightArmGesture = gesturesRef.current.rightArm[sectionId];
-            const leftForeArmGesture = gesturesRef.current.leftForeArm[sectionId];
-            const spineGesture = gesturesRef.current.spine[sectionId];
-            const rightForeArmGesture = gesturesRef.current.rightForeArm[sectionId];
-
-            // Apply the gestures
-            if (neck && neckGesture) {
-                gsap.to(neck.rotation, { 
-                    x: neckGesture.x, 
-                    y: neckGesture.y, 
-                    z: neckGesture.z, 
-                    duration: 1, 
-                    ease: 'power2.inOut' 
-                });
-            }
-
-            if (leftArm && leftArmGesture) {
-                gsap.to(leftArm.rotation, { 
-                    x: leftArmGesture.x, 
-                    y: leftArmGesture.y, 
-                    z: leftArmGesture.z, 
-                    duration: 1.2, 
-                    ease: 'power2.inOut' 
-                });
-            }
-
-            if (rightArm && rightArmGesture) {
-                gsap.to(rightArm.rotation, { 
-                    x: rightArmGesture.x, 
-                    y: rightArmGesture.y, 
-                    z: rightArmGesture.z, 
-                    duration: 1.2, 
-                    ease: 'power2.inOut' 
-                });
-            }
-
-            if (leftForeArm && leftForeArmGesture) {
-                gsap.to(leftForeArm.rotation, { 
-                    x: leftForeArmGesture.x, 
-                    y: leftForeArmGesture.y, 
-                    z: leftForeArmGesture.z, 
-                    duration: 1.2, 
-                    ease: 'power2.inOut' 
-                });
-            }
-
-            if (spine && spineGesture) {
-                gsap.to(spine.rotation, { 
-                    x: spineGesture.x, 
-                    y: spineGesture.y, 
-                    z: spineGesture.z, 
-                    duration: 1.4, 
-                    ease: 'power2.inOut' 
-                });
-            }
-
-            if (rightForeArm && rightForeArmGesture) {
-                gsap.to(rightForeArm.rotation, { 
-                    x: rightForeArmGesture.x, 
-                    y: rightForeArmGesture.y, 
-                    z: rightForeArmGesture.z, 
-                    duration: 1.2, 
-                    ease: 'power2.inOut' 
+            for (const { name, key, duration } of bones) {
+                const bone = groupRef.current.getObjectByName(name);
+                const gesture = gesturesRef.current[key][sectionId];
+                if (!bone || !gesture) continue;
+                // overwrite: "auto" stops a previous section's tween on this bone,
+                // otherwise fast scrolling leaves several tweens fighting over it.
+                gsap.to(bone.rotation, {
+                    ...gesture,
+                    duration: immediate ? 0 : duration,
+                    ease: 'power2.inOut',
+                    overwrite: 'auto'
                 });
             }
         };
+
+        const handleSectionPinned = (event: Event) => {
+            applyGesture((event as CustomEvent<{ sectionId: string }>).detail.sectionId);
+        };
+
+        // The model may finish loading after a section was already entered
+        const current = getCurrentSection();
+        if (current) applyGesture(current, true);
 
         // Add event listener
         window.addEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
