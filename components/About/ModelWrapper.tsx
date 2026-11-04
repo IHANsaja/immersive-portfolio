@@ -7,8 +7,7 @@ import { Environment, Html } from "@react-three/drei";
 import gsap from "gsap";
 import HoneycombLoader from "@/components/Ui/HoneycombLoader";
 import * as THREE from "three";
-
-const SECTION_PINNED_EVENT = 'sectionPinned';
+import { SECTION_PINNED_EVENT, getCurrentSection } from "@/utils/sectionEvents";
 
 // --- Prop interfaces ---
 interface ModelWrapperProps {
@@ -31,7 +30,7 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
     useLayoutEffect(() => {
         gsap.set(camera.position, { ...camera.position, z: initialCameraPos[2] });
         gsap.set(modelRef.current.position, { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] });
-        gsap.set(sceneRef.current, { opacity: 0, x: 0 });
+        gsap.set(sceneRef.current, { opacity: 0, x: 0, xPercent: 0 });
     }, [camera, initialCameraPos, initialModelPos, sceneRef]);
 
     // Effect for handling GSAP animations on scroll
@@ -39,14 +38,16 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
         if (!sceneRef.current || !modelRef.current) return;
 
         const animations = {
-            // Scene visibility and position
+            // Scene visibility and horizontal placement. xPercent is relative to the
+            // full-viewport canvas, so the model's screen position (50% + xPercent)
+            // is the same on every screen width instead of drifting off-screen.
             scene: {
-                'hero-section': { x: 0, opacity: 0 },
-                'about-section': { x: 0, opacity: 1 },
-                'projects-section': { x: -1000, opacity: 1 },
-                'skill-section': { x: 500, opacity: 1 },
-                'experience-section': { x: 450, opacity: 1 },
-                'contact-section': { x: -700, opacity: 1 }
+                'hero-section': { xPercent: 0, opacity: 0 },
+                'about-section': { xPercent: 0, opacity: 1 },
+                'projects-section': { xPercent: -33, opacity: 1 },
+                'skill-section': { xPercent: 30, opacity: 1 },
+                'experience-section': { xPercent: 28, opacity: 1 },
+                'contact-section': { xPercent: -35, opacity: 1 }
             },
             // Camera zoom level
             camera: {
@@ -57,32 +58,39 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
                 'experience-section': { z: 3 },
                 'contact-section': { z: 4 }
             },
-            // Model position and orientation
+            // Model depth/height. Horizontal placement lives in `scene` above; a world-space
+            // x offset here would shift by a different screen fraction per aspect ratio.
             model: {
                 'hero-section': { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] },
                 'about-section': { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] },
-                'projects-section': { x: 1, y: -1, z: -1.5 },
+                'projects-section': { x: 0, y: -1, z: -1.5 },
                 'skill-section': { x: 0, y: -1.5, z: 0 },
-                'experience-section': { x: 0.8, y: -1.2, z: -0.5 },
+                'experience-section': { x: 0, y: -1.2, z: -0.5 },
                 'contact-section': { x: initialModelPos[0], y: initialModelPos[1], z: initialModelPos[2] }
             }
         };
 
-        // **FIX**: Create a type from the animation keys to ensure type safety.
         type SectionId = keyof typeof animations.scene;
 
-        const handleSectionPinned = (event: Event) => {
-            // **FIX**: Cast the event detail to use the specific SectionId type.
-            const { sectionId } = (event as CustomEvent<{ sectionId: SectionId }>).detail;
-
-            // This check ensures the sectionId is valid before running animations.
-            if (sectionId in animations.scene) {
-                const ease = "circ.inOut";
-                gsap.to(sceneRef.current, { ...animations.scene[sectionId], duration: 1, ease });
-                gsap.to(camera.position, { ...animations.camera[sectionId], duration: 1.5, ease });
-                gsap.to(modelRef.current.position, { ...animations.model[sectionId], duration: 1.3, ease });
-            }
+        const applySection = (sectionId: string, immediate = false) => {
+            if (!(sectionId in animations.scene)) return;
+            const id = sectionId as SectionId;
+            // overwrite: "auto" kills any in-flight tween on the same properties, so fast
+            // scrolling through several sections can't leave an older tween running that
+            // drags the model back toward a previous section's position.
+            const common = { ease: "circ.inOut", overwrite: "auto" as const };
+            gsap.to(sceneRef.current, { ...animations.scene[id], ...common, duration: immediate ? 0 : 1 });
+            gsap.to(camera.position, { ...animations.camera[id], ...common, duration: immediate ? 0 : 1.5 });
+            gsap.to(modelRef.current.position, { ...animations.model[id], ...common, duration: immediate ? 0 : 1.3 });
         };
+
+        const handleSectionPinned = (event: Event) => {
+            applySection((event as CustomEvent<{ sectionId: string }>).detail.sectionId);
+        };
+
+        // Catch up if a section was entered before this scene mounted
+        const current = getCurrentSection();
+        if (current) applySection(current, true);
 
         window.addEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
         return () => window.removeEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
@@ -122,7 +130,7 @@ const ModelWrapper = memo(({
     return (
         <div
             ref={sceneRef}
-            className="fixed top-0 left-0 z-0 w-screen h-screen hidden md:block pointer-events-none"
+            className="fixed top-0 left-0 z-0 w-screen h-screen hidden min-[800px]:block pointer-events-none"
             style={{ opacity: 0 }}
         >
             <Canvas camera={{ fov: 35 }} style={{ pointerEvents: 'none' }}>
