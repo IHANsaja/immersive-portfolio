@@ -72,15 +72,30 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
 
         type SectionId = keyof typeof animations.scene;
 
+        // In About the model stands between the two text columns. The model's size
+        // follows the viewport height while the gap between the columns follows its
+        // width, so pull the camera back on narrower aspect ratios, and hide the model
+        // where the gap is too narrow to hold it at all.
+        const ABOUT_MODEL_MIN_WIDTH = 1440;
+        const responsiveOverrides = (id: SectionId) => {
+            if (id !== 'about-section') return { scene: {}, camera: {} };
+            const aspect = window.innerWidth / window.innerHeight;
+            return {
+                scene: window.innerWidth < ABOUT_MODEL_MIN_WIDTH ? { opacity: 0 } : {},
+                camera: { z: Math.max(initialCameraPos[2] * 1.1, (initialCameraPos[2] * 1.45 * 1.6) / aspect) },
+            };
+        };
+
         const applySection = (sectionId: string, immediate = false) => {
             if (!(sectionId in animations.scene)) return;
             const id = sectionId as SectionId;
+            const overrides = responsiveOverrides(id);
             // overwrite: "auto" kills any in-flight tween on the same properties, so fast
             // scrolling through several sections can't leave an older tween running that
             // drags the model back toward a previous section's position.
             const common = { ease: "circ.inOut", overwrite: "auto" as const };
-            gsap.to(sceneRef.current, { ...animations.scene[id], ...common, duration: immediate ? 0 : 1 });
-            gsap.to(camera.position, { ...animations.camera[id], ...common, duration: immediate ? 0 : 1.5 });
+            gsap.to(sceneRef.current, { ...animations.scene[id], ...overrides.scene, ...common, duration: immediate ? 0 : 1 });
+            gsap.to(camera.position, { ...animations.camera[id], ...overrides.camera, ...common, duration: immediate ? 0 : 1.5 });
             gsap.to(modelRef.current.position, { ...animations.model[id], ...common, duration: immediate ? 0 : 1.3 });
         };
 
@@ -88,12 +103,27 @@ const SceneContent = memo(({ initialCameraPos, initialModelPos, sceneRef }: Scen
             applySection((event as CustomEvent<{ sectionId: string }>).detail.sectionId);
         };
 
+        // Re-fit the current section when the window is resized
+        let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+        const handleResize = () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const section = getCurrentSection();
+                if (section) applySection(section, true);
+            }, 150);
+        };
+
         // Catch up if a section was entered before this scene mounted
         const current = getCurrentSection();
         if (current) applySection(current, true);
 
         window.addEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
-        return () => window.removeEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
+        window.addEventListener('resize', handleResize);
+        return () => {
+            clearTimeout(resizeTimer);
+            window.removeEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
+            window.removeEventListener('resize', handleResize);
+        };
     }, [camera, sceneRef, modelRef, initialCameraPos, initialModelPos]);
 
     return (
@@ -130,7 +160,7 @@ const ModelWrapper = memo(({
     return (
         <div
             ref={sceneRef}
-            className="fixed top-0 left-0 z-0 w-screen h-screen hidden min-[800px]:block pointer-events-none"
+            className="fixed top-0 left-0 z-0 w-screen h-screen hidden lg:block pointer-events-none"
             style={{ opacity: 0 }}
         >
             <Canvas camera={{ fov: 35 }} style={{ pointerEvents: 'none' }}>

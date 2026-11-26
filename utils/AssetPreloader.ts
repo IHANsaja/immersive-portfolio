@@ -1,6 +1,6 @@
 export interface AssetItem {
     url: string;
-    type: 'image' | 'video' | 'audio' | 'model' | 'spline';
+    type: 'image' | 'video' | 'audio' | 'model';
     name: string;
     priority?: 'critical' | 'normal' | 'low';
 }
@@ -10,7 +10,7 @@ export interface LoadingProgress {
     total: number;
     percentage: number;
     currentAsset: string;
-    stage: 'images' | 'videos' | 'audio' | 'models' | 'spline' | 'complete';
+    stage: 'images' | 'videos' | 'audio' | 'models' | 'complete';
 }
 
 export class AssetPreloader {
@@ -28,7 +28,6 @@ export class AssetPreloader {
             '/background.png',
             '/hero_section_backgroun_mobile.png',
             '/logo.png',
-            '/backgrounds/clouds.png',
             '/svg/clickToEnter.svg',
         ];
 
@@ -123,11 +122,6 @@ export class AssetPreloader {
             '/models/ihan.glb',
         ];
 
-        // Spline scenes
-        const splineScenes = [
-            'https://prod.spline.design/1z1FrReDGZG28VHJ/scene.splinecode',
-        ];
-
         // Add critical assets first (for immediate hero display)
         criticalImages.forEach(url => {
             this.assets.push({ url, type: 'image', name: url.split('/').pop() || url, priority: 'critical' });
@@ -148,10 +142,6 @@ export class AssetPreloader {
 
         models.forEach(url => {
             this.assets.push({ url, type: 'model', name: url.split('/').pop() || url, priority: 'low' });
-        });
-
-        splineScenes.forEach(url => {
-            this.assets.push({ url, type: 'spline', name: 'Spline Scene', priority: 'low' });
         });
     }
 
@@ -185,7 +175,6 @@ export class AssetPreloader {
             if (asset.type === 'video') stage = 'videos';
             else if (asset.type === 'audio') stage = 'audio';
             else if (asset.type === 'model') stage = 'models';
-            else if (asset.type === 'spline') stage = 'spline';
 
             this.onProgress?.({
                 loaded: totalLoaded,
@@ -258,9 +247,6 @@ export class AssetPreloader {
                 case 'model':
                     this.loadModel(asset.url).then(() => { cleanup(); resolve(); }).catch((err) => { cleanup(); reject(err); });
                     break;
-                case 'spline':
-                    this.loadSplineScene(asset.url).then(() => { cleanup(); resolve(); }).catch((err) => { cleanup(); reject(err); });
-                    break;
                 default:
                     cleanup();
                     resolve();
@@ -306,21 +292,6 @@ export class AssetPreloader {
                         throw new Error(`Failed to load model: ${url}`);
                     }
                     return response.blob();
-                })
-                .then(() => resolve())
-                .catch(reject);
-        });
-    }
-
-    private loadSplineScene(url: string): Promise<void> {
-        return new Promise((resolve, reject) => {
-            // For Spline scenes, we'll fetch the scene data
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Failed to load Spline scene: ${url}`);
-                    }
-                    return response.text();
                 })
                 .then(() => resolve())
                 .catch(reject);

@@ -41,19 +41,19 @@ const ContactSection: React.FC = () => {
             })
     })
     return (
-        <section id="contact-section" className="relative w-screen h-screen z-0">
+        <section id="contact-section" className="relative w-screen min-h-screen lg:h-screen z-0 flex flex-col items-center justify-center gap-8 md:gap-10 pt-20 pb-36 md:pt-24 md:pb-40 lg:p-0 lg:block overflow-x-hidden">
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
 
-            <h1 className="contact-title hidden md:block absolute top-20 md:top-24 lg:top-30 left-1/2 -translate-x-1/2 mt-4 font-neotriad-sans z-10 text-2xl md:text-4xl lg:text-6xl text-center whitespace-nowrap">Contact Me.</h1>
+            <h1 className="contact-title hidden lg:block absolute lg:top-[8vh] left-1/2 -translate-x-1/2 mt-4 font-neotriad-sans z-10 lg:text-5xl xl:text-6xl text-center whitespace-nowrap">Contact Me.</h1>
 
-            <div className="absolute top-[48%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[80%] md:w-[70%] lg:w-[60%] h-[70vh] md:h-auto md:aspect-[2/1] z-10 max-h-[80vh]">
+            <div className="relative lg:absolute lg:top-[50%] lg:left-[56%] xl:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 w-[92%] sm:w-[75%] md:w-[60%] max-w-lg lg:max-w-none lg:w-[62%] xl:w-[60%] h-[68vh] min-h-[520px] max-h-[640px] lg:min-h-0 lg:h-auto lg:aspect-[2/1] lg:max-h-[62vh] z-10">
                 <ContactForm />
             </div>
 
-            <div className="absolute bottom-24 right-1/2 translate-x-1/2 md:right-10 lg:right-20 md:translate-x-0 md:bottom-8 lg:bottom-10 flex flex-row gap-4 md:gap-6 z-20 md:pr-4">
+            <div className="relative lg:absolute lg:right-10 xl:right-20 lg:bottom-10 flex flex-row gap-4 md:gap-6 z-20 lg:pr-4">
                 {[
                     { href: 'mailto:ihanhansaja5@gmail.com', src: '/svg/gmail.svg', alt: 'gmail' },
                     { href: 'https://wa.me/94718995192', src: '/svg/whatsapp.svg', alt: 'whatsapp' },
@@ -62,7 +62,7 @@ const ContactSection: React.FC = () => {
                 ].map(({ href, src, alt }, idx) => (
                     <Link href={href} key={idx} target="_blank" className="group pointer-events-auto">
                         <div className="p-2 md:p-3 rounded-full border-2 border-white bg-white/5 backdrop-blur-md hover:bg-white/10 transition-all duration-300 shadow-lg group-hover:shadow-xl hover:scale-110">
-                            <div className="relative w-6 h-6 md:w-9 md:h-9">
+                            <div className="relative w-6 h-6 md:w-8 md:h-8 xl:w-9 xl:h-9">
                                 <Image
                                     src={src}
                                     alt={alt}

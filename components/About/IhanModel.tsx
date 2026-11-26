@@ -8,14 +8,14 @@ import {
     Material,
     BufferGeometry,
     Group,
+    Object3D,
     Object3DEventMap,
+    Euler,
+    Quaternion,
 } from 'three';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from "@gsap/react";
 import { SECTION_PINNED_EVENT, getCurrentSection } from '@/utils/sectionEvents';
 
-gsap.registerPlugin(ScrollTrigger);
 
 type GLTFResult = {
     nodes: {
@@ -43,98 +43,164 @@ type GLTFResult = {
     };
 };
 
+type Vec3 = [number, number, number];
+type SectionId =
+    | 'hero-section'
+    | 'about-section'
+    | 'projects-section'
+    | 'skill-section'
+    | 'experience-section'
+    | 'contact-section';
+
+// Bone rotations (radians, local Euler XYZ). The rig faces the camera, so the
+// character's Right* bones are on the viewer's left. On the arms, lowering x raises
+// the arm out to the side; the forearm bends with negative x, in a direction set by
+// the upper arm's y twist (0 = up/out, about +-pi = down/in toward the body).
+const NEUTRAL_POSE: Record<string, Vec3> = {
+    Spine: [0, 0, 0],
+    Neck: [0.6, 0, 0],
+    LeftArm: [1.3, 0, 0],
+    RightArm: [1.3, 0, 0],
+    LeftForeArm: [0, 0, 0],
+    RightForeArm: [0, 0, 0],
+};
+
+function curledFingers(side: 'Left' | 'Right', base: number, tip: number): Record<string, Vec3> {
+    const pose: Record<string, Vec3> = {};
+    for (const finger of ['Index', 'Middle', 'Ring', 'Pinky']) {
+        pose[`${side}Hand${finger}1`] = [base, 0, 0];
+        pose[`${side}Hand${finger}2`] = [base, 0, 0];
+        pose[`${side}Hand${finger}3`] = [tip, 0, 0];
+    }
+    return pose;
+}
+
+// Only what differs from NEUTRAL_POSE (or, for hands and fingers, the rig's rest pose)
+const POSES: Record<SectionId, Record<string, Vec3>> = {
+    'hero-section': {},
+    'about-section': {
+        LeftForeArm: [-0.1, 0, 0.4],
+    },
+    'projects-section': {
+        Neck: [0.6, 0.5, 0],
+        LeftForeArm: [1, -1, 2],
+    },
+    'skill-section': {
+        Neck: [0.6, -0.5, 0],
+    },
+    // Model stands on the right of the timeline: a confident thumbs-up beside the
+    // career cards. Elbow by the side, forearm held out in front below the chest, fist
+    // closed with the thumb up and the knuckles toward the viewer. Solved from bone
+    // positions (thumb vertical, fist facing the camera), bending the elbow only on
+    // its hinge so the skinned sleeve follows cleanly.
+    'experience-section': {
+        // The camera sits below head height in this section, so a level head reads as
+        // looking up; tilting down ~7deg points the face straight at the viewer.
+        Neck: [0.25, 0, 0],
+        RightArm: [-0.043, -1.128, -1.253],  // elbow out from the body, fist off to the side
+        RightForeArm: [-1.002, 1.7, 0],      // y twist turns the fist to face the viewer
+        RightHand: [0, 0, -0.9],
+        ...curledFingers('Right', 1.5, 1.1),  // closed fist
+        RightHandThumb1: [0.2, 0, -0.3],      // thumb straight up
+        RightHandThumb2: [0, 0, 0],
+        RightHandThumb3: [0, 0, 0],
+        LeftForeArm: [-0.15, 0, 0],          // other arm relaxed at the side
+    },
+    // Model stands on the left of the form: a friendly wave with an open palm toward
+    // the visitor, other arm relaxed. The waving motion is the idle loop below.
+    'contact-section': {
+        Neck: [0.1, 0.2, 0.05],
+        RightArm: [0.5, 0, 0],
+        RightForeArm: [-2.4, 1.3, 0],      // y twist: palm to the viewer, thumb toward the head
+        RightHand: [0, 0, 0.2],
+        ...curledFingers('Right', 0.05, 0.05),
+        RightHandIndex1: [0.05, 0, 0.12],   // fan the fingers slightly
+        RightHandPinky1: [0.05, 0, -0.15],
+        LeftForeArm: [-0.15, 0, 0],
+    },
+};
+
+// Looping motion layered on a section's pose once it has settled
+const IDLE_LOOPS: Partial<Record<SectionId, { bone: string; to: Partial<Record<'x' | 'y' | 'z', number>>; duration: number }>> = {
+    // Swing the raised forearm side to side on its elbow hinge
+    'contact-section': { bone: 'RightForeArm', to: { x: -1.95 }, duration: 0.5 },
+};
+
+const MANAGED_BONES = Array.from(new Set([
+    ...Object.keys(NEUTRAL_POSE),
+    ...Object.values(POSES).flatMap((pose) => Object.keys(pose)),
+]));
+
+const boneDuration = (name: string) =>
+    name === 'Neck' ? 1 : name === 'Spine' ? 1.4 : name.includes('Hand') ? 0.8 : 1.2;
+
 export function Model(props: JSX.IntrinsicElements['group']) {
 
     const groupRef = useRef<Group<Object3DEventMap>>(null);
     // The 'nodes' object will be populated once the GLTF is loaded.
     const { nodes, materials } = useGLTF('/models/ihan.glb') as unknown as GLTFResult;
 
-    // Create refs for the model gestures to be accessible in the event listener
-    const gesturesRef = useRef<{
-        neck: Record<string, { x: number, y: number, z: number }>;
-        leftArm: Record<string, { x: number, y: number, z: number }>;
-        rightArm: Record<string, { x: number, y: number, z: number }>;
-        leftForeArm: Record<string, { x: number, y: number, z: number }>;
-        spine: Record<string, { x: number, y: number, z: number }>;
-        rightForeArm: Record<string, { x: number, y: number, z: number }>;
-    }>({
-        neck: {
-            'hero-section': { x: 0.6, y: 0, z: 0 },
-            'about-section': { x: 0.6, y: 0, z: 0 },
-            'projects-section': { x: 0.6, y: 0.5, z: 0 },
-            'skill-section': { x: 0.6, y: -0.5, z: 0 },
-            'experience-section': { x: 0.2, y: -0.25, z: -0.05 },
-            'contact-section': { x: 0, y: 0.5, z: 0 }
-        },
-        leftArm: {
-            'hero-section': { x: 1.3, y: 0, z: 0 },
-            'about-section': { x: 1.3, y: 0, z: 0 },
-            'projects-section': { x: 1.3, y: 0, z: 0 },
-            'skill-section': { x: 1.3, y: 0, z: 0 },
-            'experience-section': { x: 0.9, y: 0.4, z: 0.35 },
-            'contact-section': { x: 0.7, y: -0.2, z: 0.7 }
-        },
-        rightArm: {
-            'hero-section': { x: 1.3, y: 0, z: 0 },
-            'about-section': { x: 1.3, y: 0, z: 0 },
-            'projects-section': { x: 1.3, y: 0, z: 0 },
-            'skill-section': { x: 1.3, y: 0, z: 0 },
-            'experience-section': { x: 0.9, y: -0.4, z: -0.35 },
-            'contact-section': { x: 1.3, y: 0, z: 0 }
-        },
-        leftForeArm: {
-            'hero-section': { x: 0, y: 0, z: 0 },
-            'about-section': { x: -0.1, y: 0, z: 0.4 },
-            'projects-section': { x: 1, y: -1, z: 2 },
-            'skill-section': { x: 0, y: 0, z: 0 },
-            'experience-section': { x: -1.3, y: -0.5, z: 0.8 },
-            'contact-section': { x: -1, y: -0.4, z: 1 }
-        },
-        spine: {
-            'hero-section': { x: 0, y: 0, z: 0 },
-            'about-section': { x: 0, y: 0, z: 0 },
-            'projects-section': { x: 0, y: 0, z: 0 },
-            'skill-section': { x: 0, y: 0, z: 0 },
-            'experience-section': { x: -0.05, y: -0.05, z: 0 },
-            'contact-section': { x: 0, y: 0, z: 0 }
-        },
-        rightForeArm: {
-            'hero-section': { x: 0, y: 0, z: 0 },
-            'about-section': { x: 0, y: 0, z: 0 },
-            'projects-section': { x: 0, y: 0, z: 0 },
-            'skill-section': { x: 0, y: 0, z: 0 },
-            'experience-section': { x: -1.3, y: 0.5, z: -0.8 },
-            'contact-section': { x: 0, y: 0, z: 0 }
-        }
-    });
-
-    // Set up event listener for section pinning
+    // Pose the skeleton for whichever section is pinned, and run that section's idle loop
     useEffect(() => {
-        if (!groupRef.current) return;
+        const group = groupRef.current;
+        if (!group) return;
 
-        // Bone name -> gesture table key, with per-bone tween duration
-        const bones = [
-            { name: 'Neck', key: 'neck', duration: 1 },
-            { name: 'LeftArm', key: 'leftArm', duration: 1.2 },
-            { name: 'RightArm', key: 'rightArm', duration: 1.2 },
-            { name: 'LeftForeArm', key: 'leftForeArm', duration: 1.2 },
-            { name: 'Spine', key: 'spine', duration: 1.4 },
-            { name: 'RightForeArm', key: 'rightForeArm', duration: 1.2 },
-        ] as const;
+        const bones = new Map<string, Object3D>();
+        for (const name of MANAGED_BONES) {
+            const bone = group.getObjectByName(name);
+            if (!bone) continue;
+            // Remember the rig's own rest rotation (fingers, hands) once per bone, so
+            // bones a pose doesn't mention can be returned to it.
+            if (!bone.userData.restRotation) {
+                bone.userData.restRotation = [bone.rotation.x, bone.rotation.y, bone.rotation.z];
+            }
+            bones.set(name, bone);
+        }
+
+        let idleTween: gsap.core.Tween | null = null;
+        const poseTweens = new Map<string, gsap.core.Tween>();
 
         const applyGesture = (sectionId: string, immediate = false) => {
-            if (!groupRef.current) return;
-            for (const { name, key, duration } of bones) {
-                const bone = groupRef.current.getObjectByName(name);
-                const gesture = gesturesRef.current[key][sectionId];
-                if (!bone || !gesture) continue;
-                // overwrite: "auto" stops a previous section's tween on this bone,
-                // otherwise fast scrolling leaves several tweens fighting over it.
-                gsap.to(bone.rotation, {
-                    ...gesture,
-                    duration: immediate ? 0 : duration,
+            if (!(sectionId in POSES)) return;
+            const pose = POSES[sectionId as SectionId];
+
+            idleTween?.kill();
+            idleTween = null;
+
+            for (const [name, bone] of bones) {
+                const [x, y, z] = pose[name] ?? NEUTRAL_POSE[name] ?? (bone.userData.restRotation as Vec3);
+                const target = new Quaternion().setFromEuler(new Euler(x, y, z));
+                // Stop a previous section's tween on this bone, otherwise fast
+                // scrolling leaves several tweens fighting over it.
+                poseTweens.get(name)?.kill();
+                if (immediate) {
+                    bone.quaternion.copy(target);
+                    continue;
+                }
+                // Slerp rather than tweening Euler angles: poses like the crossed arms
+                // are far apart in Euler terms, and interpolating those components
+                // swings the arms through the body on the way.
+                const start = bone.quaternion.clone();
+                const progress = { t: 0 };
+                poseTweens.set(name, gsap.to(progress, {
+                    t: 1,
+                    duration: boneDuration(name),
                     ease: 'power2.inOut',
-                    overwrite: 'auto'
+                    onUpdate: () => { bone.quaternion.slerpQuaternions(start, target, progress.t); },
+                }));
+            }
+
+            const idle = IDLE_LOOPS[sectionId as SectionId];
+            const idleBone = idle && bones.get(idle.bone);
+            if (idle && idleBone) {
+                idleTween = gsap.to(idleBone.rotation, {
+                    ...idle.to,
+                    duration: idle.duration,
+                    ease: 'sine.inOut',
+                    yoyo: true,
+                    repeat: -1,
+                    // Start once the pose has settled
+                    delay: immediate ? 0 : boneDuration(idle.bone),
                 });
             }
         };
@@ -143,76 +209,19 @@ export function Model(props: JSX.IntrinsicElements['group']) {
             applyGesture((event as CustomEvent<{ sectionId: string }>).detail.sectionId);
         };
 
-        // The model may finish loading after a section was already entered
+        // Start in the hero pose, then catch up if a section was entered before the
+        // model finished loading
+        applyGesture('hero-section', true);
         const current = getCurrentSection();
         if (current) applyGesture(current, true);
 
-        // Add event listener
         window.addEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
-
-        // Clean up
         return () => {
             window.removeEventListener(SECTION_PINNED_EVENT, handleSectionPinned);
+            idleTween?.kill();
+            poseTweens.forEach((tween) => tween.kill());
         };
-    }, []);
-
-    // We use useGSAP for proper animation setup and cleanup in React.
-    useGSAP(() => {
-        // 1. Create a GSAP context. This allows us to properly manage and
-        // clean up our animations when the component unmounts.
-        const ctx = gsap.context(() => {
-            // We don't pass a scope here, so ScrollTrigger's `trigger`
-            // will correctly search the entire document.
-
-            if (!groupRef.current) return;
-
-            // 2. Find the neck bone. It's crucial to find it by name.
-            // Skeletons are nested inside the primitive object.
-            const neck = groupRef.current.getObjectByName('Neck');
-            const leftArm = groupRef.current.getObjectByName('LeftArm');
-            const rightArm = groupRef.current.getObjectByName('RightArm');
-            const leftForeArm = groupRef.current.getObjectByName('LeftForeArm');
-            const spine = groupRef.current.getObjectByName('Spine');
-            const rightForeArm = groupRef.current.getObjectByName('RightForeArm');
-
-            // Set initial states for all bones
-            if (neck) {
-                // Set the initial state: head looking down.
-                // A positive rotation on the X-axis tilts the head forward.
-                gsap.set(neck.rotation, { x: 0.6, y: 0, z: 0 });
-            }
-
-            if (leftArm && rightArm) {
-                // Set the initial rotation for the arms
-                gsap.set([leftArm.rotation, rightArm.rotation], { x: 1.3, y: 0, z: 0 });
-            }
-
-            if (leftForeArm) {
-                // Set initial state for forearm
-                gsap.set(leftForeArm.rotation, { x: 0, y: 0, z: 0 });
-            }
-
-            if (spine) {
-                // Set initial state for spine
-                gsap.set(spine.rotation, { x: 0, y: 0, z: 0 });
-            }
-
-            if (rightForeArm) {
-                // Set initial state for right forearm
-                gsap.set(rightForeArm.rotation, { x: 0, y: 0, z: 0 });
-            }
-
-            // Model gestures are now handled by the section pinning event listener
-            // We're removing the scroll-based animations for model gestures to prevent
-            // the model from changing gestures when scrolling slightly after a section is pinned
-
-        });
-
-        // 5. Cleanup function. This will be called when the component unmounts,
-        // reverting all animations and ScrollTriggers created inside the context.
-        return () => ctx.revert();
-
-    }, [nodes]); // The dependency array ensures this effect runs *after* the model has loaded.
+    }, [nodes]);
 
     return (
         // Ensure the ref is attached to the group

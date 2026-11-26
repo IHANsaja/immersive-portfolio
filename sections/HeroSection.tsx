@@ -1,10 +1,9 @@
 import GPUFluidCanvas from "@/components/Ui/HoverEffect";
-import Image from "next/image";
-import Spline from "@splinetool/react-spline";
 import GrButtons from "@/components/Hero/GrButtons";
 import Welcome from "@/components/Hero/Welcome";
-import React, { useRef, useState, useEffect, Suspense } from "react";
-import { motion } from "framer-motion";
+import ShaderClouds from "@/components/Hero/ShaderClouds";
+import AISphere from "@/components/Hero/AISphere";
+import React, { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
@@ -13,27 +12,26 @@ const HeroSection = () => {
     const headlineRef = useRef<HTMLHeadingElement>(null);
     const bgContainerRef = useRef<HTMLDivElement>(null);
     const buttonsRef = useRef<HTMLDivElement>(null);
-    const splineContainerRef = useRef<HTMLDivElement>(null);
+    const sphereContainerRef = useRef<HTMLDivElement>(null);
     const gpuCanvasRef = useRef<HTMLDivElement>(null);
 
     // Mount assets in the background immediately so they are ready by the time the preloader finishes
-    const [showSpline, setShowSpline] = useState(true);
-    const [showGPUCanvas, setShowGPUCanvas] = useState(true);
+    const [showGPUCanvas] = useState(true);
 
     useGSAP(() => {
         const headline = headlineRef.current;
         const bgContainer = bgContainerRef.current;
         const buttons = buttonsRef.current;
-        const splineContainer = splineContainerRef.current;
+        const sphereContainer = sphereContainerRef.current;
         const gpuCanvas = gpuCanvasRef.current;
 
-        if (!headline || !bgContainer || !buttons || !splineContainer || !gpuCanvas) return;
+        if (!headline || !bgContainer || !buttons || !sphereContainer || !gpuCanvas) return;
 
         // Set initial states for elements before animation starts
         gsap.set(bgContainer, { opacity: 0, scale: 1.08 });
         gsap.set(headline, { opacity: 0 });
         gsap.set(buttons, { opacity: 0, y: -20 });
-        gsap.set(splineContainer, { opacity: 0 });
+        gsap.set(sphereContainer, { opacity: 0 });
         gsap.set(gpuCanvas, { opacity: 0 });
 
         const tl = gsap.timeline({
@@ -80,8 +78,8 @@ const HeroSection = () => {
             duration: 0.8
         }, "-=0.8");
 
-        // 4. Before the last one, load and fade in the Spline scene
-        tl.to(splineContainer, {
+        // 4. Before the last one, fade in the AI sphere scene
+        tl.to(sphereContainer, {
             opacity: 1,
             duration: 1.5,
             ease: "power2.out"
@@ -149,18 +147,9 @@ const HeroSection = () => {
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.5%22%20cy=%220.5%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay pointer-events-none" />
             </div>
 
-            {/* Spline scene wrapper */}
-            <div ref={splineContainerRef} id="scene" className="absolute inset-0 z-[9998] pointer-events-auto">
-                {showSpline && (
-                    <Suspense fallback={
-                        <div className="w-full h-full bg-gradient-to-br from-blue-900/20 to-purple-900/20 animate-pulse" />
-                    }>
-                        <Spline
-                            scene="https://prod.spline.design/1z1FrReDGZG28VHJ/scene.splinecode"
-                            className="w-full h-full"
-                        />
-                    </Suspense>
-                )}
+            {/* Interactive AI sphere (three.js rebuild of the former Spline scene) */}
+            <div ref={sphereContainerRef} id="scene" className="absolute inset-0 z-[9998] pointer-events-auto">
+                <AISphere className="w-full h-full" />
             </div>
 
             <div ref={buttonsRef} className="absolute top-0 left-0 w-screen flex justify-center md:justify-end items-center z-[10000] px-4 py-3 md:px-8 md:py-4">
@@ -169,29 +158,10 @@ const HeroSection = () => {
 
             <Welcome headlineRef={headlineRef} />
 
-            <div className="absolute bottom-[-50px] md:bottom-[-300px] left-0 w-screen z-[9998] pointer-events-none overflow-visible flex justify-center">
-                <motion.div
-                    animate={{
-                        y: [0, -10, 0], // gentle up and down
-                        x: [0, 5, 0],   // slight horizontal drift
-                        scale: [1, 1.05, 1],
-                    }}
-                    transition={{
-                        duration: 10,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                    }}
-                    className="w-full max-w-[90vw]"
-                >
-                    <Image
-                        src="/backgrounds/clouds.png"
-                        alt="clouds"
-                        width={1920}
-                        height={200}
-                        className="w-full h-auto object-contain opacity-85"
-                        priority
-                    />
-                </motion.div>
+            {/* Shader cloud bank: same box the old clouds.png occupied (90vw wide, the
+                image's 2160:1600 aspect), including the overhang into About on desktop */}
+            <div className="absolute bottom-[-50px] lg:bottom-[-300px] left-0 w-screen z-[9998] pointer-events-none overflow-visible flex justify-center">
+                <ShaderClouds className="block w-full max-w-[90vw] aspect-[2160/1600]" />
             </div>
         </section>
     );

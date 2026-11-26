@@ -33,7 +33,7 @@ const ProjectsSection = () => {
 
         const tl = gsap.timeline({
             scrollTrigger: {
-                trigger: ".project-card",
+                trigger: "#projects-section",
                 start: "top center",
                 onEnter: () => { tl.restart(); },
                 onEnterBack: () => { tl.restart(); },
@@ -85,22 +85,21 @@ const ProjectsSection = () => {
     }, []);
 
     return (
-        <section id="projects-section" className="relative w-screen h-screen z-0">
+        <section id="projects-section" className="relative w-screen min-h-screen lg:h-screen z-0 py-20 md:py-28 lg:py-0 overflow-x-hidden">
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
 
-            <div className="projects-title absolute top-16 left-1/2 -translate-x-1/2 md:top-30 md:left-30 md:-translate-x-0 xl:top-24 xl:left-24 z-10 font-neotriad-sans w-full text-center md:text-left">
-                <h1 className="text-foreground text-3xl sm:text-4xl md:text-5xl xl:text-3xl 2xl:text-4xl">MY PROJECTS</h1>
+            <div className="projects-title relative lg:absolute lg:top-24 lg:left-16 xl:left-24 z-10 font-neotriad-sans w-full lg:w-auto text-center lg:text-left mb-10 md:mb-14 lg:mb-0">
+                <h1 className="text-foreground text-3xl sm:text-4xl md:text-5xl lg:text-4xl 2xl:text-5xl">MY PROJECTS</h1>
             </div>
 
             <div
                 data-scroller-ignore
-                className="projects absolute right-0 md:right-20 xl:right-16 2xl:right-20 px-4 md:px-0 top-[55%] md:top-1/2 z-10 h-[65%] md:h-3/4 w-full md:w-5/6 xl:w-3/5 2xl:w-2/3 overflow-y-auto overflow-x-hidden gap-5"
-                style={{ transform: 'translateY(-50%)' }}
+                className="projects relative lg:absolute lg:right-12 xl:right-16 2xl:right-20 lg:top-[55%] lg:-translate-y-1/2 z-10 w-full lg:w-[58%] xl:w-3/5 2xl:w-2/3 lg:h-[70%] px-5 sm:px-10 md:px-16 lg:px-0 lg:overflow-y-auto overflow-x-hidden"
             >
-                <div className="flex flex-col gap-8 pb-20 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 md:auto-rows-auto md:gap-5 xl:gap-4 2xl:gap-5 md:pb-0 items-center md:items-start">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 sm:gap-5 xl:gap-4 2xl:gap-5 pb-24 lg:pb-4 justify-items-center items-start max-w-md sm:max-w-none mx-auto">
                     {projects.map((p, i) => (
                         <ProjectCard
                             key={i}

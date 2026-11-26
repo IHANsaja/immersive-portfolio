@@ -136,7 +136,6 @@ const Preloader = ({ onLoadingComplete }: PreloaderProps) => {
                 case 'videos': stageText = "BUFFERING MEDIA CONTENT..."; break;
                 case 'audio': stageText = "CALIBRATING AUDIO SYSTEMS..."; break;
                 case 'models': stageText = "CONSTRUCTING 3D ENVIRONMENT..."; break;
-                case 'spline': stageText = "INITIALIZING INTERACTIVE SCENE..."; break;
                 case 'complete': stageText = "SYSTEM OPTIMIZED."; break;
                 default: stageText = "PROCESSING DATA...";
             }

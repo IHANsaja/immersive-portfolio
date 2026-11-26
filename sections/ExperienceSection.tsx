@@ -204,7 +204,7 @@ const ExperienceSection: React.FC = () => {
     return (
         <section
             id="experience-section"
-            className="relative w-screen min-h-screen md:h-screen z-0 overflow-hidden"
+            className="relative w-screen min-h-screen lg:h-screen z-0 overflow-hidden py-20 md:py-28 lg:py-0"
         >
             {/* BACKGROUND DOT GRID — consistent with all sections */}
             <div className="absolute inset-0 z-0 pointer-events-none">
@@ -212,19 +212,19 @@ const ExperienceSection: React.FC = () => {
             </div>
 
             {/* Title */}
-            <div className="exp-title absolute top-16 left-1/2 -translate-x-1/2 md:top-24 md:left-24 md:-translate-x-0 z-10 font-neotriad-sans w-full text-center md:text-left opacity-0">
-                <h2 className="text-foreground text-3xl sm:text-4xl md:text-5xl">
+            <div className="exp-title relative lg:absolute lg:top-24 lg:left-16 xl:left-24 z-10 font-neotriad-sans w-full lg:w-auto text-center lg:text-left mb-10 md:mb-14 lg:mb-0 opacity-0">
+                <h2 className="text-foreground text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-5xl">
                     MY EXPERIENCE
                 </h2>
             </div>
 
             {/* Top-right decorator — PoliceLights */}
-            <div className="exp-decorator-top hidden md:block absolute top-24 right-24 z-10">
+            <div className="exp-decorator-top hidden lg:block absolute top-24 right-16 xl:right-24 z-10">
                 <PoliceLights rectHeight={30} rectWidth={70} />
             </div>
 
             {/* Bottom-right decorator */}
-            <div className="exp-decorator-bottom hidden md:block absolute bottom-20 left-30 z-10">
+            <div className="exp-decorator-bottom hidden lg:block absolute bottom-20 left-16 xl:left-30 z-10">
                 <span className="font-inconsolata-sans text-xl text-foreground">
                     + + + +
                 </span>
@@ -233,14 +233,14 @@ const ExperienceSection: React.FC = () => {
             {/* Timeline Container */}
             <div 
                 data-scroller-ignore
-                className="exp-scroll-container absolute top-[55%] md:top-[50%] -translate-y-1/2 left-0 w-full h-[65%] md:h-[70%] px-4 md:px-16 lg:px-24 z-10 overflow-y-auto pb-20 md:pb-10"
+                className="exp-scroll-container relative lg:absolute lg:top-[55%] lg:-translate-y-1/2 left-0 w-full max-w-3xl mx-auto lg:mx-0 lg:max-w-none lg:w-[64%] xl:w-[60%] lg:h-[68%] px-5 sm:px-10 lg:pl-12 lg:pr-4 xl:pl-24 z-10 lg:overflow-y-auto pb-24 lg:pb-10"
             >
                 {/* Timeline cards wrapper */}
-                <div className="relative flex flex-col gap-8 md:gap-12 items-start md:items-stretch w-full py-4">
+                <div className="relative flex flex-col gap-8 lg:gap-12 items-start lg:items-stretch w-full py-4">
                     {/* Center timeline line — hidden on mobile, visible on desktop, scrolls with cards */}
                     <div
                         ref={timelineLineRef}
-                        className="exp-timeline-line hidden md:block"
+                        className="exp-timeline-line hidden lg:block"
                         style={{ top: "40px", bottom: "40px" }}
                     />
 
@@ -250,16 +250,16 @@ const ExperienceSection: React.FC = () => {
                         return (
                             <div
                                 key={exp.id}
-                                className="relative w-full flex items-center md:grid md:grid-cols-[1fr_80px_1fr_180px]"
+                                className="relative w-full flex items-center lg:grid lg:grid-cols-[1fr_48px_1fr] xl:grid-cols-[1fr_64px_1fr]"
                             >
                                 {/* Timeline dot — hidden on mobile */}
-                                <div className="col-start-2 col-end-3 hidden md:flex justify-center items-center relative z-20">
+                                <div className="col-start-2 col-end-3 hidden lg:flex justify-center items-center relative z-20">
                                     <div className="exp-timeline-dot exp-timeline-dot-anim relative left-0 top-0 transform-none" />
                                 </div>
 
                                 {/* Mobile timeline dot */}
                                 <div
-                                    className="exp-timeline-dot-anim md:hidden absolute left-[20px] top-6"
+                                    className="exp-timeline-dot-anim lg:hidden absolute left-[20px] top-6"
                                     style={{
                                         width: "10px",
                                         height: "10px",
@@ -275,7 +275,7 @@ const ExperienceSection: React.FC = () => {
                                 {/* Mobile left line */}
                                 {i < experiences.length - 1 && (
                                     <div
-                                        className="md:hidden absolute left-[24px] top-8 bottom-[-32px] w-[2px]"
+                                        className="lg:hidden absolute left-[24px] top-8 bottom-[-32px] w-[2px]"
                                         style={{
                                             background:
                                                 "linear-gradient(180deg, rgba(63, 81, 181, 0.5), rgba(63, 81, 181, 0.15))",
@@ -284,10 +284,10 @@ const ExperienceSection: React.FC = () => {
                                 )}
 
                                 {/* Card container — offset on mobile, aligned in grid on desktop */}
-                                <div className={`w-full pl-12 md:pl-0 ${
+                                <div className={`w-full pl-12 lg:pl-0 ${
                                     isLeft 
-                                        ? "md:col-start-1 md:col-end-2 md:flex md:justify-end" 
-                                        : "md:col-start-3 md:col-end-4 md:flex md:justify-start"
+                                        ? "lg:col-start-1 lg:col-end-2 lg:flex lg:justify-end" 
+                                        : "lg:col-start-3 lg:col-end-4 lg:flex lg:justify-start"
                                 }`}>
                                     <ExperienceCard
                                         experience={exp}
@@ -302,7 +302,7 @@ const ExperienceSection: React.FC = () => {
             </div>
 
             {/* Metadata — bottom-right corner, code-style label */}
-            <div className="hidden md:block absolute bottom-10 right-16 z-10">
+            <div className="hidden lg:block absolute bottom-10 right-16 z-10">
                 <p className="font-andvari-sans text-[10px] text-gray-500 tracking-wider uppercase">
                     {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
                     // career.timeline v{experiences.length}.0

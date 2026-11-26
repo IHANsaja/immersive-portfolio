@@ -120,24 +120,24 @@ export default function SkillSection() {
     }, []); // Remove isPlaying dependency
 
     return (
-        <section id="skill-section" className="relative w-screen h-screen z-0">
+        <section id="skill-section" className="relative w-screen min-h-screen lg:h-screen z-0 py-20 md:py-28 lg:py-0 overflow-x-hidden">
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20viewBox=%220%200%2010%2010%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%220.1%22%20cy=%220.1%22%20r=%220.5%22%20fill=%22white%22/%3E%3C/svg%3E')] opacity-30 mix-blend-overlay" />
             </div>
 
-            <div className="skills-title absolute top-16 left-1/2 -translate-x-1/2 md:top-30 md:right-30 md:left-auto md:translate-x-0 z-10 font-neotriad-sans w-full text-center md:text-right">
-                <h2 className="text-foreground text-3xl sm:text-4xl md:text-5xl">MY SKILLS</h2>
+            <div className="skills-title relative lg:absolute lg:top-24 lg:right-16 xl:right-30 z-10 font-neotriad-sans w-full lg:w-auto text-center lg:text-right mb-10 md:mb-14 lg:mb-0">
+                <h2 className="text-foreground text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-5xl">MY SKILLS</h2>
             </div>
 
             <div
                 ref={containerRef}
-                className="skillgrid absolute w-full md:w-1/2 h-3/4 px-4 md:px-8 md:left-20 top-[55%] md:top-1/2 -translate-y-1/2 grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 gap-4 md:gap-6 z-1 content-start md:content-center overflow-y-auto md:overflow-visible pb-20 md:pb-0"
+                className="skillgrid relative lg:absolute w-full max-w-2xl mx-auto lg:mx-0 lg:max-w-none lg:w-[min(50vw,72vh)] px-5 sm:px-10 lg:px-8 lg:left-12 xl:left-20 lg:top-1/2 lg:-translate-y-1/2 grid grid-cols-4 sm:grid-cols-5 gap-3 sm:gap-4 xl:gap-6 z-1 content-center pb-24 lg:pb-0"
             >
                 {allSkills.map((skill, i) => (
                     <div
                         key={i}
-                        className="skills flex flex-col items-center justify-center gap-2 relative z-10 bg-background border border-gray-500 rounded-sm transition-all duration-300"
+                        className="skills aspect-square min-w-0 flex flex-col items-center justify-center gap-1 sm:gap-2 relative z-10 bg-background border border-gray-500 rounded-sm transition-all duration-300 overflow-hidden"
                         onMouseEnter={() => {
                             const square = squareRefs.current[i];
                             const name = nameRefs.current[i];
@@ -184,13 +184,13 @@ export default function SkillSection() {
                             alt={`logo-${skill.name}`}
                             width={50}
                             height={50}
-                            className="w-8 h-8 sm:w-[50px] sm:h-[50px] transition-all duration-300 z-10"
+                            className="w-8 h-8 sm:w-10 sm:h-10 xl:w-[50px] xl:h-[50px] transition-all duration-300 z-10"
                             priority
                         />
 
                         <div
                             ref={(el) => { nameRefs.current[i] = el!; }}
-                            className="text-sm sm:text-base text-center font-inconsolata-sans z-10 pointer-events-none"
+                            className="text-[10px] sm:text-xs xl:text-base leading-tight text-center font-inconsolata-sans z-10 pointer-events-none px-1"
                         >
                             {skill.name}
                         </div>

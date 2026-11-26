@@ -1,9 +1,105 @@
 "use client";
-import React, { useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from "@gsap/react";
 
+// The frame was designed on a 1920x1080 canvas. Rather than stretching that drawing to
+// the window (which squashes the borders, side bumps and label tabs on other aspect
+// ratios), rebuild it in real pixels for the current window, scaled uniformly by `s`.
+const DESIGN_W = 1920;
+const DESIGN_H = 1080;
+const MIN_SCALE = 0.55;
+// Longest label the tabs have to hold: "[ SYSTEM.LOG :: 2025 // ROLE::DEVELOPER ]"
+const LONGEST_LABEL_CHARS = 41;
+const MONO_CHAR_WIDTH_EM = 0.5; // Inconsolata
+
+type FrameGeometry = {
+    path: string;
+    scale: number;
+    fontSize: number;
+    tabHeight: number;
+    loaderX: number;
+    loaderYs: number[];
+};
+
+function buildFrame(W: number, H: number): FrameGeometry {
+    const s = Math.min(1, Math.max(MIN_SCALE, Math.min(W / DESIGN_W, H / DESIGN_H)));
+    const fontSize = Math.max(11, Math.round(16 * s));
+
+    const side = 20 * s;        // left/right border
+    const bump = 45 * s;        // how far the side bumps reach in
+    const edge = 25 * s;        // top/bottom border
+    const tab = 50 * s;         // how far the label tabs reach in
+    const chamfer = 13 * s;     // corner cut
+    const slope = 23.5 * s;     // side bump slope height
+    const bumpHalf = 25 * s;    // half of a bump's flat run
+    const tabSlope = 33 * s;    // label tab slope width
+
+    // Label tabs: at least the design width, and always wide enough for the text
+    const tabFlat = Math.max(422 * s, LONGEST_LABEL_CHARS * MONO_CHAR_WIDTH_EM * fontSize + 48 * s);
+    const tabL = W / 2 - tabFlat / 2;
+    const tabR = W / 2 + tabFlat / 2;
+
+    // Three bumps per side, centred vertically
+    const loaderYs = [-1, 0, 1].map((i) => H / 2 + i * 150 * s);
+
+    const p: string[] = [];
+    // Outer rectangle
+    p.push(`M${W} ${H}H0V0H${W}Z`);
+    // Inner cut-out, clockwise from the top-left corner down the left side
+    p.push(`M${side} ${edge + chamfer}`);
+    for (const cy of loaderYs) {
+        p.push(`V${cy - bumpHalf - slope}L${bump} ${cy - bumpHalf}V${cy + bumpHalf}L${side} ${cy + bumpHalf + slope}`);
+    }
+    p.push(`V${H - edge - chamfer}L${side + chamfer} ${H - edge}`);
+    // Bottom edge with the label tab
+    p.push(`H${tabL - tabSlope}L${tabL} ${H - tab}H${tabR}L${tabR + tabSlope} ${H - edge}`);
+    p.push(`H${W - side - chamfer}L${W - side} ${H - edge - chamfer}`);
+    // Right side, bottom to top
+    for (const cy of [...loaderYs].reverse()) {
+        p.push(`V${cy + bumpHalf + slope}L${W - bump} ${cy + bumpHalf}V${cy - bumpHalf}L${W - side} ${cy - bumpHalf - slope}`);
+    }
+    p.push(`V${edge + chamfer}L${W - side - chamfer} ${edge}`);
+    // Top edge with the label tab
+    p.push(`H${tabR + tabSlope}L${tabR} ${tab}H${tabL}L${tabL - tabSlope} ${edge}`);
+    p.push(`H${side + chamfer}Z`);
+
+    return {
+        path: p.join(''),
+        scale: s,
+        fontSize,
+        tabHeight: tab,
+        // Centre each cog in its bump (the dark area is 0..bump wide) so it never
+        // pokes out past the frame edge into the page.
+        loaderX: bump / 2,
+        loaderYs,
+    };
+}
+
 const SvgFrame = () => {
+    const [size, setSize] = useState({ w: DESIGN_W, h: DESIGN_H });
+
+    useLayoutEffect(() => {
+        const update = () => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            // A hidden or not-yet-laid-out window can report 0x0; keep the last good size
+            if (w > 0 && h > 0) setSize({ w, h });
+        };
+        update();
+        // Observe the root element too: some viewport changes (zoom, device emulation,
+        // mobile URL bars) don't fire a window resize event.
+        const observer = new ResizeObserver(update);
+        observer.observe(document.documentElement);
+        window.addEventListener('resize', update);
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('resize', update);
+        };
+    }, []);
+
+    const frame = buildFrame(size.w, size.h);
+
     const desktopFrameRef = useRef<HTMLDivElement>(null);
     const upTextRef = useRef<HTMLDivElement>(null);
     const botTextRef = useRef<HTMLDivElement>(null);
@@ -143,40 +239,52 @@ const SvgFrame = () => {
                 {/* Desktop Frame: visible on md and up */}
                 <div ref={desktopFrameRef} className="relative hidden md:block w-full h-full" style={{ transformOrigin: 'center center' }}>
                     <svg
-                        className="w-full h-full"
-                        viewBox="0 0 1920 1080"
+                        className="absolute inset-0 w-full h-full"
+                        viewBox={`0 0 ${size.w} ${size.h}`}
                         preserveAspectRatio="none"
                         xmlns="http://www.w3.org/2000/svg"
                     >
-                        <path
-                            d="M1920 1080H0V0H1920V1080ZM20 38V341.5L45 365V415L20 438.5V491L45 514.5V564.5L20 588V641L45 664.5V714.5L20 738V1042L33 1055H716L749 1030H1171L1204 1055H1882L1895 1042V738.5L1870 715V665L1895 641.5V588.5L1870 565V515L1895 491.5V439L1870 415.5V365.5L1895 342V38L1882 25H1204L1171 50H749L716 25H33L20 38Z"
-                            fill="#191919"
-                        />
+                        <path d={frame.path} fill="#191919" fillRule="evenodd" />
                     </svg>
-                    {/* HoneycombLoader dots on the left middle - responsive */}
-                    <div ref={leftLoaderRef} className="fixed top-1/2 left-[0.5%] -translate-y-1/2 hidden md:flex flex-col items-center justify-center gap-[11vh] pointer-events-none z-[10000]">
-                        <div className="loader"><span></span></div>
-                        <div className="loader"><span></span></div>
-                        <div className="loader"><span></span></div>
-                    </div>
 
-                    {/* HoneycombLoader dots on the right middle - responsive */}
-                    <div ref={rightLoaderRef} className="fixed top-1/2 right-[0.5%] -translate-y-1/2 hidden md:flex flex-col items-center justify-center gap-[11vh] pointer-events-none z-[10000]">
-                        <div className="loader"><span></span></div>
-                        <div className="loader"><span></span></div>
-                        <div className="loader"><span></span></div>
-                    </div>
+                    {/* Spinning cogs, one in each side bump */}
+                    {([['left', leftLoaderRef], ['right', rightLoaderRef]] as const).map(([edge, ref]) => (
+                        <div key={edge} ref={ref} className="absolute inset-0 pointer-events-none">
+                            {frame.loaderYs.map((y) => (
+                                <div
+                                    key={y}
+                                    className="absolute"
+                                    style={{
+                                        top: y,
+                                        [edge]: frame.loaderX,
+                                        // 30px cog at 0.85x leaves a margin inside the 45px bump
+                                        transform: `translate(${edge === 'left' ? '-50%' : '50%'}, -50%) scale(${frame.scale * 0.85})`,
+                                    }}
+                                >
+                                    <div className="loader"><span></span></div>
+                                </div>
+                            ))}
+                        </div>
+                    ))}
 
-                    {/* Bottom Text */}
-                    <div ref={botTextRef} className="absolute bottom-4 w-screen hidden md:flex items-center justify-center z-[10000]">
-                        <p id="bottext" className="text-[#B5B5B5] text-base font-inconsolata-sans">
+                    {/* Bottom Text, centred in the bottom label tab */}
+                    <div
+                        ref={botTextRef}
+                        className="absolute bottom-0 inset-x-0 flex items-center justify-center"
+                        style={{ height: frame.tabHeight }}
+                    >
+                        <p id="bottext" className="text-[#B5B5B5] font-inconsolata-sans whitespace-nowrap leading-none" style={{ fontSize: frame.fontSize }}>
                             [ SYSTEM.LOG :: 2025 // ROLE::DEVELOPER ]
                         </p>
                     </div>
 
-                    {/* Top Text */}
-                    <div ref={upTextRef} className="absolute top-3 w-screen hidden md:flex items-center justify-center z-[10000]">
-                        <p id="uptext" className="text-[#B5B5B5] text-base font-inconsolata-sans">
+                    {/* Top Text, centred in the top label tab */}
+                    <div
+                        ref={upTextRef}
+                        className="absolute top-0 inset-x-0 flex items-center justify-center"
+                        style={{ height: frame.tabHeight }}
+                    >
+                        <p id="uptext" className="text-[#B5B5B5] font-inconsolata-sans whitespace-nowrap leading-none" style={{ fontSize: frame.fontSize }}>
                             [ DEV.NAME :: IHAN_HANSAJA ]
                         </p>
                     </div>

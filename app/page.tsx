@@ -18,8 +18,8 @@ import { emitSection } from '@/utils/sectionEvents';
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin);
 
 // Must match the breakpoint ModelWrapper uses to show the canvas
-const DESKTOP_QUERY = "(min-width: 800px)";
-const MOBILE_QUERY = "(max-width: 799px)";
+const DESKTOP_QUERY = "(min-width: 1024px)";
+const MOBILE_QUERY = "(max-width: 1023px)";
 
 // --- Lazy-load your page sections ---
 const HeroSection = lazy(() => import('@/sections/HeroSection'));
@@ -85,8 +85,21 @@ const Home: React.FC = () => {
             });
         });
 
+        // Sections are lazy-loaded and, below the desktop breakpoint, size to their
+        // content, so the page height keeps changing after the triggers are created.
+        // Recalculate trigger positions whenever it does, or they fire at stale offsets.
+        let refreshTimer: ReturnType<typeof setTimeout> | undefined;
+        const resizeObserver = new ResizeObserver(() => {
+            clearTimeout(refreshTimer);
+            refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 200);
+        });
+        const content = document.getElementById("smooth-content");
+        if (content) resizeObserver.observe(content);
+
         // Cleanup on unmount
         return () => {
+            clearTimeout(refreshTimer);
+            resizeObserver.disconnect();
             mm.revert();
         };
     }, []); // Empty dependency array ensures this runs only once

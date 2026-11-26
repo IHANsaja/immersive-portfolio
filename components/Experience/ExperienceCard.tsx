@@ -58,13 +58,13 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({ experience, index, isLe
 
     return (
         <div
-            className={`exp-card-wrapper flex items-center w-full md:max-w-[460px] ${
-                isLeft ? "md:flex-row-reverse" : "md:flex-row"
+            className={`exp-card-wrapper flex items-center w-full lg:max-w-[460px] ${
+                isLeft ? "lg:flex-row-reverse" : "lg:flex-row"
             }`}
         >
             {/* Connector arm — hidden on mobile */}
             <div
-                className="hidden md:block exp-connector w-10"
+                className="hidden lg:block exp-connector w-10"
                 style={{
                     background: isLeft
                         ? "linear-gradient(270deg, rgba(63, 81, 181, 0.5), transparent)"
@@ -83,7 +83,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({ experience, index, isLe
                 <div ref={accentRef} className="exp-card-accent" />
 
                 {/* Header row — type badge + period */}
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                     <span className={`exp-type-indicator exp-type-${experience.type}`}>
                         {typeLabels[experience.type]}
                     </span>
@@ -93,23 +93,23 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({ experience, index, isLe
                 </div>
 
                 {/* Role title */}
-                <h3 className={`exp-role font-neotriad-sans text-base md:text-lg text-[var(--foreground)] mb-1 ${isLeft ? "md:text-right" : "md:text-left"}`}>
+                <h3 className={`exp-role font-neotriad-sans text-base lg:text-lg text-[var(--foreground)] mb-1 ${isLeft ? "lg:text-right" : "lg:text-left"}`}>
                     {experience.role}
                 </h3>
 
                 {/* Company */}
-                <p className={`exp-company font-andvari-sans text-[11px] tracking-wider text-gray-400 uppercase mb-3 ${isLeft ? "md:text-right" : "md:text-left"}`}>
+                <p className={`exp-company font-andvari-sans text-[11px] tracking-wider text-gray-400 uppercase mb-3 ${isLeft ? "lg:text-right" : "lg:text-left"}`}>
                     {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
                     // {experience.company}
                 </p>
 
                 {/* Description */}
-                <p className={`font-andvari-sans text-[11px] leading-5 text-gray-300 mb-4 ${isLeft ? "md:text-right" : "md:text-left"}`}>
+                <p className={`font-andvari-sans text-[11px] leading-5 text-gray-300 mb-4 ${isLeft ? "lg:text-right" : "lg:text-left"}`}>
                     {experience.description}
                 </p>
 
                 {/* Tech stack badges */}
-                <div className={`flex flex-wrap gap-2 ${isLeft ? "md:justify-end" : "md:justify-start"}`}>
+                <div className={`flex flex-wrap gap-2 ${isLeft ? "lg:justify-end" : "lg:justify-start"}`}>
                     {experience.techStack.map((tech, i) => (
                         <span key={i} className="exp-tech-badge">
                             {tech}
@@ -118,7 +118,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({ experience, index, isLe
                 </div>
 
                 {/* Index number — decorative */}
-                <span className={`absolute bottom-3 font-inconsolata-sans text-[10px] text-gray-600 ${isLeft ? "md:left-5 right-5" : "md:right-5 left-5"}`}>
+                <span className={`absolute bottom-3 font-inconsolata-sans text-[10px] text-gray-600 ${isLeft ? "right-5 lg:right-auto lg:left-5" : "right-5"}`}>
                     {String(index + 1).padStart(2, "0")}
                 </span>
             </div>

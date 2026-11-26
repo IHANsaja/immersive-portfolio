@@ -28,7 +28,7 @@ const AboutSection = () => {
     const line2 = useRef<HTMLSpanElement>(null);
     const line3 = useRef<HTMLSpanElement>(null);
     const line4 = useRef<HTMLSpanElement>(null);
-    const isMobile = useMediaQuery("(max-width: 768px)");
+    const isMobile = useMediaQuery("(max-width: 1023px)");
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     // Load the audio once
@@ -182,7 +182,7 @@ const AboutSection = () => {
     return (
         <section
             id="about-section"
-            className="w-screen min-h-screen md:h-screen flex flex-col md:flex-row md:gap-30 bg-[var(--background)] text-[#f0dbee] relative z-0 py-20 md:py-0"
+            className="w-screen min-h-screen lg:h-screen flex flex-col lg:flex-row lg:gap-10 xl:gap-30 bg-[var(--background)] text-[#f0dbee] relative z-0 py-20 md:py-28 lg:py-0 overflow-x-hidden lg:overflow-hidden"
         >
             {/* BACKGROUND DOT GRID */}
             <div className="absolute inset-0 z-0 pointer-events-none">
@@ -190,75 +190,75 @@ const AboutSection = () => {
             </div>
 
             {isMobile && (
-                <h1 className="block md:hidden font-neotriad-sans text-3xl text-center mb-10">
+                <h1 className="relative z-10 block lg:hidden font-neotriad-sans text-3xl md:text-5xl text-center mb-10 md:mb-14">
                     About Me.
                 </h1>
             )}
 
 
             {/* LEFT SIDE: BASIC INFO & SKILLS */}
-            <div className="w-full md:h-full md:w-1/2 flex flex-col text-left text-[var(--foreground)] leading-5 tracking-wider order-2 md:order-1 px-6 md:px-0">
-                <div className="md:h-1/2 md:mt-20 md:ml-24 pt-10 md:pt-40 flex flex-row justify-between md:justify-start items-start gap-4 md:gap-10 w-full">
+            <div className="relative z-10 w-full lg:h-full lg:flex-[0.85] xl:flex-1 lg:min-w-0 flex flex-col text-left text-[var(--foreground)] leading-5 tracking-wider order-2 lg:order-1 px-6 md:px-16 lg:px-0">
+                <div className="lg:h-1/2 lg:mt-[8vh] lg:ml-12 xl:ml-24 pt-12 md:pt-20 lg:pt-[14vh] flex flex-row justify-between md:justify-center lg:justify-start items-start gap-4 md:gap-24 lg:gap-10 w-full">
                     {/* Basic Info */}
                     <div>
                         <PoliceLights rectHeight={30} rectWidth={70} />
                         <br />
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px] mb-2">// basic info</p>
-                        <p className="scrambleBI font-andvari-sans text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px] mb-2">// basic info</p>
+                        <p className="scrambleBI font-andvari-sans text-[10px] lg:text-[11px]">
                             name → &quot;Ihan Hansaja&quot;
                         </p>
-                        <p className="scrambleBI font-andvari-sans text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans text-[10px] lg:text-[11px]">
                             location → &quot;Kotikawatta&quot;
                         </p>
                         <br />
                         <br />
                         <br />
                         <br />
-                        <p className="font-andvari-sans text-[10px] md:text-[11px]">
+                        <p className="font-andvari-sans text-[10px] lg:text-[11px]">
                             &lt;meta charset=&quot;UTF-8&quot;&gt;
                         </p>
                         <br />
                         <br />
-                        <p className="font-inconsolata-sans-sans w-full text-xl md:text-2xl">+ + + +</p>
+                        <p className="font-inconsolata-sans-sans w-full text-xl lg:text-2xl">+ + + +</p>
                     </div>
 
                     {/* Skills */}
                     <div>
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px] mb-2">// areas of expertise</p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px] mb-2">// areas of expertise</p>
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px]">
                             [&quot; Full‑Stack Development &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px]">
                             &quot; Front‑End Development &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px]">
                             &quot; Back‑End Development &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px]">
                             &quot; UI/UX Design &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px]">
                             &quot; AI Engineering &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px]">
                             &quot; Machine Learning Engineering &quot;]
                         </p>
                         <br />
                         <br />
                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px] mb-2">// what i&apos;m building</p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px] mb-2">// what i&apos;m building</p>
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px]">
                             [&quot; AI‑driven Web Apps &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px]">
                             &quot; Immersive Websites &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px]">
                             &quot; AI SaaS Platforms &quot;,
                         </p>
-                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] md:text-[11px]">
+                        <p className="scrambleBI font-andvari-sans uppercase text-[10px] lg:text-[11px]">
                             &quot; Machine Learning Models &quot;]
                         </p>
                         <br />
@@ -267,28 +267,28 @@ const AboutSection = () => {
                 </div>
 
                 {/* LEFT SVG */}
-                <div className="h-1/2 w-full ml-30 hidden md:flex flex-col justify-center items-start">
+                <div className="xl:flex-1 xl:min-h-0 w-full xl:ml-30 hidden xl:flex flex-col justify-center items-start">
                     <div className="svgGsap">
                         <AnimatedSvg />
                     </div>
-                    <div className="font-inconsalata-sans w-full text-sm md:text-2xl flex justify-center items-center">
+                    <div className="font-inconsalata-sans w-full text-sm lg:text-2xl flex justify-center items-center">
                         + + + +
                     </div>
                 </div>
             </div>
 
             {/* RIGHT SIDE: INTRO & PARAGRAPH */}
-            <div className="w-full md:h-full md:w-1/2 flex flex-col px-6 md:px-8 md:mr-20 text-[var(--foreground)] leading-5 tracking-wider order-1 md:order-2 md:gap-20">
+            <div className="relative z-10 w-full lg:h-full lg:flex-[1.15] xl:flex-1 lg:min-w-0 flex flex-col px-6 md:px-16 lg:px-8 lg:mr-10 xl:mr-20 text-[var(--foreground)] leading-5 tracking-wider order-1 lg:order-2 gap-14 md:gap-20 lg:gap-8 xl:gap-20 lg:justify-center xl:justify-start lg:pt-[12vh] xl:pt-0">
 
-                <div className="w-full md:h-2/5 text-center md:text-right flex flex-col justify-start items-center md:items-end gap-6 md:gap-10">
-                    <div className="w-full md:ml-20 md:mt-20 flex justify-center md:justify-start items-start text-xl md:text-2xl font-inconsolata-sans">
+                <div className="w-full xl:h-2/5 text-center lg:text-right flex flex-col justify-start items-center lg:items-end gap-6 lg:gap-5 xl:gap-10">
+                    <div className="w-full lg:hidden xl:flex xl:ml-20 xl:mt-[8vh] flex justify-center xl:justify-start items-start text-xl xl:text-2xl font-inconsolata-sans">
                         + + + +
                     </div>
-                    <h2 className="scramble font-neotriad-sans text-3xl md:text-4xl">Hey I am <strong>IHAN HANSAJA</strong></h2>
+                    <h2 className="scramble font-neotriad-sans text-2xl sm:text-3xl md:text-4xl">Hey I am <strong>IHAN HANSAJA</strong></h2>
 
                     <p
                         ref={paragraphRef}
-                        className="font-andvari-sans max-w-xl text-[11px] md:text-[11px] leading-6 text-center md:text-right"
+                        className="font-andvari-sans max-w-xl text-[11px] md:text-[12px] lg:text-[11px] leading-6 lg:leading-5 xl:leading-6 text-center lg:text-right"
                     >
                         I am a <strong>Software Engineering undergraduate</strong> with a strong passion for
                         building efficient, user-centric applications. As a <strong>Full Stack Developer</strong> and <strong>AI Engineer</strong>,
@@ -301,21 +301,21 @@ const AboutSection = () => {
                     </p>
 
                 </div>
-                <div className="w-full md:h-2/5 flex flex-col items-center md:items-end gap-6 md:gap-10 text-2xl font-inconsolata-sans z-10 md:mt-0">
+                <div className="w-full xl:h-2/5 flex flex-col items-center lg:items-end gap-6 lg:gap-4 xl:gap-10 text-2xl font-inconsolata-sans z-10 lg:mt-0">
                     <h3 className="scramble font-neotriad-sans text-2xl md:text-4xl">Education</h3>
-                    <div className="flex flex-col md:flex-row justify-center md:justify-start items-center gap-6 md:gap-10 w-full md:w-auto">
-                        <div className="h-full hidden md:flex justify-center items-start mr-10">
+                    <div className="flex flex-col sm:flex-row justify-center lg:justify-start items-center sm:items-stretch gap-6 lg:gap-6 xl:gap-10 w-full lg:w-auto">
+                        <div className="h-full hidden xl:flex justify-center items-start mr-10">
                             <PoliceLights rectHeight={30} rectWidth={70} />
                         </div>
                         <div
                             onMouseEnter={hoverEnter}
-                            className="eduCard h-auto w-full max-w-[280px] md:h-70 md:w-50 flex flex-col items-center gap-3 md:gap-5 border border-gray-500 rounded-sm p-4 md:p-6 bg-background opacity-100">
+                            className="eduCard h-auto w-full max-w-[280px] sm:w-56 lg:w-44 xl:w-50 flex flex-col items-center gap-3 lg:gap-2 xl:gap-5 border border-gray-500 rounded-sm p-5 lg:p-4 xl:p-6 bg-background opacity-100">
                             <Image
                                 src="/DSlogo.png"
                                 alt="DS senanayake college school logo"
                                 height={70}
                                 width={70}
-                                className="relative z-10 w-12 h-12 md:w-[70px] md:h-[70px]"
+                                className="relative z-10 w-12 h-12 xl:w-[70px] xl:h-[70px]"
                                 loading="lazy"
                             />
                             <ScrambledTextBlock
@@ -326,28 +326,28 @@ const AboutSection = () => {
                                     "Advanced Level",
                                 ]}
                             />
-                            <span className="text-center font-inconsolata-sans text-[10px] md:text-sm">RES: 9A / 1C 2S</span>
+                            <span className="text-center font-inconsolata-sans text-[10px] md:text-xs xl:text-sm">RES: 9A / 1C 2S</span>
                         </div>
                         <div
                             onMouseEnter={hoverEnter}
-                            className="eduCard h-auto w-full max-w-[280px] md:h-70 md:w-50 flex flex-col items-center gap-3 md:gap-5 border border-gray-500 rounded-sm p-4 md:p-6 bg-background opacity-100">
+                            className="eduCard h-auto w-full max-w-[280px] sm:w-56 lg:w-44 xl:w-50 flex flex-col items-center gap-3 lg:gap-2 xl:gap-5 border border-gray-500 rounded-sm p-5 lg:p-4 xl:p-6 bg-background opacity-100">
                             <Image
                                 src="/cinecLogo.png"
                                 alt="DS senanayake college school logo"
                                 height={70}
                                 width={70}
-                                className="relative z-10 w-12 h-12 md:w-[70px] md:h-[70px]"
+                                className="relative z-10 w-12 h-12 xl:w-[70px] xl:h-[70px]"
                                 loading="lazy"
                             />
                             <ScrambledTextBlock
                                 lines={[
-                                    "2021 - Present",
+                                    "2022 - 2026",
                                     "CINEC Campus",
                                     "Software",
                                     "Engineering",
                                 ]}
                             />
-                            <span className="text-center font-inconsolata-sans text-[10px] md:text-sm">GPA: above 3.80</span>
+                            <span className="text-center font-inconsolata-sans text-[10px] md:text-xs xl:text-sm">GPA: 3.89</span>
                         </div>
                     </div>
 

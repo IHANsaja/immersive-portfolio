@@ -10,6 +10,16 @@ export interface Experience {
 
 export const experiences: Experience[] = [
     {
+        id: 'exp-2',
+        role: 'Associate Software Engineer',
+        company: 'Blicq',
+        period: '2026 Aug — Present',
+        description:
+            'Building cross-platform products at Blicq: Flutter mobile apps, NestJS and Next.js services on PostgreSQL with Prisma, deployed on AWS, alongside interactive 3D and map experiences with Blender, Unity, Mapbox and Firebase.',
+        techStack: ['Flutter', 'NestJS', 'Next.js', 'PostgreSQL', 'Prisma', 'AWS', 'Blender', 'Unity', 'Mapbox', 'Firebase'],
+        type: 'work',
+    },
+    {
         id: 'exp-1',
         role: 'Full-Stack Developer',
         company: 'SLT Mobitel',

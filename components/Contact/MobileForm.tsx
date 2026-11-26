@@ -13,6 +13,14 @@ import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
 
 const MobileForm = () => {
     const { isPlaying } = useMusic(); // Get global sound state
+    // Read inside GSAP callbacks so toggling sound doesn't rebuild (and replay) the reveal
+    const isPlayingRef = useRef(isPlaying);
+    useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
+    // The circles only react to hover/tap once the reveal has scaled them in.
+    // Before that they're invisible, and a hover would pop them in early, after
+    // which the reveal snaps them back to 0 and plays their entrance again.
+    const circlesRevealedRef = useRef(false);
+    const hoverTweenRef = useRef<gsap.core.Tween | null>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const audioHoverRef = useRef<HTMLAudioElement | null>(null);
     const audioClickRef = useRef<HTMLAudioElement | null>(null);
@@ -59,32 +67,36 @@ const MobileForm = () => {
 
     // Main animation timeline with .contactme included
     useGSAP(() => {
-        gsap.set(".contact-border", { opacity: 0 });
-        gsap.set(".appearlines", { clipPath: "circle(0% at 50% 50%)" });
-        gsap.set(".Cform", { clipPath: "circle(0% at 50% 50%)" });
-
-        gsap.set(".circle", { scale: 0 });
-        gsap.set(".contactme", { opacity: 0 });
+        // Hide everything the reveal brings in, including any hover state left on the
+        // circles, so every (re)start plays from the same clean state.
+        const resetReveal = () => {
+            circlesRevealedRef.current = false;
+            hoverTweenRef.current?.kill();
+            gsap.set(".contact-border", { opacity: 0 });
+            gsap.set(".appearlines", { clipPath: "circle(0% at 50% 50%)" });
+            gsap.set(".Cform", { clipPath: "circle(0% at 50% 50%)" });
+            gsap.set(".circle", { scale: 0, filter: "drop-shadow(0 0 0px transparent)" });
+            gsap.set(".contactme", { opacity: 0 });
+        };
+        resetReveal();
 
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".appearlines",
-                start: "top center",
-                onEnter: () => tl.restart(),
-                onLeaveBack: () => {
-                    gsap.set(".contact-border", { opacity: 0 });
-                    gsap.set(".appearlines", { clipPath: "circle(0% at 50% 50%)" });
-                    gsap.set(".Cform", { clipPath: "circle(0% at 50% 50%)" });
-
-                    gsap.set(".circle", { scale: 0 });
-                    gsap.set(".contactme", { opacity: 0 });
+                // Contact is the last section, so on phones the page can't scroll
+                // far enough for the form's top to reach the viewport centre.
+                start: "top 80%",
+                onEnter: () => {
+                    resetReveal();
+                    tl.restart();
                 },
+                onLeaveBack: resetReveal,
             }
         });
 
         if (audioInitiateRef.current) {
             tl.add(() => {
-                if (isPlaying) { // Check isPlaying
+                if (isPlayingRef.current) {
                     const audio = audioInitiateRef.current!;
                     audio.currentTime = 0;
                     audio.play().catch(err => {
@@ -130,6 +142,7 @@ const MobileForm = () => {
                     grid: [1, 5]
                 }
             })
+            .add(() => { circlesRevealedRef.current = true; })
             .to(".Cform", {
                 clipPath: "circle(100% at 50% 50%)",
                 duration: 1.5,
@@ -140,7 +153,7 @@ const MobileForm = () => {
                 duration: 1,
                 ease: "power2.out"
             });
-    }, [isPlaying]); // Add isPlaying dependency
+    }, []);
 
     // Hover sound and glow
     useGSAP(() => {
@@ -148,14 +161,16 @@ const MobileForm = () => {
         if (!wrapper) return;
 
         const enter = () => {
-            if (audioHoverRef.current && isPlaying) { // Check isPlaying
+            if (!circlesRevealedRef.current) return;
+            if (audioHoverRef.current && isPlayingRef.current) {
                 audioHoverRef.current.currentTime = 0;
                 audioHoverRef.current.play().catch(err => {
                     console.warn('Sound play prevented:', err);
                 });
             }
 
-            gsap.to(wrapper.querySelectorAll('.circle'), {
+            hoverTweenRef.current?.kill();
+            hoverTweenRef.current = gsap.to(wrapper.querySelectorAll('.circle'), {
                 scale: 1.2,
                 filter: "drop-shadow(0 0 10px #46a0f9)",
                 duration: 0.3,
@@ -165,7 +180,9 @@ const MobileForm = () => {
         };
 
         const leave = () => {
-            gsap.to(wrapper.querySelectorAll('.circle'), {
+            if (!circlesRevealedRef.current) return;
+            hoverTweenRef.current?.kill();
+            hoverTweenRef.current = gsap.to(wrapper.querySelectorAll('.circle'), {
                 scale: 1,
                 filter: "drop-shadow(0 0 0px transparent)",
                 duration: 0.3,
@@ -181,9 +198,10 @@ const MobileForm = () => {
             wrapper.removeEventListener('mouseenter', enter);
             wrapper.removeEventListener('mouseleave', leave);
         };
-    }, [isPlaying]); // Add isPlaying dependency
+    }, []);
 
     const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
+        if (!circlesRevealedRef.current) return;
         if (audioClickRef.current && isPlaying) { // Check isPlaying
             audioClickRef.current.currentTime = 0;
             audioClickRef.current.play().catch(() => { });
@@ -247,9 +265,9 @@ const MobileForm = () => {
     };
 
     return (
-        <div className="contact-form w-full h-full min-h-[100vh] bg-transparent flex flex-col relative">
-            <h1 className="contactme absolute top-0 left-1/2 -translate-x-1/2 mt-4 font-neotriad-sans z-10 text-2xl">Contact Me.</h1>
-            <div className="absolute inset-0 flex justify-center items-center z-5">
+        <div className="contact-form w-full h-full bg-transparent flex flex-col relative">
+            <h1 className="contactme absolute top-0 left-1/2 -translate-x-1/2 mt-4 font-neotriad-sans z-10 text-2xl md:text-3xl whitespace-nowrap">Contact Me.</h1>
+            <div className="absolute inset-x-0 top-[52%] bottom-0 flex justify-center items-center z-5">
                 <Image
                     src="/svg/border.svg"
                     alt="scifi contact form border"
@@ -284,11 +302,11 @@ const MobileForm = () => {
                 ref={formRef}
                 onSubmit={handleSubmit}
                 className="Cform absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-                <div className="relative w-full h-full pointer-events-none flex flex-col items-center justify-start pt-24 gap-4 px-6">
-                    <input type="text" placeholder="Name" name="name" className="futuristic-input pointer-events-auto z-10 w-full max-w-[280px]" />
-                    <input type="email" placeholder="Email" name="email" className="futuristic-input pointer-events-auto z-10 w-full max-w-[280px]" />
-                    <textarea placeholder="Message" name="message" className="resize-none futuristic-input pointer-events-auto z-10 w-full max-w-[280px] h-[75px]" />
-                    <button type="submit" className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[60px] h-[60px] rounded-full futuristic-button pointer-events-auto z-20 text-[10px] font-neotriad-sans flex items-center justify-center">SEND</button>
+                <div className="relative w-full h-full pointer-events-none flex flex-col items-center justify-start pt-20 gap-4 px-6">
+                    <input type="text" placeholder="Name" name="name" className="futuristic-input pointer-events-auto z-10 w-full max-w-[280px] md:max-w-[340px]" />
+                    <input type="email" placeholder="Email" name="email" className="futuristic-input pointer-events-auto z-10 w-full max-w-[280px] md:max-w-[340px]" />
+                    <textarea placeholder="Message" name="message" className="resize-none futuristic-input pointer-events-auto z-10 w-full max-w-[280px] md:max-w-[340px] h-[75px]" />
+                    <button type="submit" className="absolute top-[76%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[60px] h-[60px] rounded-full futuristic-button pointer-events-auto z-20 text-[10px] font-neotriad-sans flex items-center justify-center">SEND</button>
                 </div>
             </form>
         </div>

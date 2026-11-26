@@ -9,6 +9,14 @@ import { useMusic } from "@/components/Ui/MusicProvider"; // Import useMusic
 
 const DesktopForm = () => {
     const { isPlaying } = useMusic(); // Get global sound state
+    // Read inside GSAP callbacks so toggling sound doesn't rebuild (and replay) the reveal
+    const isPlayingRef = useRef(isPlaying);
+    useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
+    // The circles only react to hover/tap once the reveal has scaled them in.
+    // Before that they're invisible, and a hover would pop them in early, after
+    // which the reveal snaps them back to 0 and plays their entrance again.
+    const circlesRevealedRef = useRef(false);
+    const hoverTweenRef = useRef<gsap.core.Tween | null>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const audioHoverRef = useRef<HTMLAudioElement | null>(null);
     const audioClickRef = useRef<HTMLAudioElement | null>(null);
@@ -67,31 +75,34 @@ const DesktopForm = () => {
 
     // Border and clip-path appear animations
     useGSAP(() => {
-        gsap.set(".contact-border", { opacity: 0 });
-        gsap.set(".appearlines", { clipPath: "circle(0% at 50% 50%)" });
-        gsap.set(".Cform", { clipPath: "circle(0% at 50% 50%)" });
-        gsap.set(".sclines", { scaleX: 0 });
+        // Hide everything the reveal brings in, including any hover state left on the
+        // circles, so every (re)start plays from the same clean state.
+        const resetReveal = () => {
+            circlesRevealedRef.current = false;
+            hoverTweenRef.current?.kill();
+            gsap.set(".contact-border", { opacity: 0 });
+            gsap.set(".appearlines", { clipPath: "circle(0% at 50% 50%)" });
+            gsap.set(".Cform", { clipPath: "circle(0% at 50% 50%)" });
+            gsap.set(".sclines", { scaleX: 0 });
+            gsap.set(".circle", { scale: 0, filter: "drop-shadow(0 0 0px transparent)" });
+        };
+        resetReveal();
 
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".appearlines",
                 start: "top center",
                 onEnter: () => {
+                    resetReveal();
                     tl.restart();
                 },
-                onLeaveBack: () => {
-                    gsap.set(".contact-border", { opacity: 0 });
-                    gsap.set(".appearlines", { clipPath: "circle(0% at 50% 50%)" });
-                    gsap.set(".Cform", { clipPath: "circle(0% at 50% 50%)" });
-                    gsap.set(".sclines", { scaleX: 0 });
-                    gsap.set(".circle", { scale: 0 });
-                },
+                onLeaveBack: resetReveal,
             }
         });
 
         if (audioInitiateRef.current) {
             tl.add(() => {
-                if (isPlaying) { // Check isPlaying
+                if (isPlayingRef.current) {
                     const audio = audioInitiateRef.current!;
                     audio.currentTime = 0;
                     audio.play().catch(err => {
@@ -141,13 +152,14 @@ const DesktopForm = () => {
                     grid: [1, 5]
                 }
             })
+            .add(() => { circlesRevealedRef.current = true; })
             .to(".Cform", {
                 clipPath: "circle(100% at 50% 50%)",
                 duration: 1.5,
                 delay: 2,
                 ease: "power2.out"
             })
-    }, [isPlaying]); // Add isPlaying dependency
+    }, []);
 
     // Hover scale and glow effect
     useGSAP(() => {
@@ -155,14 +167,16 @@ const DesktopForm = () => {
         if (!wrapper) return;
 
         const enter = () => {
-            if (audioHoverRef.current && isPlaying) { // Check isPlaying
+            if (!circlesRevealedRef.current) return;
+            if (audioHoverRef.current && isPlayingRef.current) {
                 audioHoverRef.current.currentTime = 0;
                 audioHoverRef.current.play().catch(err => {
                     console.warn('Sound play prevented:', err);
                 });
             }
 
-            gsap.to(wrapper.querySelectorAll('.circle'), {
+            hoverTweenRef.current?.kill();
+            hoverTweenRef.current = gsap.to(wrapper.querySelectorAll('.circle'), {
                 scale: 1.2,
                 filter: "drop-shadow(0 0 10px #46a0f9)",
                 duration: 0.3,
@@ -171,7 +185,9 @@ const DesktopForm = () => {
             });
         };
         const leave = () => {
-            gsap.to(wrapper.querySelectorAll('.circle'), {
+            if (!circlesRevealedRef.current) return;
+            hoverTweenRef.current?.kill();
+            hoverTweenRef.current = gsap.to(wrapper.querySelectorAll('.circle'), {
                 scale: 1,
                 filter: "drop-shadow(0 0 0px transparent)",
                 duration: 0.3,
@@ -185,9 +201,10 @@ const DesktopForm = () => {
             wrapper.removeEventListener('mouseenter', enter);
             wrapper.removeEventListener('mouseleave', leave);
         };
-    }, [isPlaying]); // Add isPlaying dependency
+    }, []);
 
     const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
+        if (!circlesRevealedRef.current) return;
         if (audioClickRef.current && isPlaying) { // Check isPlaying
             audioClickRef.current.currentTime = 0;
             audioClickRef.current.play().catch(() => { });
