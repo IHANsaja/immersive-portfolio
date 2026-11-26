@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, type ThreeEvent } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 import * as THREE from "three";
 
 // The hero's "AI sphere" character, rebuilt in three.js from the original Spline scene
@@ -65,6 +66,7 @@ const BALL_FRAGMENT = `
 precision highp float;
 varying vec3 vViewNormal;
 uniform float uTime;
+uniform float uExcite;   // 0..1 while the sphere is held
 
 vec2 rotate2(vec2 v, float a) {
     float c = cos(a), s = sin(a);
@@ -105,12 +107,17 @@ void main() {
     float light = 0.8 + 0.2 * dot(n, normalize(vec3(-0.4, 0.5, 0.75)));
     col *= light;
 
+    // Held: the rim glows brighter and the whole ball lights up a little
+    col = mix(col, teal, fresnel * uExcite * 0.35);
+    col *= 1.0 + 0.14 * uExcite;
+
     gl_FragColor = vec4(col, 1.0);
 }
 `;
 
 const SHELL_VERTEX = `
 uniform float uTime;
+uniform float uExcite;   // 0..1 while the sphere is held
 varying float vFacing;
 
 // 3D value noise
@@ -134,7 +141,8 @@ void main() {
     // flowing over time so the outline wobbles
     vec3 p = position * 0.016 + vec3(0.0, uTime * 0.35, uTime * 0.2);
     float n = noise3(p) * 0.65 + noise3(p * 2.1 + 7.0) * 0.35;
-    vec3 displaced = position + normal * (n - 0.5) * 2.0 * 15.0;
+    vec3 displaced = position * (1.0 + 0.06 * uExcite)
+                   + normal * (n - 0.5) * 2.0 * 15.0 * (1.0 + 1.2 * uExcite);
     vec3 viewNormal = normalize(normalMatrix * normal);
     vFacing = clamp(viewNormal.z, 0.0, 1.0);
     gl_Position = projectionMatrix * modelViewMatrix * vec4(displaced, 1.0);
@@ -193,7 +201,7 @@ function curl(x: number, y: number, z: number, t: number, out: THREE.Vector3) {
     return out;
 }
 
-function ParticleEmitter({ force, seed }: { force: ForceType; seed: number }) {
+function ParticleEmitter({ force, seed, excite }: { force: ForceType; seed: number; excite: { value: number } }) {
     const pointsRef = useRef<THREE.Points>(null);
     const count = PARTICLES_PER_EMITTER;
 
@@ -253,7 +261,9 @@ function ParticleEmitter({ force, seed }: { force: ForceType; seed: number }) {
             // Just outside the surface, so the ball's own depth doesn't hide them
             const spawnR = BALL_RADIUS * 1.02;
             p[i * 3] = nx * spawnR; p[i * 3 + 1] = ny * spawnR; p[i * 3 + 2] = nz * spawnR;
-            v[i * 3] = nx * 10; v[i * 3 + 1] = ny * 10; v[i * 3 + 2] = nz * 10;
+            // Held: particles shoot out much faster
+            const speed = 10 + 70 * excite.value;
+            v[i * 3] = nx * speed; v[i * 3 + 1] = ny * speed; v[i * 3 + 2] = nz * speed;
             life[i] = PARTICLE_LIFE * (0.75 + 0.25 * random());
             const c = PARTICLE_COLORS[random() < 0.5 ? 0 : 1];
             colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
@@ -272,12 +282,14 @@ function ParticleEmitter({ force, seed }: { force: ForceType; seed: number }) {
             const len = Math.hypot(x, y, z) || 1;
             if (force === "attractor") {
                 // Pull back toward the ball once particles drift past its surface
-                const pull = Math.max(0, len - BALL_RADIUS * 1.03) * 0.5 * 2.2;
+                // Held: the attractor lets go, so the particles burst into a cloud
+                const pull = Math.max(0, len - BALL_RADIUS * 1.03) * 0.5 * 2.2 * (1 - 0.85 * excite.value);
                 ax -= (x / len) * pull; ay -= (y / len) * pull; az -= (z / len) * pull;
             } else {
                 // Swirl around the view axis
                 const rxy = Math.hypot(x, y) || 1;
-                ax += (-y / rxy) * 0.5 * 60; ay += (x / rxy) * 0.5 * 60;
+                const swirl = 0.5 * 60 * (1 + 2.5 * excite.value); // held: spin faster
+                ax += (-y / rxy) * swirl; ay += (x / rxy) * swirl;
                 const pull = Math.max(0, len - BALL_RADIUS * 1.05) * 0.6;
                 ax -= (x / len) * pull; ay -= (y / len) * pull; az -= (z / len) * pull;
             }
@@ -327,16 +339,20 @@ function SphereCharacter({ pointer, viewportWidth }: { pointer: React.RefObject<
     const lookRef = useRef<THREE.Group>(null);
     const blinkRef = useRef<THREE.Group>(null);
     const eyeGeometry = useEyeGeometry();
+    const bubbleRef = useRef<HTMLDivElement>(null);
+    // 0..1, eases in while the sphere is held; shared with the particle emitters
+    const excite = useMemo(() => ({ value: 0 }), []);
+    const shellTime = useRef(0);
 
     const ballMaterial = useMemo(() => new THREE.ShaderMaterial({
         vertexShader: BALL_VERTEX,
         fragmentShader: BALL_FRAGMENT,
-        uniforms: { uTime: { value: 0 } },
+        uniforms: { uTime: { value: 0 }, uExcite: { value: 0 } },
     }), []);
     const shellMaterial = useMemo(() => new THREE.ShaderMaterial({
         vertexShader: SHELL_VERTEX,
         fragmentShader: SHELL_FRAGMENT,
-        uniforms: { uTime: { value: 0 } },
+        uniforms: { uTime: { value: 0 }, uExcite: { value: 0 } },
         transparent: true,
         depthWrite: false,
     }), []);
@@ -356,8 +372,16 @@ function SphereCharacter({ pointer, viewportWidth }: { pointer: React.RefObject<
         const ptr = pointer.current;
         const m = motion.current;
 
+        // Hold excitement eases in quickly and fades out a little slower
+        excite.value = damp(excite.value, ptr.pressed ? 1 : 0, ptr.pressed ? 6 : 3, dt);
+        const ex = excite.value;
+
         ballMaterial.uniforms.uTime.value = t;
-        shellMaterial.uniforms.uTime.value = t;
+        ballMaterial.uniforms.uExcite.value = ex;
+        // The halo churns up to 3.5x faster while held (accumulated so it never jumps)
+        shellTime.current += dt * (1 + 2.5 * ex);
+        shellMaterial.uniforms.uTime.value = shellTime.current;
+        shellMaterial.uniforms.uExcite.value = ex;
 
         // Breakpoint scale (Spline transitions it over ~1s)
         m.scale = damp(m.scale, breakpointScale(viewportWidth), 4, dt);
@@ -369,7 +393,11 @@ function SphereCharacter({ pointer, viewportWidth }: { pointer: React.RefObject<
 
         // Press and hold: squeeze to 70% quickly, ease back on release
         m.press = damp(m.press, ptr.pressed ? PRESS_SCALE : 1, ptr.pressed ? 9 : 4.5, dt);
-        ball.scale.setScalar(m.press);
+        // Held: jelly squash-and-stretch on top of the squeeze, plus a little shake
+        const jelly = Math.sin(t * 16) * 0.07 * ex;
+        ball.scale.set(m.press * (1 + jelly), m.press * (1 - jelly), m.press);
+        ball.rotation.z = Math.sin(t * 11) * 0.09 * ex;
+        ball.position.x = Math.sin(t * 37) * 2.2 * ex;
 
         // Look-at: turn the face toward the cursor; ease back to centre when it leaves
         const dx = (ptr.x - root.position.x) / m.scale;
@@ -387,7 +415,12 @@ function SphereCharacter({ pointer, viewportWidth }: { pointer: React.RefObject<
         let eyeScale = 1;
         if (phase < 0.2) eyeScale = 1 - (1 - BLINK_SCALE_Y) * ease(phase / 0.2);
         else if (phase < 0.4) eyeScale = BLINK_SCALE_Y + (1 - BLINK_SCALE_Y) * ease((phase - 0.2) / 0.2);
-        blink.scale.y = eyeScale;
+        // Held: happy squint (eyes narrow and widen a touch)
+        blink.scale.y = Math.min(eyeScale, 1 - 0.55 * ex);
+        blink.scale.x = 1 + 0.12 * ex;
+
+        // Speech bubble reacts to being held (class toggle, no React re-render)
+        bubbleRef.current?.classList.toggle("is-held", ptr.pressed);
     });
 
     const onPressStart = (event: ThreeEvent<PointerEvent>) => {
@@ -422,8 +455,18 @@ function SphereCharacter({ pointer, viewportWidth }: { pointer: React.RefObject<
                 </group>
             </group>
 
-            <ParticleEmitter force="attractor" seed={1} />
-            <ParticleEmitter force="vortex" seed={2} />
+            <ParticleEmitter force="attractor" seed={1} excite={excite} />
+            <ParticleEmitter force="vortex" seed={2} excite={excite} />
+
+            {/* Speech bubble, anchored to the sphere's upper right so it follows it */}
+            <Html position={[66, 92, 130]} zIndexRange={[20, 0]} style={{ pointerEvents: "none" }}>
+                <div ref={bubbleRef} className="sphere-bubble" aria-hidden="true">
+                    <div className="sphere-bubble__inner">
+                        <span className="sphere-bubble__text sphere-bubble__text--idle">Hold me!</span>
+                        <span className="sphere-bubble__text sphere-bubble__text--held">Wheee!</span>
+                    </div>
+                </div>
+            </Html>
         </group>
     );
 }
