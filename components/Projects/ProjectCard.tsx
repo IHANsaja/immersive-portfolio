@@ -35,7 +35,11 @@ const ProjectCard: FC<ProjectCardProps> = (props) => {
     // Map projects to immersive realistic dates and metrics inspired by the user's reference design
     const getCardMetadata = (title: string) => {
         const t = title.toLowerCase();
-        if (t.includes("freya")) {
+        if (t.includes("kitloom")) {
+            return { dateNum: "13", dateMonth: "Oct", stat: "9 Agents" };
+        } else if (t.includes("bestofburst")) {
+            return { dateNum: "19", dateMonth: "Oct", stat: "GPU Accel" };
+        } else if (t.includes("freya")) {
             return { dateNum: "07", dateMonth: "Jul", stat: "14 Commits" };
         } else if (t.includes("serendib")) {
             return { dateNum: "12", dateMonth: "Oct", stat: "28 Screens" };
@@ -92,7 +96,14 @@ const ProjectCard: FC<ProjectCardProps> = (props) => {
                     {isVideo(videoSrc) ? (
                         <video ref={videoRef} src={videoSrc} className="project-card-video" loop muted playsInline />
                     ) : (
-                        <Image src={videoSrc} alt={title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
+                        <Image
+                            src={videoSrc}
+                            alt={title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            // Wide SVG banners keep their logo end (left) in view; photos are centred
+                            className={videoSrc.endsWith('.svg') ? 'object-cover object-left' : 'object-cover'}
+                        />
                     )}
                     <div className="project-card-shimmer" />
                 </div>

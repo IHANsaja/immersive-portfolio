@@ -66,6 +66,8 @@ const TrailDisplayShader = {
         uShatterStrength:   { value: 0.1 },
         uDragStrength:      { value: 1.5 },
         uMouseVelocity:     { value: new THREE.Vector2() },
+        uScreenAspect:      { value: 16 / 9 },
+        uImageAspect:       { value: 1672 / 941 }, // /background.png
     },
     vertexShader: `
     varying vec2 vUv;
@@ -91,6 +93,17 @@ const TrailDisplayShader = {
 
     uniform float uDragStrength;
     uniform vec2 uMouseVelocity;
+    uniform float uScreenAspect;
+    uniform float uImageAspect;
+
+    // Sample the background the way the hero shows it (object-cover), so the
+    // ripple distorts exactly the image that sits behind it
+    vec2 coverUv(vec2 uv) {
+        vec2 s = uScreenAspect > uImageAspect
+            ? vec2(1.0, uImageAspect / uScreenAspect)
+            : vec2(uScreenAspect / uImageAspect, 1.0);
+        return (uv - 0.5) * s + 0.5;
+    }
 
     vec2 random2(vec2 p) {
         return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453);
@@ -145,9 +158,14 @@ const TrailDisplayShader = {
       
       vec2 dragDisplacement = uMouseVelocity * uDragStrength * intensity;
       vec2 finalUv = vUv + geometricDisplacement - dragDisplacement;
-      vec4 finalBgColor = texture2D(uBackground, finalUv);
+      vec4 finalBgColor = texture2D(uBackground, coverUv(finalUv));
 
-      gl_FragColor = vec4(finalBgColor.rgb, finalBgColor.a * (1.0 - intensity * uAlpha));
+      // Faint sheen in the hero's lavender/pink along the ripple's edges
+      float edge = smoothstep(0.04, 0.3, intensity) * (1.0 - smoothstep(0.3, 0.85, intensity));
+      vec3 tint = mix(vec3(0.55, 0.60, 0.94), vec3(0.95, 0.70, 0.88), 0.5 + 0.5 * sin(uTime * 0.6 + vUv.x * 6.0));
+      vec3 color = finalBgColor.rgb + tint * (edge * 0.18 + intensity * 0.05);
+
+      gl_FragColor = vec4(color, finalBgColor.a * (1.0 - intensity * uAlpha));
     }
   `
 };
@@ -157,18 +175,18 @@ function GPUTrailManager({ backgroundTexture }: { backgroundTexture: THREE.Textu
     const config = useMemo(() => ({
         resolution: 256, // Reduced from 512 for better performance
         // Mouse trail settings
-        mouseRadius: 0.02,
-        mouseIntensity: 0.15, // Reduced intensity
+        mouseRadius: 0.03,
+        mouseIntensity: 0.3,
         mouseDissipation: 0.96,
         lag: 0.05,
         // Auto trail settings
-        autoRadius: 0.015,
-        autoIntensity: 0.1, // Reduced intensity
+        autoRadius: 0.022,
+        autoIntensity: 0.18,
         autoDissipation: 0.97,
         // Display settings
         alpha: 0.6, // Reduced alpha for less GPU load
         blur: 0.003, // Slightly increased blur to compensate for lower resolution
-        displacementScale: 0.03, // Reduced displacement
+        displacementScale: 0.045,
         shatterScale: 150, // Reduced shatter scale
         shatterStrength: 0.3, // Reduced shatter strength
         dragStrength: 3, // Reduced drag strength
@@ -272,7 +290,7 @@ function GPUTrailManager({ backgroundTexture }: { backgroundTexture: THREE.Textu
     const frameInterval = 1000 / targetFPS;
 
     // --- Render Loop ---
-    useFrame(({ gl }, delta) => {
+    useFrame(({ gl, size }, delta) => {
         const now = performance.now();
         
         // Skip frame if not enough time has passed
@@ -318,6 +336,7 @@ function GPUTrailManager({ backgroundTexture }: { backgroundTexture: THREE.Textu
         dispMat.uniforms.uTime.value += delta;
         dispMat.uniforms.uMouseVelocity.value.copy(velocity.current);
         dispMat.uniforms.uMouse.value.copy(simulatedMouse.current);
+        dispMat.uniforms.uScreenAspect.value = size.width / Math.max(size.height, 1);
     });
 
     return <mesh geometry={new THREE.PlaneGeometry(2, 2)} material={dispMat} />;

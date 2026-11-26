@@ -12,6 +12,28 @@ export interface Project {
 
 export const projects: Project[] = [
     {
+        title: "Kitloom - AI Agent Setup Directory",
+        videoSrc: "/images/kitloom.svg",
+        description: "A free directory of setups for AI coding agents, checked for warning signs before you download.",
+        detailDescription: "Kitloom is a free directory of setups for AI coding agents: the instructions, rules, skills, commands, sub-agents and hooks that make an agent work well in a project. Each listing shows its README, file tree, licence and the agents it is written for, across Claude Code, OpenAI Codex, Cursor, Google Antigravity and more. Before you download, Heddle, Kitloom's pre-download check, pins the repository to its latest commit and scans every file for warning signs such as hidden instructions, auto-running commands and credential access. Built as a static Next.js site with Supabase for auth and Postgres, and publishing straight from public GitHub repositories.",
+        codeUrl: "https://github.com/IHANsaja/kitloom",
+        demoUrl: "https://kitloom.site",
+        figmaUrl: "",
+        audioSrc: "",
+        badge: "full-project",
+    },
+    {
+        title: "BestOfBurst - Photo Culling App",
+        videoSrc: "/images/bestofburst.png",
+        description: "Cull thousands of photos in minutes: bursts stacked, the best frame of each moment circled.",
+        detailDescription: "BestOfBurst culls a photo shoot for you. Drop in a folder of thousands of photos and it checks every frame for focus, exposure, contrast, noise and colour, stacks the bursts, sets aside the weak frames and circles the best photo of each moment, so you only review the genuine close calls in a loupe or side-by-side compare. Keepers are exported best-first, ready for Lightroom or Capture One, and originals are never changed. A Windows desktop app written in Rust that runs fully offline with GPU acceleration on DirectX 12 and Vulkan.",
+        codeUrl: "https://github.com/IHANsaja/BestOfBurst",
+        demoUrl: "https://github.com/IHANsaja/BestOfBurst/releases/latest",
+        figmaUrl: "",
+        audioSrc: "",
+        badge: "full-project",
+    },
+    {
         title: "Freya 3.0 - AI Voice Assistant",
         videoSrc: "/images/freya.jpeg",
         description: "AI voice assistant designed to simplify your daily tasks and engage in casual conversations.",
