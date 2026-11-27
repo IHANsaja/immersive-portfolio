@@ -43,23 +43,23 @@
     "forks": 0,
     "watchers": 0,
     "openIssues": 0,
-    "size": 4987,
-    "pushedAt": "2026-11-12T09:21:20Z",
-    "commitsCount": 27,
+    "size": 5006,
+    "pushedAt": "2026-11-26T18:42:26Z",
+    "commitsCount": 30,
     "languages": [
       {
         "name": "Rust",
-        "bytes": 692486,
+        "bytes": 709104,
         "percentage": 99.2
+      },
+      {
+        "name": "PowerShell",
+        "bytes": 2860,
+        "percentage": 0.4
       },
       {
         "name": "Inno Setup",
         "bytes": 2841,
-        "percentage": 0.4
-      },
-      {
-        "name": "PowerShell",
-        "bytes": 2729,
         "percentage": 0.4
       }
     ],
